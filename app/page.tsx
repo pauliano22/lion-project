@@ -1,23 +1,79 @@
 import Link from 'next/link';
-import { Shield, Download, Zap, Users, Play } from 'lucide-react';
+import Image from 'next/image';
+import { Shield, Zap, Users, Search, BookOpen } from 'lucide-react';
+import AudioTester from '@/components/AudioTester';
+
+// Add these missing component definitions
+function FeatureCard({ icon, title, description, features }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  features: string[];
+}) {
+  return (
+    <div className="bg-gray-dark border border-gold/20 rounded-lg p-6">
+      <div className="text-gold mb-4">{icon}</div>
+      <h3 className="text-xl font-bold mb-3 text-gold">{title}</h3>
+      <p className="text-gray-300 mb-4">{description}</p>
+      <ul className="space-y-2">
+        {features.map((feature, index) => (
+          <li key={index} className="text-sm text-gray-400 flex items-center">
+            <span className="text-gold mr-2">•</span>
+            {feature}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function DownloadCard({ title, description, price, features, featured = false }: {
+  title: string;
+  description: string;
+  price: string;
+  features: string[];
+  featured?: boolean;
+}) {
+  return (
+    <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold scale-105' : 'border-gold/20'}`}>
+      {featured && (
+        <div className="bg-gold text-black text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
+          RECOMMENDED
+        </div>
+      )}
+      <h3 className="text-xl font-bold mb-2 text-gold">{title}</h3>
+      <p className="text-gray-300 mb-4">{description}</p>
+      <div className="text-3xl font-bold text-gold mb-4">{price}</div>
+      <ul className="space-y-2 mb-6">
+        {features.map((feature, index) => (
+          <li key={index} className="text-sm text-gray-400 flex items-center">
+            <span className="text-gold mr-2">✓</span>
+            {feature}
+          </li>
+        ))}
+      </ul>
+      <button className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
+        Download
+      </button>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-foreground">
-      {/* Header */}
-      <header className="border-b border-gray-dark">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-gold-red rounded-full"></div>
-            <span className="text-xl font-bold gradient-text">Lion Project</span>
+    <div className="min-h-screen bg-black text-white">
+      {/* Navigation */}
+      <header className="border-b border-gold/20 px-4 py-4">
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <span className="text-xl font-bold text-gold">The Lion Project</span>
           </div>
           <nav className="hidden md:flex space-x-8">
             <Link href="#features" className="text-gray-300 hover:text-gold transition-colors">Features</Link>
-            <Link href="#how-it-works" className="text-gray-300 hover:text-gold transition-colors">How It Works</Link>
-            <Link href="#download" className="text-gray-300 hover:text-gold transition-colors">Download</Link>
+            <Link href="#how-it-works" className="text-gray-300 hover:text-gold transition-colors">How it Works</Link>
             <Link href="#pricing" className="text-gray-300 hover:text-gold transition-colors">Pricing</Link>
           </nav>
-          <button className="bg-gold text-black px-4 py-2 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
+          <button className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
             Try Demo
           </button>
         </div>
@@ -25,37 +81,47 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Protect Yourself from{' '}
-            <span className="gradient-text">AI Voice Deception</span>
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Advanced deepfake detection suite that identifies AI-generated voices in real-time. 
-            Safeguard your conversations, verify audio authenticity, and stay ahead of voice fraud.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center">
-              <Play className="mr-2 h-5 w-5" />
-              Try Live Demo
-            </button>
-            <button className="border border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center">
-              <Download className="mr-2 h-5 w-5" />
-              Download Suite
-            </button>
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="md:w-1/3">
+              <Image 
+                src="/images/2.png" 
+                alt="Lion Project - Protect Yourself from AI Voice Deception" 
+                width={500} 
+                height={500}
+                className="mx-auto rounded-full shadow-2xl"
+                priority
+              />
+            </div>
+            
+            <div className="md:w-2/3 text-center md:text-left">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                Protect Yourself from{' '}
+                <span className="gradient-text">AI Voice Deception</span>
+              </h1>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl">
+                Advanced AI detection technology that identifies deepfake audio with 90%+ accuracy. 
+                Safeguard yourself from voice cloning scams and fraudulent calls.
+              </p>
+              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
+                <button className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center">
+                  <Search className="w-5 h-5 mr-2" />
+                  Try Detection Now
+                </button>
+                <button className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Learn More
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Live Demo Section */}
-      <section id="demo" className="py-16 px-4 bg-gray-dark">
+      {/* Audio Tester Section */}
+      <section className="py-20 px-4 bg-gray-dark/50">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            <span className="gradient-text">Test Audio Files</span> Instantly
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            <AudioTester />
-          </div>
+          <AudioTester />
         </div>
       </section>
 
@@ -115,8 +181,8 @@ export default function Home() {
                 <div className="flex items-start space-x-4">
                   <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
                   <div>
-                    <h4 className="font-semibold">Real-time Results</h4>
-                    <p className="text-gray-300">Get instant feedback with 90%+ accuracy in under 2 seconds</p>
+                    <h4 className="font-semibold">Result & Confidence</h4>
+                    <p className="text-gray-300">Get instant results with confidence scoring</p>
                   </div>
                 </div>
               </div>
@@ -184,7 +250,13 @@ export default function Home() {
       <footer className="border-t border-gray-dark py-8 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-6 h-6 bg-gradient-gold-red rounded-full"></div>
+            <Image 
+              src="/images/2.png" 
+              alt="Lion Project" 
+              width={32} 
+              height={32}
+              className="rounded-full"
+            />
             <span className="text-lg font-bold gradient-text">Lion Project</span>
           </div>
           <p className="text-gray-300">
@@ -192,92 +264,6 @@ export default function Home() {
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-// Feature Card Component
-function FeatureCard({ icon, title, description, features }: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  features: string[];
-}) {
-  return (
-    <div className="bg-gray-dark border border-gold/20 rounded-lg p-6 hover:border-gold/40 transition-colors">
-      <div className="text-gold mb-4">{icon}</div>
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
-      <p className="text-gray-300 mb-4">{description}</p>
-      <ul className="space-y-2">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-center text-sm">
-            <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-            {feature}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-// Download Card Component
-function DownloadCard({ title, description, price, features, featured = false }: {
-  title: string;
-  description: string;
-  price: string;
-  features: string[];
-  featured?: boolean;
-}) {
-  return (
-    <div className={`border rounded-lg p-6 ${
-      featured 
-        ? 'border-gold bg-gold/5 transform scale-105' 
-        : 'border-gray-dark bg-gray-dark'
-    }`}>
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
-      <p className="text-gray-300 mb-4">{description}</p>
-      <div className="text-3xl font-bold mb-4 text-gold">{price}</div>
-      <ul className="space-y-2 mb-6">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-center text-sm">
-            <div className="w-2 h-2 bg-gold rounded-full mr-2"></div>
-            {feature}
-          </li>
-        ))}
-      </ul>
-      <button className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-        featured
-          ? 'bg-gold text-black hover:bg-gold-dark'
-          : 'border border-gold text-gold hover:bg-gold/10'
-      }`}>
-        {price === 'Free' ? 'Add to Chrome' : 'Download Now'}
-      </button>
-    </div>
-  );
-}
-
-// Audio Tester Component (placeholder for now)
-function AudioTester() {
-  return (
-    <div className="bg-black border border-gold rounded-lg p-8">
-      <h3 className="text-2xl font-bold text-gold mb-6 text-center">
-        🎤 Test Your Audio File
-      </h3>
-      <div className="border-2 border-dashed border-gold/30 rounded-lg p-12 text-center">
-        <div className="text-gold mb-4">
-          <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-        </div>
-        <p className="text-lg mb-2">Drop your audio file here or click to browse</p>
-        <p className="text-sm text-gray-400">Supports MP3, WAV, M4A files</p>
-        <button className="mt-4 bg-gold text-black px-6 py-2 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
-          Choose File
-        </button>
-      </div>
-      <div className="mt-6 text-center text-sm text-gray-400">
-        <p>Files are processed locally and never stored on our servers</p>
-      </div>
     </div>
   );
 }

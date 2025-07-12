@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react';
+import Image from 'next/image';
+import { Upload, AlertTriangle, CheckCircle, Loader2, X, Search, Shield } from 'lucide-react';
 
 interface DetectionResult {
   is_fake: boolean;
@@ -122,9 +123,11 @@ export default function AudioTester() {
   return (
     <div className="bg-black border border-gold rounded-lg p-8 max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h3 className="text-3xl font-bold text-gold mb-2">
-          🎤 Audio Deepfake Detector
-        </h3>
+        <div className="flex items-center justify-center space-x-3 mb-4">
+          <h3 className="text-3xl font-bold text-gold">
+            Audio Deepfake Detector
+          </h3>
+        </div>
         <p className="text-gray-300">
           Upload an audio file to check if it is AI-generated or authentic human voice
         </p>
@@ -217,7 +220,8 @@ export default function AudioTester() {
               </>
             ) : (
               <>
-                🔍 Analyze Audio
+                <Search className="w-5 h-5 mr-2" />
+                Analyze Audio
               </>
             )}
           </button>
@@ -246,11 +250,17 @@ export default function AudioTester() {
             }`}
           >
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-2xl font-bold">
+              <h4 className="text-2xl font-bold flex items-center">
                 {result.is_fake ? (
-                  <span className="text-red">⚠️ DEEPFAKE DETECTED</span>
+                  <>
+                    <AlertTriangle className="w-8 h-8 mr-3 text-red" />
+                    <span className="text-red">DEEPFAKE DETECTED</span>
+                  </>
                 ) : (
-                  <span className="text-green-500">✅ AUTHENTIC VOICE</span>
+                  <>
+                    <CheckCircle className="w-8 h-8 mr-3 text-green-500" />
+                    <span className="text-green-500">AUTHENTIC VOICE</span>
+                  </>
                 )}
               </h4>
               <div className="text-right">
@@ -294,7 +304,10 @@ export default function AudioTester() {
 
       {/* Info Section */}
       <div className="mt-8 p-4 bg-gray-dark rounded-lg">
-        <h5 className="font-semibold text-gold mb-2">🔒 Privacy & Security</h5>
+        <h5 className="font-semibold text-gold mb-2 flex items-center">
+          <Shield className="w-5 h-5 mr-2" />
+          Privacy & Security
+        </h5>
         <ul className="text-sm text-gray-300 space-y-1">
           <li>• Files are processed locally and never stored on our servers</li>
           <li>• Analysis typically completes in under 3 seconds</li>
