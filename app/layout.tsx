@@ -17,9 +17,12 @@ export const metadata: Metadata = {
   description:
     "Protect yourself from AI voice deception with advanced deepfake detection technology. Real-time audio verification and authenticity protection.",
   icons: {
-    icon: "/images/2.png",
+    icon: [
+      { url: "/images/2.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" }, // Add SVG option
+    ],
     shortcut: "/images/2.png",
-    apple: "/images/2.png",
+    apple: { url: "/images/2.png", sizes: "180x180", type: "image/png" },
   },
 };
 
@@ -30,6 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/2.png" />
+        <link rel="icon" type="image/png" sizes="64x64" href="/images/2.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/2.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
