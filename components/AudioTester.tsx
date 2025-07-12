@@ -126,7 +126,7 @@ export default function AudioTester() {
           🎤 Audio Deepfake Detector
         </h3>
         <p className="text-gray-300">
-          Upload an audio file to check if it's AI-generated or authentic human voice
+          Upload an audio file to check if it is AI-generated or authentic human voice
         </p>
       </div>
 
