@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Shield, Download, Zap, Users, ArrowRight, Play } from 'lucide-react';
+import { Shield, Download, Zap, Users, Play } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -162,14 +162,12 @@ export default function Home() {
               description="Background monitoring for your computer"
               price="$29.99"
               features={["Real-time monitoring", "System tray alerts", "Audio capture", "Windows/Mac/Linux"]}
-              downloadLink="#"
             />
             <DownloadCard
               title="Chrome Extension"
               description="Web protection for your browser"
               price="Free"
               features={["Web audio detection", "Video call protection", "Browser integration", "Real-time alerts"]}
-              downloadLink="#"
               featured
             />
             <DownloadCard
@@ -177,7 +175,6 @@ export default function Home() {
               description="Portable verification tool"
               price="$4.99"
               features={["File upload", "Real-time recording", "Portable verification", "iOS & Android"]}
-              downloadLink="#"
             />
           </div>
         </div>
@@ -224,12 +221,11 @@ function FeatureCard({ icon, title, description, features }: {
 }
 
 // Download Card Component
-function DownloadCard({ title, description, price, features, downloadLink, featured = false }: {
+function DownloadCard({ title, description, price, features, featured = false }: {
   title: string;
   description: string;
   price: string;
   features: string[];
-  downloadLink: string;
   featured?: boolean;
 }) {
   return (

@@ -87,7 +87,7 @@ export default function AudioTester() {
 
       const data = await response.json();
       setResult(data);
-    } catch (err) {
+    } catch {
       // Simulate a result for demo purposes
       // Remove this in production
       setTimeout(() => {
