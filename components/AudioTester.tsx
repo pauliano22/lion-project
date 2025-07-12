@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Image from 'next/image';
 import { Upload, AlertTriangle, CheckCircle, Loader2, X, Search, Shield } from 'lucide-react';
 
 interface DetectionResult {
