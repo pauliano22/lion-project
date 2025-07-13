@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Zap, Users, Search, BookOpen } from 'lucide-react';
+import { Shield, Zap, Users, Search, BookOpen, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Globe } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 // Add these missing component definitions
@@ -27,7 +27,33 @@ function FeatureCard({ icon, title, description, features }: {
   );
 }
 
-function DownloadCard({ title, description, price, features, featured = false }: {
+function ProtectionCard({ icon, title, description, examples }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  examples: string[];
+}) {
+  return (
+    <div className="bg-gray-dark border border-gold/20 rounded-lg p-6">
+      <div className="text-gold mb-4">{icon}</div>
+      <h3 className="text-xl font-bold mb-3 text-gold">{title}</h3>
+      <p className="text-gray-300 mb-4">{description}</p>
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-gold">Common threats we detect:</p>
+        <ul className="space-y-1">
+          {examples.map((example, index) => (
+            <li key={index} className="text-sm text-gray-400 flex items-start">
+              <AlertTriangle className="w-4 h-4 text-red mr-2 mt-0.5 flex-shrink-0" />
+              {example}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function ComingSoonCard({ title, description, price, features, featured = false }: {
   title: string;
   description: string;
   price: string;
@@ -38,7 +64,7 @@ function DownloadCard({ title, description, price, features, featured = false }:
     <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold scale-105' : 'border-gold/20'}`}>
       {featured && (
         <div className="bg-gold text-black text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
-          RECOMMENDED
+          MOST POPULAR
         </div>
       )}
       <h3 className="text-xl font-bold mb-2 text-gold">{title}</h3>
@@ -47,14 +73,18 @@ function DownloadCard({ title, description, price, features, featured = false }:
       <ul className="space-y-2 mb-6">
         {features.map((feature, index) => (
           <li key={index} className="text-sm text-gray-400 flex items-center">
-            <span className="text-gold mr-2">✓</span>
+            <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
             {feature}
           </li>
         ))}
       </ul>
-      <button className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
-        Download
+      <button className="w-full bg-gray-600 text-gray-300 px-6 py-3 rounded-lg font-semibold cursor-not-allowed">
+        <Clock className="w-4 h-4 inline mr-2" />
+        Coming Soon
       </button>
+      <p className="text-xs text-gray-500 mt-2 text-center">
+        Notify me when available
+      </p>
     </div>
   );
 }
@@ -66,12 +96,19 @@ export default function Home() {
       <header className="border-b border-gold/20 px-4 py-4">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <span className="text-xl font-bold text-gold">The Lion Project</span>
+            <Image 
+              src="/images/2.png" 
+              alt="Lion Project" 
+              width={60}
+              height={60}
+              className="rounded-full"
+            />
+            <span className="text-xl font-bold text-gold">Lion Project</span>
           </div>
           <nav className="hidden md:flex space-x-8">
-            <Link href="#features" className="text-gray-300 hover:text-gold transition-colors">Features</Link>
+            <Link href="#protection" className="text-gray-300 hover:text-gold transition-colors">Protection</Link>
             <Link href="#how-it-works" className="text-gray-300 hover:text-gold transition-colors">How it Works</Link>
-            <Link href="#pricing" className="text-gray-300 hover:text-gold transition-colors">Pricing</Link>
+            <Link href="#coming-soon" className="text-gray-300 hover:text-gold transition-colors">Products</Link>
           </nav>
           <button className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
             Try Demo
@@ -86,9 +123,9 @@ export default function Home() {
             <div className="md:w-1/3">
               <Image 
                 src="/images/2.png" 
-                alt="Lion Project - Protect Yourself from AI Voice Deception" 
-                width={500} 
-                height={500}
+                alt="Lion Project - Protect Your Family from AI Deception" 
+                width={400} 
+                height={400}
                 className="mx-auto rounded-full shadow-2xl"
                 priority
               />
@@ -96,23 +133,30 @@ export default function Home() {
             
             <div className="md:w-2/3 text-center md:text-left">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Protect Yourself from{' '}
-                <span className="gradient-text">AI Voice Deception</span>
+                Protect Your Family from{' '}
+                <span className="gradient-text">AI Deception</span>
               </h1>
               <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-                Advanced AI detection technology that identifies deepfake audio with 90%+ accuracy. 
-                Safeguard yourself from voice cloning scams and fraudulent calls.
+                Advanced AI detection that runs in the background, automatically alerting you to{' '}
+                <span className="gradient-text">deepfake scams</span>,{' '}
+                <span className="gradient-text">AI-generated news</span>, and{' '}
+                <span className="gradient-text">voice cloning</span> attempts. Specially designed to protect older adults and 
+                vulnerable family members from digital deception.
               </p>
               <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
                 <button className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center">
                   <Search className="w-5 h-5 mr-2" />
-                  Try Detection Now
+                  Try Free Demo
                 </button>
                 <button className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Learn More
+                  <Shield className="w-5 h-5 mr-2" />
+                  How It Protects
                 </button>
               </div>
+              <p className="text-sm text-gray-400 mt-4">
+                <CheckCircle className="w-4 h-4 inline mr-1 text-green-500" />
+                Products complete & launching soon - Try our detection model free while we prepare for release
+              </p>
             </div>
           </div>
         </div>
@@ -121,34 +165,47 @@ export default function Home() {
       {/* Audio Tester Section */}
       <section className="py-20 px-4 bg-gray-dark/50">
         <div className="container mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">
+              Test Our AI Detection Model
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Try our detection technology for free. Upload any audio file and we'll analyze it for AI generation signs. 
+              This is the same technology that will power our background monitoring products.
+            </p>
+          </div>
           <AudioTester />
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 px-4">
+      {/* Protection Types Section */}
+      <section id="protection" className="py-16 px-4">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Complete <span className="gradient-text">Protection Suite</span>
+            Comprehensive <span className="gradient-text">Digital Protection</span>
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Shield className="h-8 w-8" />}
-              title="Desktop Monitor"
-              description="Background monitoring for system audio. Real-time detection with system tray alerts."
-              features={["Real-time monitoring", "System tray integration", "Audio capture", "Alert notifications"]}
+          <div className="grid md:grid-cols-2 gap-8">
+            <ProtectionCard
+              icon={<Phone className="h-8 w-8" />}
+              title="Phone Call Protection"
+              description="Real-time monitoring of incoming calls to detect voice cloning and deepfake attempts targeting your family."
+              examples={[
+                "Fake calls from 'grandchildren' asking for money",
+                "Cloned voices of family members in distress",
+                "AI-generated voices impersonating trusted contacts",
+                "Emergency scam calls using familiar voices"
+              ]}
             />
-            <FeatureCard
-              icon={<Zap className="h-8 w-8" />}
-              title="Chrome Extension"
-              description="Web audio deepfake detection. Protect yourself while browsing and in video calls."
-              features={["Web audio capture", "Real-time alerts", "Browser integration", "Video call protection"]}
-            />
-            <FeatureCard
-              icon={<Users className="h-8 w-8" />}
-              title="Mobile App"
-              description="Portable audio verification tool. Verify authenticity anywhere, anytime."
-              features={["File upload", "Real-time recording", "Portable verification", "Cross-platform"]}
+            <ProtectionCard
+              icon={<Newspaper className="h-8 w-8" />}
+              title="News & Media Monitoring"
+              description="Background scanning of news feeds, social media, and videos to flag AI-generated content before it misleads."
+              examples={[
+                "Deepfake political speeches and statements",
+                "AI-generated news anchors spreading misinformation",
+                "Fake audio clips on social media platforms",
+                "Manipulated celebrity endorsements and testimonials"
+              ]}
             />
           </div>
         </div>
@@ -158,37 +215,44 @@ export default function Home() {
       <section id="how-it-works" className="py-16 px-4 bg-gray-dark">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Powered by <span className="gradient-text">Advanced AI</span>
+            Always-On <span className="gradient-text">Protection</span>
           </h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-bold mb-6 text-gold">How Detection Works</h3>
+              <h3 className="text-2xl font-bold mb-6 text-gold">Background Monitoring</h3>
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
                   <div>
-                    <h4 className="font-semibold">Audio Analysis</h4>
-                    <p className="text-gray-300">Convert audio to mel-spectrograms for deep analysis</p>
+                    <h4 className="font-semibold">Continuous Scanning</h4>
+                    <p className="text-gray-300">Monitors phone calls, news feeds, and social media in real-time</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
                   <div>
-                    <h4 className="font-semibold">AI Detection</h4>
-                    <p className="text-gray-300">Custom CNN model trained on thousands of voice samples</p>
+                    <h4 className="font-semibold">AI Detection Analysis</h4>
+                    <p className="text-gray-300">Advanced neural networks identify deepfake patterns and anomalies</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
                   <div>
-                    <h4 className="font-semibold">Result & Confidence</h4>
-                    <p className="text-gray-300">Get instant results with confidence scoring</p>
+                    <h4 className="font-semibold">Instant Alerts</h4>
+                    <p className="text-gray-300">Immediate notifications when suspicious content is detected</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
+                  <div>
+                    <h4 className="font-semibold">Family Protection</h4>
+                    <p className="text-gray-300">Special modes for protecting elderly family members from sophisticated scams</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="bg-black border border-gold rounded-lg p-6">
-              <h4 className="text-gold font-bold mb-4">Technical Specifications</h4>
+              <h4 className="text-gold font-bold mb-4">Detection Capabilities</h4>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span>Detection Accuracy:</span>
@@ -204,11 +268,15 @@ export default function Home() {
                 </div>
                 <div className="flex justify-between">
                   <span>Supported Formats:</span>
-                  <span className="text-gold">MP3, WAV, M4A</span>
+                  <span className="text-gold">MP3, WAV, M4A, Phone Calls</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Monitoring:</span>
+                  <span className="text-gold">24/7 Background Protection</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Platforms:</span>
-                  <span className="text-gold">Windows, Mac, Linux, Chrome, iOS, Android</span>
+                  <span className="text-gold">Windows, Mac, Chrome, iOS, Android</span>
                 </div>
               </div>
             </div>
@@ -216,31 +284,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Download Section */}
-      <section id="download" className="py-16 px-4">
+      {/* Coming Soon Section */}
+      <section id="coming-soon" className="py-16 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">
-            Choose Your <span className="gradient-text">Protection</span>
+          <h2 className="text-4xl font-bold mb-6">
+            Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
+          <p className="text-gray-300 max-w-2xl mx-auto mb-12">
+            Our products are complete and ready for launch. We're finalizing security audits and preparing distribution. 
+            Sign up to be notified when they become available.
+          </p>
           <div className="grid md:grid-cols-3 gap-8">
-            <DownloadCard
-              title="Desktop App"
-              description="Background monitoring for your computer"
-              price="$29.99"
-              features={["Real-time monitoring", "System tray alerts", "Audio capture", "Windows/Mac/Linux"]}
+            <ComingSoonCard
+              title="Desktop Guardian"
+              description="Complete background monitoring for your computer and phone calls against deepfake scams"
+              price="$5/mo"
+              features={[
+                "24/7 call monitoring & alerts",
+                "News feed scanning",
+                "Browser protection",
+                "Family account management",
+                "Emergency contact alerts"
+              ]}
             />
-            <DownloadCard
-              title="Chrome Extension"
-              description="Web protection for your browser"
+            <ComingSoonCard
+              title="Family Shield (Chrome)"
+              description="Browser extension for web and social media protection against AI-generated news"
               price="Free"
-              features={["Web audio detection", "Video call protection", "Browser integration", "Real-time alerts"]}
+              features={[
+                "Social media scanning",
+                "Video call protection", 
+                "News article verification",
+                "One-click reporting",
+                "Elderly-friendly alerts"
+              ]}
               featured
             />
-            <DownloadCard
-              title="Mobile App"
-              description="Portable verification tool"
-              price="$4.99"
-              features={["File upload", "Real-time recording", "Portable verification", "iOS & Android"]}
+            <ComingSoonCard
+              title="Mobile Protector"
+              description="On-the-go protection for calls and messages against voice cloning"
+              price="$2/mo"
+              features={[
+                "Call screening & analysis",
+                "Text message verification",
+                "WhatsApp/SMS scanning",
+                "GPS-based scam alerts",
+                "Emergency contact integration"
+              ]}
             />
           </div>
         </div>
@@ -259,8 +349,11 @@ export default function Home() {
             />
             <span className="text-lg font-bold gradient-text">Lion Project</span>
           </div>
-          <p className="text-gray-300">
-            Protecting authenticity in the age of AI. Built with privacy and security in mind.
+          <p className="text-gray-300 mb-4">
+            Protecting families from AI deception. Specially designed for older adults and vulnerable populations.
+          </p>
+          <p className="text-sm text-gray-500">
+            Built with privacy and security in mind. Your data never leaves your device.
           </p>
         </div>
       </footer>
