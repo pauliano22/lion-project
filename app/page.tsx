@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Zap, Users, Search, BookOpen, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Globe } from 'lucide-react';
+import { Shield, Zap, Users, Search, BookOpen, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Globe, Code } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 // Add these missing component definitions
@@ -89,11 +91,22 @@ function ComingSoonCard({ title, description, price, features, featured = false 
   );
 }
 
+// Smooth scroll function
+const smoothScrollTo = (elementId: string) => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+};
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Navigation */}
-      <header className="border-b border-gold/20 px-4 py-4">
+    <div className="min-h-screen bg-black text-white scroll-smooth">
+      {/* Sticky Navigation */}
+      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gold/20 px-1 py-1">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Image 
@@ -106,11 +119,35 @@ export default function Home() {
             <span className="text-xl font-bold text-gold">Lion Project</span>
           </div>
           <nav className="hidden md:flex space-x-8">
-            <Link href="#protection" className="text-gray-300 hover:text-gold transition-colors">Protection</Link>
-            <Link href="#how-it-works" className="text-gray-300 hover:text-gold transition-colors">How it Works</Link>
-            <Link href="#coming-soon" className="text-gray-300 hover:text-gold transition-colors">Products</Link>
+            <button 
+              onClick={() => smoothScrollTo('protection')}
+              className="text-gray-300 hover:text-gold transition-colors"
+            >
+              Protection
+            </button>
+            <button 
+              onClick={() => smoothScrollTo('how-it-works')}
+              className="text-gray-300 hover:text-gold transition-colors"
+            >
+              How it Works
+            </button>
+            <button 
+              onClick={() => smoothScrollTo('coming-soon')}
+              className="text-gray-300 hover:text-gold transition-colors"
+            >
+              Products
+            </button>
+            <button 
+              onClick={() => smoothScrollTo('developers')}
+              className="text-gray-300 hover:text-gold transition-colors"
+            >
+              Developers
+            </button>
           </nav>
-          <button className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors">
+          <button 
+            onClick={() => smoothScrollTo('demo')}
+            className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors"
+          >
             Try Demo
           </button>
         </div>
@@ -144,11 +181,17 @@ export default function Home() {
                 vulnerable family members from digital deception.
               </p>
               <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
-                <button className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center">
+                <button 
+                  onClick={() => smoothScrollTo('demo')}
+                  className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center"
+                >
                   <Search className="w-5 h-5 mr-2" />
                   Try Free Demo
                 </button>
-                <button className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center">
+                <button 
+                  onClick={() => smoothScrollTo('protection')}
+                  className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center"
+                >
                   <Shield className="w-5 h-5 mr-2" />
                   How It Protects
                 </button>
@@ -163,7 +206,7 @@ export default function Home() {
       </section>
 
       {/* Audio Tester Section */}
-      <section className="py-20 px-4 bg-gray-dark/50">
+      <section id="demo" className="py-20 px-4 bg-gray-dark/50">
         <div className="container mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">
@@ -332,6 +375,77 @@ export default function Home() {
                 "Emergency contact integration"
               ]}
             />
+          </div>
+        </div>
+      </section>
+
+      {/* For Developers Section */}
+      <section id="developers" className="py-16 px-4 bg-gray-dark/50">
+        <div className="container mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center mb-6">
+              <Code className="w-12 h-12 text-gold mr-4" />
+              <h2 className="text-4xl font-bold">
+                For <span className="gradient-text">Developers</span>
+              </h2>
+            </div>
+            
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Integrate our powerful deepfake detection capabilities directly into your applications with our developer-friendly API.
+            </p>
+
+            <div className="bg-black border border-gold/20 rounded-lg p-8">
+              <h3 className="text-2xl font-bold text-gold mb-4">API Documentation Coming Soon</h3>
+              <p className="text-gray-300 mb-6">
+                We're preparing comprehensive documentation for developers who want to integrate our AI detection technology 
+                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div>
+                  <h4 className="font-semibold text-gold mb-3">What's Included:</h4>
+                  <ul className="space-y-2">
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      RESTful API with JSON responses
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      Real-time and batch processing endpoints
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      Multiple audio format support
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      Confidence scoring and detailed analysis
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gold mb-3">Developer Resources:</h4>
+                  <ul className="space-y-2">
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      Code examples in Python, JavaScript, cURL
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      SDK libraries for popular frameworks
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      Interactive API playground
+                    </li>
+                    <li className="text-sm text-gray-300 flex items-center">
+                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                      24/7 developer support
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
