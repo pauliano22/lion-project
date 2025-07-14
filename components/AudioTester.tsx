@@ -74,39 +74,22 @@ export default function AudioTester() {
       const formData = new FormData();
       formData.append('audio', file);
 
-      // This would call your Gradio API or Next.js API route
-      // For now, we'll simulate the API call
       const response = await fetch('/api/detect-deepfake', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Detection failed. Please try again.');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Detection failed. Please try again.');
       }
 
       const data = await response.json();
       setResult(data);
-    } catch {
-      // Simulate a result for demo purposes
-      // Remove this in production
-      setTimeout(() => {
-        const mockResult: DetectionResult = {
-          is_fake: Math.random() > 0.5,
-          confidence: Math.floor(Math.random() * 30) + 70,
-          processing_time: Math.random() * 2 + 0.5,
-          model_version: 'v1.0.0'
-        };
-        setResult(mockResult);
-        setLoading(false);
-      }, 2000);
-      return;
-      
-      // Uncomment this for production:
-      // setError(err instanceof Error ? err.message : 'An error occurred');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during analysis');
     } finally {
-      // Remove this line when using real API
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
