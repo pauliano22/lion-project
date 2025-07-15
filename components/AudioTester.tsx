@@ -1,9 +1,9 @@
-// components/AudioTester.tsx - CDN-based ONNX (no npm package)
+// components/AudioTester.tsx - Clean production version
 
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio } from 'lucide-react';
+import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink } from 'lucide-react';
 import { AudioFeatureExtractor } from '@/lib/audio-processing';
 
 interface DetectionResult {
@@ -53,14 +53,13 @@ export default function AudioTester() {
 
   const loadONNXFromCDN = async (): Promise<any> => {
     return new Promise((resolve, reject) => {
-      // Check if already loaded
       if ((window as any).ort) {
         resolve((window as any).ort);
         return;
       }
 
       console.log('🔄 Loading ONNX Runtime from CDN...');
-      setModelStatus('Loading ONNX Runtime from CDN...');
+      setModelStatus('Loading ONNX Runtime...');
 
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js';
@@ -68,20 +67,19 @@ export default function AudioTester() {
       script.onload = () => {
         const ort = (window as any).ort;
         if (ort) {
-          // Configure ONNX
           ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
           ort.env.wasm.numThreads = 1;
           ort.env.wasm.simd = true;
           
-          console.log('✅ ONNX Runtime loaded from CDN');
+          console.log('✅ ONNX Runtime loaded');
           resolve(ort);
         } else {
-          reject(new Error('ONNX Runtime not found on window object'));
+          reject(new Error('ONNX Runtime not found'));
         }
       };
       
       script.onerror = () => {
-        reject(new Error('Failed to load ONNX Runtime from CDN'));
+        reject(new Error('Failed to load ONNX Runtime'));
       };
       
       document.head.appendChild(script);
@@ -91,14 +89,9 @@ export default function AudioTester() {
   const initializeONNX = async () => {
     if (!ort) {
       try {
-        console.log('🔄 Initializing ONNX Runtime...');
         setModelStatus('Initializing ONNX...');
-        
         ort = await loadONNXFromCDN();
-        
-        console.log('✅ ONNX Runtime initialized');
         return ort;
-        
       } catch (error) {
         console.error('❌ ONNX initialization failed:', error);
         setModelStatus('ONNX initialization failed');
@@ -112,13 +105,9 @@ export default function AudioTester() {
     if (onnxSession) return onnxSession;
     
     try {
-      console.log('🔄 Loading model from Hugging Face...');
-      setModelStatus('Loading model from Hugging Face...');
+      setModelStatus('Loading AI model...');
       
       const ort = await initializeONNX();
-      
-      console.log('📥 Fetching model from:', MODEL_URL);
-      setModelStatus('Downloading model...');
       
       const response = await fetch(MODEL_URL);
       if (!response.ok) {
@@ -126,18 +115,12 @@ export default function AudioTester() {
       }
       
       const modelBytes = await response.arrayBuffer();
-      console.log(`📊 Model downloaded: ${Math.round(modelBytes.byteLength / 1024 / 1024)}MB`);
-      setModelStatus('Creating ONNX session...');
+      setModelStatus('Initializing model...');
       
-      // Create session
       onnxSession = await ort.InferenceSession.create(modelBytes, {
         executionProviders: ['wasm'],
         graphOptimizationLevel: 'basic',
       });
-      
-      console.log('✅ ONNX model loaded successfully');
-      console.log('Inputs:', onnxSession.inputNames);
-      console.log('Outputs:', onnxSession.outputNames);
       
       setModelStatus('Model ready!');
       return onnxSession;
@@ -151,30 +134,23 @@ export default function AudioTester() {
 
   const runONNXInference = async (features: Float32Array) => {
     try {
-      setModelStatus('Running inference...');
+      setModelStatus('Analyzing audio...');
       
       const ort = await initializeONNX();
       const session = await loadONNXModel();
       
-      console.log('🧠 Creating input tensor...');
       const inputTensor = new ort.Tensor('float32', features, [1, 1, 128, 128]);
       
-      console.log('🧠 Running inference...');
       const startInference = Date.now();
       const outputs = await session.run({ audio_features: inputTensor });
       const inferenceTime = Date.now() - startInference;
       
-      console.log(`✅ Inference completed in ${inferenceTime}ms`);
       setModelStatus('Analysis complete!');
       
-      // Process results
       const predictions = outputs.predictions.data as Float32Array;
       const realScore = predictions[0];
       const fakeScore = predictions[1];
       
-      console.log('Raw predictions:', [realScore, fakeScore]);
-      
-      // Apply softmax
       const expReal = Math.exp(realScore);
       const expFake = Math.exp(fakeScore);
       const sum = expReal + expFake;
@@ -191,7 +167,7 @@ export default function AudioTester() {
       
     } catch (error) {
       console.error('❌ ONNX inference failed:', error);
-      setModelStatus('Inference failed');
+      setModelStatus('Analysis failed');
       throw error;
     }
   };
@@ -207,23 +183,16 @@ export default function AudioTester() {
     const startTime = Date.now();
 
     try {
-      console.log('🎵 Starting analysis with CDN-loaded ONNX...');
-      
-      // Step 1: Extract features
-      console.log('📊 Step 1: Extracting audio features...');
       setModelStatus('Processing audio...');
+      
       const features = await featureExtractor.extractMelSpectrogram(file);
       
       if (!features) {
         throw new Error('Failed to extract audio features');
       }
-      console.log('✅ Features extracted:', features.length);
 
-      // Step 2: Run ONNX inference
-      console.log('🧠 Step 2: Running AI model inference...');
       const inferenceResult = await runONNXInference(features);
       
-      // Step 3: Process results
       const prediction = inferenceResult.fakeProb > 0.5 ? 'FAKE' : 'REAL';
       const confidence = Math.max(inferenceResult.realProb, inferenceResult.fakeProb);
       
@@ -238,13 +207,12 @@ export default function AudioTester() {
           file_name: file.name,
           file_size: file.size,
           processing_time: startTime,
-          model_version: '1.0-cdn-external'
+          model_version: '1.0'
         },
         is_suspicious: inferenceResult.fakeProb > 0.7,
         timestamp: new Date().toISOString()
       };
 
-      console.log(`✅ Analysis complete: ${prediction} (${(confidence * 100).toFixed(1)}%)`);
       setResult(result);
       setModelStatus(`Result: ${prediction} (${(confidence * 100).toFixed(1)}%)`);
 
@@ -312,9 +280,22 @@ export default function AudioTester() {
           <p className="text-gray-300 mb-2">
             Click to upload an audio file
           </p>
-          <p className="text-sm text-gray-500">
-            Supports WAV, MP3, M4A, OGG (max 10MB)
+          <p className="text-sm text-gray-500 mb-3">
+            <strong className="text-gold">WAV files work best</strong> • Also supports MP3, M4A, OGG (max 10MB)
           </p>
+          <div className="inline-flex items-center space-x-2 text-xs text-blue-400 hover:text-blue-300">
+            <span>Need to convert your audio file?</span>
+            <a 
+              href="https://convertio.co/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1 underline hover:no-underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span>Use Convertio</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -478,10 +459,6 @@ export default function AudioTester() {
                   <span className="text-white ml-2">{new Date(result.timestamp).toLocaleTimeString()}</span>
                 </div>
               </div>
-              <div className="mt-2 pt-2 border-t border-gray-600">
-                <span className="text-gray-400">Model Source:</span>
-                <span className="text-white ml-2">Hugging Face (CDN-loaded)</span>
-              </div>
             </div>
           </details>
         </div>
@@ -490,19 +467,22 @@ export default function AudioTester() {
       {/* Info Section */}
       <div className="mt-8 p-4 bg-gray-900/50 border border-gold/20 rounded-lg">
         <h4 className="text-gold font-semibold mb-2">How It Works</h4>
-        <p className="text-gray-300 text-sm">
-          ONNX.js is loaded from CDN, your trained model from Hugging Face, and all processing happens locally in your browser. 
-          No data leaves your device - maximum privacy and security.
+        <p className="text-gray-300 text-sm mb-3">
+          Our AI model analyzes audio characteristics to detect synthetic speech. All processing happens 
+          locally in your browser - no data leaves your device for maximum privacy and security.
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
             🔒 100% Private
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🌐 CDN-loaded
+            🧠 AI-Powered
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🤗 Hugging Face
+            ⚡ Real-time
+          </span>
+          <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
+            📱 Browser-based
           </span>
         </div>
       </div>
