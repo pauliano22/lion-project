@@ -1,208 +1,203 @@
+// components/AudioTester.tsx - Updated to process audio on client side
+
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, AlertTriangle, CheckCircle, Loader2, X, Search, Shield } from 'lucide-react';
+import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio } from 'lucide-react';
+import { AudioFeatureExtractor } from '@/lib/audio-processing';
 
 interface DetectionResult {
-  is_fake: boolean;
+  prediction: 'FAKE' | 'REAL';
   confidence: number;
-  processing_time: number;
-  model_version: string;
+  probabilities: {
+    real: number;
+    fake: number;
+  };
+  is_suspicious: boolean;
+  timestamp: string;
+  details: {
+    file_name: string;
+    file_size: number;
+    processing_time: number;
+    model_version: string;
+  };
 }
 
 export default function AudioTester() {
   const [file, setFile] = useState<File | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<DetectionResult | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dragOver, setDragOver] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const featureExtractor = new AudioFeatureExtractor();
 
-  const handleFileSelect = (selectedFile: File) => {
-    // Validate file type
-    const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/m4a', 'audio/ogg'];
-    if (!allowedTypes.includes(selectedFile.type)) {
-      setError('Please select a valid audio file (MP3, WAV, M4A, OGG)');
-      return;
-    }
-
-    // Validate file size (max 10MB)
-    if (selectedFile.size > 10 * 1024 * 1024) {
-      setError('File size must be less than 10MB');
-      return;
-    }
-
-    setFile(selectedFile);
-    setError(null);
-    setResult(null);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setResult(null);
+      setError(null);
     }
   };
 
   const analyzeAudio = async () => {
     if (!file) return;
 
-    setLoading(true);
+    setIsAnalyzing(true);
     setError(null);
+    setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append('audio', file);
+      console.log('🎵 Starting client-side audio processing...');
+      
+      // Process audio on client side (browser)
+      const features = await featureExtractor.extractMelSpectrogram(file);
+      
+      if (!features) {
+        throw new Error('Failed to extract audio features');
+      }
 
+      console.log('✅ Features extracted on client side:', features.length);
+
+      // Send features to server (not the raw audio file)
       const response = await fetch('/api/detect-deepfake', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          features: Array.from(features), // Convert Float32Array to regular array
+          file_info: {
+            name: file.name,
+            size: file.size,
+            type: file.type
+          }
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Detection failed. Please try again.');
+        throw new Error(errorData.error || 'Analysis failed');
       }
 
-      const data = await response.json();
-      setResult(data);
+      const result: DetectionResult = await response.json();
+      setResult(result);
+
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred during analysis');
+      console.error('Analysis error:', err);
+      setError(err instanceof Error ? err.message : 'Analysis failed');
     } finally {
-      setLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
-  const resetTest = () => {
-    setFile(null);
-    setResult(null);
-    setError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const togglePlayback = () => {
+    if (!audioRef.current || !file) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
     }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   return (
-    <div className="bg-black border border-gold rounded-lg p-8 max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto bg-gray-dark border border-gold/20 rounded-lg p-8">
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center space-x-3 mb-4">
-          <h3 className="text-3xl font-bold text-gold">
-            Audio Deepfake Detector
-          </h3>
-        </div>
+        <h3 className="text-2xl font-bold text-gold mb-2">
+          AI Audio Detection Demo
+        </h3>
         <p className="text-gray-300">
-          Upload an audio file to check if it is AI-generated or authentic human voice
+          Upload an audio file to test our deepfake detection technology
         </p>
       </div>
 
-      {/* File Upload Area */}
-      <div className="mb-8">
-        <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
-            dragOver
-              ? 'border-gold bg-gold/5'
-              : file
-              ? 'border-green-500 bg-green-500/5'
-              : 'border-gold/30 hover:border-gold/50'
-          }`}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
+      {/* File Upload */}
+      <div className="mb-6">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="audio/*"
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+        
+        <div 
+          onClick={() => fileInputRef.current?.click()}
+          className="border-2 border-dashed border-gold/30 rounded-lg p-8 text-center cursor-pointer hover:border-gold/50 transition-colors"
         >
-          {file ? (
-            <div className="space-y-4">
-              <CheckCircle className="w-16 h-16 mx-auto text-green-500" />
-              <div>
-                <p className="text-lg font-semibold text-green-500">File Ready</p>
-                <p className="text-gray-300">{file.name}</p>
-                <p className="text-sm text-gray-400">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB
-                </p>
-              </div>
-              <button
-                onClick={resetTest}
-                className="text-red hover:text-red-dark transition-colors"
-              >
-                <X className="w-5 h-5 inline mr-1" />
-                Remove
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <Upload className="w-16 h-16 mx-auto text-gold" />
-              <div>
-                <p className="text-lg font-semibold text-gold mb-2">
-                  Drop your audio file here or click to browse
-                </p>
-                <p className="text-sm text-gray-400">
-                  Supports MP3, WAV, M4A, OGG files (max 10MB)
-                </p>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*"
-                onChange={handleFileInput}
-                className="hidden"
-                id="audio-file-input"
-              />
-              <label
-                htmlFor="audio-file-input"
-                className="inline-block bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors cursor-pointer"
-              >
-                Choose File
-              </label>
-            </div>
-          )}
+          <Upload className="w-12 h-12 text-gold mx-auto mb-4" />
+          <p className="text-gray-300 mb-2">
+            Click to upload an audio file
+          </p>
+          <p className="text-sm text-gray-500">
+            Supports WAV, MP3, M4A, OGG (max 10MB)
+          </p>
         </div>
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="mb-6 p-4 bg-red/10 border border-red rounded-lg">
-          <div className="flex items-center">
-            <AlertTriangle className="w-5 h-5 text-red mr-2" />
-            <span className="text-red">{error}</span>
+      {/* File Info */}
+      {file && (
+        <div className="mb-6 p-4 bg-black border border-gold/20 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <FileAudio className="w-6 h-6 text-gold" />
+              <div>
+                <p className="font-semibold text-gold">{file.name}</p>
+                <p className="text-sm text-gray-400">
+                  {formatFileSize(file.size)} • {file.type}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              onClick={togglePlayback}
+              className="flex items-center space-x-2 bg-gold text-black px-4 py-2 rounded-lg hover:bg-gold-dark transition-colors"
+            >
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              <span>{isPlaying ? 'Pause' : 'Play'}</span>
+            </button>
           </div>
+          
+          <audio
+            ref={audioRef}
+            src={file ? URL.createObjectURL(file) : ''}
+            onEnded={() => setIsPlaying(false)}
+            onPause={() => setIsPlaying(false)}
+            className="hidden"
+          />
         </div>
       )}
 
       {/* Analyze Button */}
-      {file && !result && (
-        <div className="text-center mb-8">
+      {file && (
+        <div className="mb-6 text-center">
           <button
             onClick={analyzeAudio}
-            disabled={loading}
-            className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto"
+            disabled={isAnalyzing}
+            className="bg-gold text-black px-8 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
           >
-            {loading ? (
+            {isAnalyzing ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Analyzing Audio...
+                <Clock className="w-5 h-5 mr-2 animate-spin" />
+                Analyzing...
               </>
             ) : (
               <>
-                <Search className="w-5 h-5 mr-2" />
+                <AlertTriangle className="w-5 h-5 mr-2" />
                 Analyze Audio
               </>
             )}
@@ -210,92 +205,133 @@ export default function AudioTester() {
         </div>
       )}
 
-      {/* Loading State */}
-      {loading && (
-        <div className="text-center mb-8">
-          <div className="inline-block animate-pulse">
-            <div className="w-12 h-12 bg-gold rounded-full mx-auto mb-4"></div>
-            <p className="text-gold font-semibold">Processing your audio...</p>
-            <p className="text-sm text-gray-400">This usually takes 1-3 seconds</p>
+      {/* Error Display */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+          <div className="flex items-center space-x-2">
+            <AlertTriangle className="w-5 h-5 text-red-400" />
+            <p className="text-red-400 font-semibold">Analysis Failed</p>
           </div>
+          <p className="text-red-300 mt-1">{error}</p>
         </div>
       )}
 
-      {/* Results */}
+      {/* Results Display */}
       {result && (
-        <div className="space-y-6">
-          <div
-            className={`p-6 rounded-lg border-2 ${
-              result.is_fake
-                ? 'bg-red/10 border-red'
-                : 'bg-green-500/10 border-green-500'
-            }`}
-          >
+        <div className="space-y-4">
+          {/* Main Result */}
+          <div className={`p-6 rounded-lg border-2 ${
+            result.prediction === 'FAKE' 
+              ? 'bg-red-900/20 border-red-500' 
+              : 'bg-green-900/20 border-green-500'
+          }`}>
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-2xl font-bold flex items-center">
-                {result.is_fake ? (
-                  <>
-                    <AlertTriangle className="w-8 h-8 mr-3 text-red" />
-                    <span className="text-red">DEEPFAKE DETECTED</span>
-                  </>
+              <div className="flex items-center space-x-3">
+                {result.prediction === 'FAKE' ? (
+                  <AlertTriangle className="w-8 h-8 text-red-400" />
                 ) : (
-                  <>
-                    <CheckCircle className="w-8 h-8 mr-3 text-green-500" />
-                    <span className="text-green-500">AUTHENTIC VOICE</span>
-                  </>
+                  <CheckCircle className="w-8 h-8 text-green-400" />
                 )}
-              </h4>
-              <div className="text-right">
-                <div className="text-3xl font-bold">
-                  {result.confidence}%
+                <div>
+                  <h4 className={`text-2xl font-bold ${
+                    result.prediction === 'FAKE' ? 'text-red-400' : 'text-green-400'
+                  }`}>
+                    {result.prediction === 'FAKE' ? 'AI Generated' : 'Likely Real'}
+                  </h4>
+                  <p className="text-gray-300">
+                    {(result.confidence * 100).toFixed(1)}% confidence
+                  </p>
                 </div>
-                <div className="text-sm text-gray-400">Confidence</div>
               </div>
+              
+              {result.is_suspicious && (
+                <div className="bg-yellow-900/20 border border-yellow-500/50 rounded-lg px-3 py-1">
+                  <p className="text-yellow-400 text-sm font-semibold">⚠️ Suspicious</p>
+                </div>
+              )}
             </div>
-            
-            <p className="text-lg mb-4">
-              {result.is_fake
-                ? 'This audio appears to be generated by AI technology.'
-                : 'This audio appears to be authentic human speech.'}
-            </p>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-400">Processing Time:</span>
-                <span className="ml-2 font-semibold">
-                  {result.processing_time.toFixed(2)}s
-                </span>
+            {/* Probability Breakdown */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">Real Audio:</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full"
+                      style={{ width: `${result.probabilities.real * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-green-400 font-mono text-sm">
+                    {(result.probabilities.real * 100).toFixed(1)}%
+                  </span>
+                </div>
               </div>
-              <div>
-                <span className="text-gray-400">Model Version:</span>
-                <span className="ml-2 font-semibold">{result.model_version}</span>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">AI Generated:</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-red-500 h-2 rounded-full"
+                      style={{ width: `${result.probabilities.fake * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-red-400 font-mono text-sm">
+                    {(result.probabilities.fake * 100).toFixed(1)}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="text-center">
-            <button
-              onClick={resetTest}
-              className="bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
-            >
-              Test Another File
-            </button>
-          </div>
+          {/* Technical Details */}
+          <details className="bg-black border border-gold/20 rounded-lg">
+            <summary className="p-4 cursor-pointer text-gold hover:text-gold-dark transition-colors">
+              📊 Technical Details
+            </summary>
+            <div className="px-4 pb-4 space-y-2 text-sm">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-gray-400">Model Version:</span>
+                  <span className="text-white ml-2">{result.details.model_version}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">Processing Time:</span>
+                  <span className="text-white ml-2">{Date.now() - result.details.processing_time}ms</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">File Size:</span>
+                  <span className="text-white ml-2">{formatFileSize(result.details.file_size)}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">Analyzed:</span>
+                  <span className="text-white ml-2">{new Date(result.timestamp).toLocaleTimeString()}</span>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       )}
 
       {/* Info Section */}
-      <div className="mt-8 p-4 bg-gray-dark rounded-lg">
-        <h5 className="font-semibold text-gold mb-2 flex items-center">
-          <Shield className="w-5 h-5 mr-2" />
-          Privacy & Security
-        </h5>
-        <ul className="text-sm text-gray-300 space-y-1">
-          <li>• Files are processed locally and never stored on our servers</li>
-          <li>• Analysis typically completes in under 3 seconds</li>
-          <li>• Our AI model achieves 90%+ accuracy on diverse audio samples</li>
-          <li>• Supports most common audio formats and multiple languages</li>
-        </ul>
+      <div className="mt-8 p-4 bg-gray-900/50 border border-gold/20 rounded-lg">
+        <h4 className="text-gold font-semibold mb-2">How It Works</h4>
+        <p className="text-gray-300 text-sm">
+          Audio processing happens entirely in your browser for privacy. Features are extracted 
+          client-side and sent to our ONNX model for analysis.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
+            Client-side Processing
+          </span>
+          <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
+            Privacy-First
+          </span>
+          <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
+            Real-time Analysis
+          </span>
+        </div>
       </div>
     </div>
   );
