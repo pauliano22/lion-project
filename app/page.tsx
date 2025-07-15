@@ -1,12 +1,12 @@
 'use client';
 
-import Link from 'next/link';
+// import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Zap, Users, Search, BookOpen, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Globe, Code } from 'lucide-react';
+import { Shield, /*Zap, Users, */ Search, /*BookOpen,*/ Phone, Newspaper, AlertTriangle, CheckCircle, Clock, /*Globe,*/ Code } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 // Add these missing component definitions
-function FeatureCard({ icon, title, description, features }: {
+/* function FeatureCard({ icon, title, description, features }: {
   icon: React.ReactNode;
   title: string;
   description: string;
@@ -27,7 +27,7 @@ function FeatureCard({ icon, title, description, features }: {
       </ul>
     </div>
   );
-}
+} */
 
 function ProtectionCard({ icon, title, description, examples }: {
   icon: React.ReactNode;
