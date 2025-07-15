@@ -1,4 +1,4 @@
-// components/AudioTester.tsx - Fixed version with dynamic imports
+// components/AudioTester.tsx - CDN-based ONNX (no npm package)
 
 'use client';
 
@@ -29,10 +29,18 @@ export default function AudioTester() {
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [modelStatus, setModelStatus] = useState<string>('Not loaded');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const featureExtractor = new AudioFeatureExtractor();
+
+  // ONNX session cache
+  let onnxSession: any = null;
+  let ort: any = null;
+
+  // Your model URL on Hugging Face
+  const MODEL_URL = 'https://huggingface.co/pauliano22/deepfake-audio-detector/resolve/main/deepfake_detector.onnx';
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -43,52 +51,207 @@ export default function AudioTester() {
     }
   };
 
+  const loadONNXFromCDN = async (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      // Check if already loaded
+      if ((window as any).ort) {
+        resolve((window as any).ort);
+        return;
+      }
+
+      console.log('🔄 Loading ONNX Runtime from CDN...');
+      setModelStatus('Loading ONNX Runtime from CDN...');
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js';
+      
+      script.onload = () => {
+        const ort = (window as any).ort;
+        if (ort) {
+          // Configure ONNX
+          ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
+          ort.env.wasm.numThreads = 1;
+          ort.env.wasm.simd = true;
+          
+          console.log('✅ ONNX Runtime loaded from CDN');
+          resolve(ort);
+        } else {
+          reject(new Error('ONNX Runtime not found on window object'));
+        }
+      };
+      
+      script.onerror = () => {
+        reject(new Error('Failed to load ONNX Runtime from CDN'));
+      };
+      
+      document.head.appendChild(script);
+    });
+  };
+
+  const initializeONNX = async () => {
+    if (!ort) {
+      try {
+        console.log('🔄 Initializing ONNX Runtime...');
+        setModelStatus('Initializing ONNX...');
+        
+        ort = await loadONNXFromCDN();
+        
+        console.log('✅ ONNX Runtime initialized');
+        return ort;
+        
+      } catch (error) {
+        console.error('❌ ONNX initialization failed:', error);
+        setModelStatus('ONNX initialization failed');
+        throw error;
+      }
+    }
+    return ort;
+  };
+
+  const loadONNXModel = async () => {
+    if (onnxSession) return onnxSession;
+    
+    try {
+      console.log('🔄 Loading model from Hugging Face...');
+      setModelStatus('Loading model from Hugging Face...');
+      
+      const ort = await initializeONNX();
+      
+      console.log('📥 Fetching model from:', MODEL_URL);
+      setModelStatus('Downloading model...');
+      
+      const response = await fetch(MODEL_URL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch model: ${response.status} ${response.statusText}`);
+      }
+      
+      const modelBytes = await response.arrayBuffer();
+      console.log(`📊 Model downloaded: ${Math.round(modelBytes.byteLength / 1024 / 1024)}MB`);
+      setModelStatus('Creating ONNX session...');
+      
+      // Create session
+      onnxSession = await ort.InferenceSession.create(modelBytes, {
+        executionProviders: ['wasm'],
+        graphOptimizationLevel: 'basic',
+      });
+      
+      console.log('✅ ONNX model loaded successfully');
+      console.log('Inputs:', onnxSession.inputNames);
+      console.log('Outputs:', onnxSession.outputNames);
+      
+      setModelStatus('Model ready!');
+      return onnxSession;
+      
+    } catch (error) {
+      console.error('❌ Model loading failed:', error);
+      setModelStatus('Model loading failed');
+      throw error;
+    }
+  };
+
+  const runONNXInference = async (features: Float32Array) => {
+    try {
+      setModelStatus('Running inference...');
+      
+      const ort = await initializeONNX();
+      const session = await loadONNXModel();
+      
+      console.log('🧠 Creating input tensor...');
+      const inputTensor = new ort.Tensor('float32', features, [1, 1, 128, 128]);
+      
+      console.log('🧠 Running inference...');
+      const startInference = Date.now();
+      const outputs = await session.run({ audio_features: inputTensor });
+      const inferenceTime = Date.now() - startInference;
+      
+      console.log(`✅ Inference completed in ${inferenceTime}ms`);
+      setModelStatus('Analysis complete!');
+      
+      // Process results
+      const predictions = outputs.predictions.data as Float32Array;
+      const realScore = predictions[0];
+      const fakeScore = predictions[1];
+      
+      console.log('Raw predictions:', [realScore, fakeScore]);
+      
+      // Apply softmax
+      const expReal = Math.exp(realScore);
+      const expFake = Math.exp(fakeScore);
+      const sum = expReal + expFake;
+      
+      const realProb = expReal / sum;
+      const fakeProb = expFake / sum;
+      
+      return {
+        realProb,
+        fakeProb,
+        inferenceTime,
+        rawScores: [realScore, fakeScore]
+      };
+      
+    } catch (error) {
+      console.error('❌ ONNX inference failed:', error);
+      setModelStatus('Inference failed');
+      throw error;
+    }
+  };
+
   const analyzeAudio = async () => {
     if (!file) return;
 
     setIsAnalyzing(true);
     setError(null);
     setResult(null);
+    setModelStatus('Starting analysis...');
+
+    const startTime = Date.now();
 
     try {
-      console.log('🎵 Starting client-side audio processing...');
+      console.log('🎵 Starting analysis with CDN-loaded ONNX...');
       
-      // Process audio on client side (browser)
+      // Step 1: Extract features
+      console.log('📊 Step 1: Extracting audio features...');
+      setModelStatus('Processing audio...');
       const features = await featureExtractor.extractMelSpectrogram(file);
       
       if (!features) {
         throw new Error('Failed to extract audio features');
       }
+      console.log('✅ Features extracted:', features.length);
 
-      console.log('✅ Features extracted on client side:', features.length);
-
-      // Send features to server (not the raw audio file)
-      const response = await fetch('/api/detect-deepfake', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Step 2: Run ONNX inference
+      console.log('🧠 Step 2: Running AI model inference...');
+      const inferenceResult = await runONNXInference(features);
+      
+      // Step 3: Process results
+      const prediction = inferenceResult.fakeProb > 0.5 ? 'FAKE' : 'REAL';
+      const confidence = Math.max(inferenceResult.realProb, inferenceResult.fakeProb);
+      
+      const result: DetectionResult = {
+        prediction,
+        confidence,
+        probabilities: {
+          real: inferenceResult.realProb,
+          fake: inferenceResult.fakeProb
         },
-        body: JSON.stringify({
-          features: Array.from(features), // Convert Float32Array to regular array
-          file_info: {
-            name: file.name,
-            size: file.size,
-            type: file.type
-          }
-        }),
-      });
+        details: {
+          file_name: file.name,
+          file_size: file.size,
+          processing_time: startTime,
+          model_version: '1.0-cdn-external'
+        },
+        is_suspicious: inferenceResult.fakeProb > 0.7,
+        timestamp: new Date().toISOString()
+      };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Analysis failed');
-      }
-
-      const result: DetectionResult = await response.json();
+      console.log(`✅ Analysis complete: ${prediction} (${(confidence * 100).toFixed(1)}%)`);
       setResult(result);
+      setModelStatus(`Result: ${prediction} (${(confidence * 100).toFixed(1)}%)`);
 
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err instanceof Error ? err.message : 'Analysis failed');
+      setModelStatus('Analysis failed');
     } finally {
       setIsAnalyzing(false);
     }
@@ -124,8 +287,11 @@ export default function AudioTester() {
           Upload an audio file to test our deepfake detection technology
         </p>
         <p className="text-sm text-gray-400 mt-2">
-          🔒 Audio processed locally, AI model runs securely on our servers
+          🔒 Fully private - all processing happens in your browser
         </p>
+        <div className="mt-3 p-2 bg-black/50 rounded text-xs text-gray-400">
+          Model Status: <span className="text-gold">{modelStatus}</span>
+        </div>
       </div>
 
       {/* File Upload */}
@@ -312,6 +478,10 @@ export default function AudioTester() {
                   <span className="text-white ml-2">{new Date(result.timestamp).toLocaleTimeString()}</span>
                 </div>
               </div>
+              <div className="mt-2 pt-2 border-t border-gray-600">
+                <span className="text-gray-400">Model Source:</span>
+                <span className="text-white ml-2">Hugging Face (CDN-loaded)</span>
+              </div>
             </div>
           </details>
         </div>
@@ -321,18 +491,18 @@ export default function AudioTester() {
       <div className="mt-8 p-4 bg-gray-900/50 border border-gold/20 rounded-lg">
         <h4 className="text-gold font-semibold mb-2">How It Works</h4>
         <p className="text-gray-300 text-sm">
-          Audio processing happens in your browser for privacy. Features are extracted 
-          client-side and sent to our secure servers where your trained AI model analyzes them.
+          ONNX.js is loaded from CDN, your trained model from Hugging Face, and all processing happens locally in your browser. 
+          No data leaves your device - maximum privacy and security.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🔒 Private Processing
+            🔒 100% Private
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🛡️ Secure Model
+            🌐 CDN-loaded
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            ⚡ Real-time Analysis
+            🤗 Hugging Face
           </span>
         </div>
       </div>

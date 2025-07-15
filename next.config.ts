@@ -4,65 +4,45 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
-    // Handle WebAssembly
+    // Handle WebAssembly files
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
-      layers: true,
     };
 
-    // Handle ONNX Runtime Web
+    // Exclude ONNX WebAssembly files from being parsed as JS
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: 'asset/resource',
+    });
+
+    // Ignore ONNX Runtime WebAssembly files during bundling
+    config.module.rules.push({
+      test: /onnxruntime-web.*\.wasm$/,
+      type: 'asset/resource',
+    });
+
+    // Don't try to parse .wasm files
+    config.module.noParse = [
+      ...(config.module.noParse || []),
+      /\.wasm$/,
+    ];
+
+    // Client-side: prevent bundling of server-only packages
     if (!isServer) {
-      // Client-side: externalize ONNX runtime to avoid bundling issues
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
         crypto: false,
       };
-      
-      // Don't bundle ONNX WASM files
-      config.module.rules.push({
-        test: /\.wasm$/,
-        type: 'asset/resource',
-      });
-      
-      // Ignore ONNX WASM imports that cause issues
-      config.module.rules.push({
-        test: /onnxruntime-web/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
-      });
-    }
-
-    // Server-side: externalize onnxruntime to prevent bundling
-    if (isServer) {
-      config.externals.push('onnxruntime-node', 'onnxruntime-web');
     }
 
     return config;
   },
-  // Handle static files
-  async headers() {
-    return [
-      {
-        source: '/_next/static/(.*)',
-        headers: [
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp',
-          },
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
-          },
-        ],
-      },
-    ];
+  // Don't try to optimize WASM files
+  images: {
+    unoptimized: true,
   },
 };
 
