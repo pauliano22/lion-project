@@ -1,14 +1,11 @@
-// app/api/detect-deepfake/route.ts - Simplified Edge Runtime version
+// app/api/detect-deepfake/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
 
-// CRITICAL: Tell Vercel to use Edge Runtime
 export const runtime = 'edge';
 
-// Your actual Vercel URL (replace with yours)
-const VERCEL_URL = 'https://lion-project.vercel.app';
+const VERCEL_URL = 'https://lion-project-8be7c9zc9-pauliano22s-projects.vercel.app';
 
-// Global session cache
 let ort: any = null;
 let session: any = null;
 
@@ -19,8 +16,7 @@ async function initializeONNX() {
       
       ort = await import('onnxruntime-web');
       
-      // Configure for Edge Runtime with CDN WASM files
-      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.16.3/dist/';
+      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
       ort.env.wasm.numThreads = 1;
       ort.env.wasm.simd = true;
       
@@ -39,7 +35,6 @@ async function loadModel() {
       console.log('🔄 Loading ONNX model on Edge Runtime...');
       const ort = await initializeONNX();
       
-      // Fetch model from your Vercel deployment
       const modelUrl = `${VERCEL_URL}/models/deepfake_detector.onnx`;
       console.log('📥 Fetching model from:', modelUrl);
       
@@ -51,15 +46,12 @@ async function loadModel() {
       const modelBytes = await response.arrayBuffer();
       console.log(`📊 Model loaded: ${Math.round(modelBytes.byteLength / 1024 / 1024)}MB`);
       
-      // Create session
       session = await ort.InferenceSession.create(modelBytes, {
         executionProviders: ['wasm'],
         graphOptimizationLevel: 'basic',
       });
       
       console.log('✅ ONNX model loaded successfully on Edge');
-      console.log('Inputs:', session.inputNames);
-      console.log('Outputs:', session.outputNames);
       
     } catch (error) {
       console.error('❌ Model loading failed on Edge:', error);
@@ -115,7 +107,6 @@ export async function POST(request: NextRequest) {
       
       console.log('Raw predictions:', [realScore, fakeScore]);
       
-      // Apply softmax
       const expReal = Math.exp(realScore);
       const expFake = Math.exp(fakeScore);
       const sum = expReal + expFake;
@@ -199,7 +190,7 @@ export async function GET() {
       runtime: 'edge',
       onnx_status: onnxStatus,
       model_url: `${VERCEL_URL}/models/deepfake_detector.onnx`,
-      wasm_source: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.16.3/dist/',
+      wasm_source: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/',
       processing_mode: 'client-side-features',
       timestamp: new Date().toISOString(),
       note: 'Running on Vercel Edge Runtime for ONNX.js compatibility'
