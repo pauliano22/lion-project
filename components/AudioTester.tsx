@@ -1,4 +1,4 @@
-// components/AudioTester.tsx - Updated to process audio on client side
+// components/AudioTester.tsx - Fixed version with dynamic imports
 
 'use client';
 
@@ -122,6 +122,9 @@ export default function AudioTester() {
         </h3>
         <p className="text-gray-300">
           Upload an audio file to test our deepfake detection technology
+        </p>
+        <p className="text-sm text-gray-400 mt-2">
+          🔒 Audio processed locally, AI model runs securely on our servers
         </p>
       </div>
 
@@ -318,18 +321,18 @@ export default function AudioTester() {
       <div className="mt-8 p-4 bg-gray-900/50 border border-gold/20 rounded-lg">
         <h4 className="text-gold font-semibold mb-2">How It Works</h4>
         <p className="text-gray-300 text-sm">
-          Audio processing happens entirely in your browser for privacy. Features are extracted 
-          client-side and sent to our ONNX model for analysis.
+          Audio processing happens in your browser for privacy. Features are extracted 
+          client-side and sent to our secure servers where your trained AI model analyzes them.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            Client-side Processing
+            🔒 Private Processing
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            Privacy-First
+            🛡️ Secure Model
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            Real-time Analysis
+            ⚡ Real-time Analysis
           </span>
         </div>
       </div>
