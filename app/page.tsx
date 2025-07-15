@@ -161,8 +161,8 @@ export default function Home() {
               <Image 
                 src="/images/2.png" 
                 alt="Lion Project - Protect Your Family from AI Deception" 
-                width={400} 
-                height={400}
+                width={250} 
+                height={250}
                 className="mx-auto rounded-full shadow-2xl"
                 priority
               />
