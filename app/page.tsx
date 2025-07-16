@@ -213,8 +213,8 @@ export default function Home() {
               Test Our AI Detection Model
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              Try our detection technology for free. Upload any audio file and we'll analyze it for AI generation signs. 
-              This is the same technology that will power our background monitoring products.
+              {Try our detection technology for free. Upload any audio file and we'll analyze it for AI generation signs. 
+              This is the same technology that will power our background monitoring products.}
             </p>
           </div>
           <AudioTester />
@@ -334,8 +334,8 @@ export default function Home() {
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our products are complete and ready for launch. We're finalizing security audits and preparing distribution. 
-            Sign up to be notified when they become available.
+            {Our products are complete and ready for launch. We're finalizing security audits and preparing distribution. 
+            Sign up to be notified when they become available.}
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
@@ -397,13 +397,13 @@ export default function Home() {
             <div className="bg-black border border-gold/20 rounded-lg p-8">
               <h3 className="text-2xl font-bold text-gold mb-4">API Documentation Coming Soon</h3>
               <p className="text-gray-300 mb-6">
-                We're preparing comprehensive documentation for developers who want to integrate our AI detection technology 
-                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.
+                {We're preparing comprehensive documentation for developers who want to integrate our AI detection technology 
+                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.}
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 text-left">
                 <div>
-                  <h4 className="font-semibold text-gold mb-3">What's Included:</h4>
+                  <h4 className="font-semibold text-gold mb-3">What&apos;s Included:</h4>
                   <ul className="space-y-2">
                     <li className="text-sm text-gray-300 flex items-center">
                       <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
