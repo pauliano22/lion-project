@@ -1,10 +1,7 @@
-// components/AudioTester.tsx - Clean production version
-
 'use client';
 
 import { useState, useRef } from 'react';
 import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink } from 'lucide-react';
-import { AudioFeatureExtractor } from '@/lib/audio-processing';
 
 interface DetectionResult {
   prediction: 'FAKE' | 'REAL';
@@ -29,197 +26,333 @@ export default function AudioTester() {
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [modelStatus, setModelStatus] = useState<string>('Not loaded');
+  const [modelStatus, setModelStatus] = useState<string>('Ready to analyze');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const featureExtractor = new AudioFeatureExtractor();
 
-  // ONNX session cache
-  let onnxSession: any = null;
-  let ort: any = null;
+  // Upload file and get the file URL for Gradio
+  const uploadFileToGradio = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('files', file);
+    
+    const uploadResponse = await fetch('https://pauliano22-deepfake-audio-detector.hf.space/gradio_api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!uploadResponse.ok) {
+      throw new Error(`Upload failed: ${uploadResponse.status}`);
+    }
+    
+    const uploadResult = await uploadResponse.json();
+    console.log('📤 Upload result:', uploadResult);
+    
+    // The upload returns an array of file paths
+    if (uploadResult && uploadResult.length > 0) {
+      return uploadResult[0];
+    }
+    
+    throw new Error('No file path returned from upload');
+  };
 
-  // Your model URL on Hugging Face
-  const MODEL_URL = 'https://huggingface.co/pauliano22/deepfake-audio-detector/resolve/main/deepfake_detector.onnx';
+  // Main detection function using official Gradio API format
+  const detectAudioDeepfake = async (audioFile: File) => {
+    try {
+      console.log('🚀 Starting audio detection...');
+      console.log('📁 File info:', { name: audioFile.name, size: audioFile.size, type: audioFile.type });
+      
+      const API_URL = "https://pauliano22-deepfake-audio-detector.hf.space/gradio_api";
+      
+      // Step 1: Upload the file to Gradio
+      console.log('📤 Uploading file to Gradio...');
+      const filePath = await uploadFileToGradio(audioFile);
+      console.log('✅ File uploaded, path:', filePath);
+      
+      // Step 2: Make the prediction request using the correct format from the docs
+      console.log('🔮 Making prediction request...');
+      const predictionData = {
+        data: [{
+          path: filePath,
+          meta: { _type: "gradio.FileData" }
+        }]
+      };
+      
+      const response = await fetch(`${API_URL}/call/predict`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(predictionData)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Prediction request failed: ${response.status} ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      console.log('📡 Prediction response:', result);
+      
+      // Step 3: Get the event ID and poll for results
+      if (result.event_id) {
+        console.log('🔄 Polling for results with event ID:', result.event_id);
+        return await pollForResults(result.event_id);
+      }
+      
+      throw new Error('No event ID returned from prediction request');
+      
+    } catch (error) {
+      console.error('❌ Detection failed:', error);
+      
+      // Return a fallback result instead of throwing
+      return {
+        prediction: 'REAL' as const,
+        confidence: 0.5,
+        probabilities: { real: 0.5, fake: 0.5 },
+        is_suspicious: false,
+        details: { 
+          model_version: '1.0', 
+          processing_success: false,
+          error_message: error instanceof Error ? error.message : 'Unknown error'
+        },
+        error: error instanceof Error ? error.message : 'Detection failed'
+      };
+    }
+  };
+
+  // Poll for results using the event ID - COMPLETELY REWRITTEN
+  const pollForResults = async (eventId: string) => {
+    const API_URL = "https://pauliano22-deepfake-audio-detector.hf.space/gradio_api";
+    
+    try {
+      console.log('🔄 NEW POLLING: Starting to poll for results...');
+      const response = await fetch(`${API_URL}/call/predict/${eventId}`, {
+        method: 'GET',
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Polling failed: ${response.status}`);
+      }
+      
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      
+      if (!reader) {
+        throw new Error('No reader available');
+      }
+      
+      let attempts = 0;
+      const maxAttempts = 50; // Increased attempts
+      
+      while (attempts < maxAttempts) {
+        try {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.substring(6));
+                console.log('📊 NEW POLLING: Raw data received:', data);
+                console.log('📊 NEW POLLING: Data type:', typeof data);
+                console.log('📊 NEW POLLING: Is array?', Array.isArray(data));
+                
+                // THE MOST IMPORTANT CHECK: Direct array format
+                if (Array.isArray(data)) {
+                  console.log('🎯 NEW POLLING: Data is an array with length:', data.length);
+                  if (data.length > 0) {
+                    console.log('🎯 NEW POLLING: First element type:', typeof data[0]);
+                    if (typeof data[0] === 'string') {
+                      console.log('🎯 NEW POLLING: FOUND RESULT AS DIRECT ARRAY!');
+                      console.log('🎯 NEW POLLING: Result string:', data[0]);
+                      return parseMarkdownResult(data[0]);
+                    }
+                  }
+                }
+                
+                // Alternative formats
+                if (data && typeof data === 'object') {
+                  if (data.msg === 'process_completed' && data.output && data.output.data) {
+                    console.log('🎯 NEW POLLING: Found process_completed format');
+                    return parseMarkdownResult(data.output.data[0]);
+                  }
+                  
+                  if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    console.log('🎯 NEW POLLING: Found data.data format');
+                    return parseMarkdownResult(data.data[0]);
+                  }
+                }
+                
+                // If we get here, we didn't handle the format
+                console.log('⚠️ NEW POLLING: Unhandled format:', data);
+                
+              } catch (parseError) {
+                console.log('⚠️ NEW POLLING: Parse error:', parseError);
+                console.log('⚠️ NEW POLLING: Raw line:', line);
+              }
+            }
+          }
+          
+        } catch (readError) {
+          console.error('❌ NEW POLLING: Read error:', readError);
+          break;
+        }
+        
+        attempts++;
+        console.log(`🔄 NEW POLLING: Attempt ${attempts}/${maxAttempts}`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      throw new Error('No result received after polling');
+      
+    } catch (error) {
+      console.error('❌ NEW POLLING: Failed:', error);
+      throw error;
+    }
+  };
+
+  // Parse the markdown result from your HF model
+  const parseMarkdownResult = (markdown: string) => {
+    try {
+      console.log('🔍 PARSING: Starting to parse result:', markdown);
+
+      // Handle string results
+      if (typeof markdown !== 'string') {
+        markdown = String(markdown);
+      }
+
+      // Extract percentages from markdown response
+      const realMatch = markdown.match(/Real Voice.*?(\d+\.\d+)%/i) || 
+                       markdown.match(/real.*?(\d+\.\d+)%/i);
+      const fakeMatch = markdown.match(/AI Generated.*?(\d+\.\d+)%/i) || 
+                       markdown.match(/fake.*?(\d+\.\d+)%/i) ||
+                       markdown.match(/ai.*?(\d+\.\d+)%/i);
+      
+      console.log('🔍 PARSING: Real match:', realMatch);
+      console.log('🔍 PARSING: Fake match:', fakeMatch);
+      
+      const realProb = realMatch ? parseFloat(realMatch[1]) / 100 : 0.5;
+      const fakeProb = fakeMatch ? parseFloat(fakeMatch[1]) / 100 : 0.5;
+      
+      console.log('🔍 PARSING: Real probability:', realProb);
+      console.log('🔍 PARSING: Fake probability:', fakeProb);
+      
+      // Determine if it's fake based on markdown content
+      const isFake = markdown.includes('🚨 LIKELY AI GENERATED') || 
+                   markdown.toLowerCase().includes('ai generated') ||
+                   markdown.toLowerCase().includes('fake') ||
+                   fakeProb > realProb;
+      
+      console.log('🔍 PARSING: Is fake?:', isFake);
+      
+      const confidence = Math.max(realProb, fakeProb);
+      
+      const result = {
+        prediction: isFake ? 'FAKE' as const : 'REAL' as const,
+        confidence: confidence,
+        probabilities: { real: realProb, fake: fakeProb },
+        is_suspicious: fakeProb > 0.6,
+        details: { 
+          model_version: '1.0', 
+          processing_success: true,
+          raw_result: markdown
+        }
+      };
+      
+      console.log('✅ PARSING: Final result:', result);
+      return result;
+      
+    } catch (error) {
+      console.error('❌ PARSING: Error:', error);
+      
+      // Fallback parsing
+      const isFake = markdown.toLowerCase().includes('ai generated') ||
+                   markdown.toLowerCase().includes('fake');
+      
+      return {
+        prediction: isFake ? 'FAKE' as const : 'REAL' as const,
+        confidence: 0.7,
+        probabilities: { real: isFake ? 0.3 : 0.7, fake: isFake ? 0.7 : 0.3 },
+        is_suspicious: isFake,
+        details: { 
+          model_version: '1.0', 
+          processing_success: true,
+          raw_result: markdown
+        }
+      };
+    }
+  };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
+      // Validate file size (max 10MB)
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        setError('File size too large. Please select a file smaller than 10MB.');
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['audio/wav', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/m4a'];
+      if (!allowedTypes.some(type => selectedFile.type.includes(type.split('/')[1]))) {
+        setError('Invalid file type. Please select a WAV, MP3, OGG, or M4A file.');
+        return;
+      }
+      
       setFile(selectedFile);
       setResult(null);
       setError(null);
-    }
-  };
-
-  const loadONNXFromCDN = async (): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      if ((window as any).ort) {
-        resolve((window as any).ort);
-        return;
-      }
-
-      console.log('🔄 Loading ONNX Runtime from CDN...');
-      setModelStatus('Loading ONNX Runtime...');
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js';
-      
-      script.onload = () => {
-        const ort = (window as any).ort;
-        if (ort) {
-          ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
-          ort.env.wasm.numThreads = 1;
-          ort.env.wasm.simd = true;
-          
-          console.log('✅ ONNX Runtime loaded');
-          resolve(ort);
-        } else {
-          reject(new Error('ONNX Runtime not found'));
-        }
-      };
-      
-      script.onerror = () => {
-        reject(new Error('Failed to load ONNX Runtime'));
-      };
-      
-      document.head.appendChild(script);
-    });
-  };
-
-  const initializeONNX = async () => {
-    if (!ort) {
-      try {
-        setModelStatus('Initializing ONNX...');
-        ort = await loadONNXFromCDN();
-        return ort;
-      } catch (error) {
-        console.error('❌ ONNX initialization failed:', error);
-        setModelStatus('ONNX initialization failed');
-        throw error;
-      }
-    }
-    return ort;
-  };
-
-  const loadONNXModel = async () => {
-    if (onnxSession) return onnxSession;
-    
-    try {
-      setModelStatus('Loading AI model...');
-      
-      const ort = await initializeONNX();
-      
-      const response = await fetch(MODEL_URL);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch model: ${response.status} ${response.statusText}`);
-      }
-      
-      const modelBytes = await response.arrayBuffer();
-      setModelStatus('Initializing model...');
-      
-      onnxSession = await ort.InferenceSession.create(modelBytes, {
-        executionProviders: ['wasm'],
-        graphOptimizationLevel: 'basic',
-      });
-      
-      setModelStatus('Model ready!');
-      return onnxSession;
-      
-    } catch (error) {
-      console.error('❌ Model loading failed:', error);
-      setModelStatus('Model loading failed');
-      throw error;
-    }
-  };
-
-  const runONNXInference = async (features: Float32Array) => {
-    try {
-      setModelStatus('Analyzing audio...');
-      
-      const ort = await initializeONNX();
-      const session = await loadONNXModel();
-      
-      const inputTensor = new ort.Tensor('float32', features, [1, 1, 128, 128]);
-      
-      const startInference = Date.now();
-      const outputs = await session.run({ audio_features: inputTensor });
-      const inferenceTime = Date.now() - startInference;
-      
-      setModelStatus('Analysis complete!');
-      
-      const predictions = outputs.predictions.data as Float32Array;
-      const realScore = predictions[0];
-      const fakeScore = predictions[1];
-      
-      const expReal = Math.exp(realScore);
-      const expFake = Math.exp(fakeScore);
-      const sum = expReal + expFake;
-      
-      const realProb = expReal / sum;
-      const fakeProb = expFake / sum;
-      
-      return {
-        realProb,
-        fakeProb,
-        inferenceTime,
-        rawScores: [realScore, fakeScore]
-      };
-      
-    } catch (error) {
-      console.error('❌ ONNX inference failed:', error);
-      setModelStatus('Analysis failed');
-      throw error;
+      setModelStatus('Ready to analyze');
     }
   };
 
   const analyzeAudio = async () => {
     if (!file) return;
-
+  
     setIsAnalyzing(true);
     setError(null);
     setResult(null);
-    setModelStatus('Starting analysis...');
-
+    setModelStatus('Uploading file to Hugging Face...');
+  
     const startTime = Date.now();
-
+  
     try {
-      setModelStatus('Processing audio...');
+      setModelStatus('Processing with AI model...');
       
-      const features = await featureExtractor.extractMelSpectrogram(file);
+      // Call the detection function
+      const apiResult = await detectAudioDeepfake(file);
       
-      if (!features) {
-        throw new Error('Failed to extract audio features');
+      if (apiResult.error) {
+        throw new Error(apiResult.error);
       }
-
-      const inferenceResult = await runONNXInference(features);
-      
-      const prediction = inferenceResult.fakeProb > 0.5 ? 'FAKE' : 'REAL';
-      const confidence = Math.max(inferenceResult.realProb, inferenceResult.fakeProb);
-      
+  
+      setModelStatus('Analysis complete!');
+  
+      // Convert API result to component format
       const result: DetectionResult = {
-        prediction,
-        confidence,
-        probabilities: {
-          real: inferenceResult.realProb,
-          fake: inferenceResult.fakeProb
-        },
+        prediction: apiResult.prediction,
+        confidence: apiResult.confidence,
+        probabilities: apiResult.probabilities,
         details: {
           file_name: file.name,
           file_size: file.size,
-          processing_time: startTime,
-          model_version: '1.0'
+          processing_time: Date.now() - startTime,
+          model_version: apiResult.details.model_version
         },
-        is_suspicious: inferenceResult.fakeProb > 0.7,
+        is_suspicious: apiResult.is_suspicious,
         timestamp: new Date().toISOString()
       };
-
+  
       setResult(result);
-      setModelStatus(`Result: ${prediction} (${(confidence * 100).toFixed(1)}%)`);
-
+      setModelStatus(`Result: ${result.prediction} (${(result.confidence * 100).toFixed(1)}% confidence)`);
+  
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err instanceof Error ? err.message : 'Analysis failed');
-      setModelStatus('Analysis failed');
+      setModelStatus('Analysis failed - check console for details');
     } finally {
       setIsAnalyzing(false);
     }
@@ -255,10 +388,10 @@ export default function AudioTester() {
           Upload an audio file to test our deepfake detection technology
         </p>
         <p className="text-sm text-gray-400 mt-2">
-          🔒 Fully private - all processing happens in your browser
+          🤖 Powered by your custom model on Hugging Face
         </p>
         <div className="mt-3 p-2 bg-black/50 rounded text-xs text-gray-400">
-          Model Status: <span className="text-gold">{modelStatus}</span>
+          Status: <span className="text-gold">{modelStatus}</span>
         </div>
       </div>
 
@@ -343,7 +476,7 @@ export default function AudioTester() {
             {isAnalyzing ? (
               <>
                 <Clock className="w-5 h-5 mr-2 animate-spin" />
-                Analyzing...
+                Analyzing with AI...
               </>
             ) : (
               <>
@@ -363,6 +496,9 @@ export default function AudioTester() {
             <p className="text-red-400 font-semibold">Analysis Failed</p>
           </div>
           <p className="text-red-300 mt-1">{error}</p>
+          <p className="text-red-200 text-xs mt-2">
+            Check the browser console for detailed error logs. Make sure your Hugging Face Space is running.
+          </p>
         </div>
       )}
 
@@ -448,7 +584,7 @@ export default function AudioTester() {
                 </div>
                 <div>
                   <span className="text-gray-400">Processing Time:</span>
-                  <span className="text-white ml-2">{Date.now() - result.details.processing_time}ms</span>
+                  <span className="text-white ml-2">{result.details.processing_time}ms</span>
                 </div>
                 <div>
                   <span className="text-gray-400">File Size:</span>
@@ -468,21 +604,21 @@ export default function AudioTester() {
       <div className="mt-8 p-4 bg-gray-900/50 border border-gold/20 rounded-lg">
         <h4 className="text-gold font-semibold mb-2">How It Works</h4>
         <p className="text-gray-300 text-sm mb-3">
-          Our AI model analyzes audio characteristics to detect synthetic speech. All processing happens 
-          locally in your browser - no data leaves your device for maximum privacy and security.
+          This demo uses the official Gradio API format: uploads files to HF Space, makes prediction requests, 
+          and polls for results using the documented endpoints. Now with enhanced debugging!
         </p>
         <div className="flex flex-wrap gap-2">
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🔒 100% Private
+            📤 File Upload
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            🧠 AI-Powered
+            🤖 Official Gradio API
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            ⚡ Real-time
+            🔄 Enhanced Polling
           </span>
           <span className="bg-gold/20 text-gold px-2 py-1 rounded text-xs">
-            📱 Browser-based
+            🎯 Debug Logging
           </span>
         </div>
       </div>

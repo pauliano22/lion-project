@@ -1,3 +1,4 @@
+// tsconfig.json - Fixed version
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -18,8 +19,11 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "*": ["types/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
