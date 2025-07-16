@@ -1,33 +1,9 @@
 'use client';
 
-// import Link from 'next/link';
+import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, /*Zap, Users, */ Search, /*BookOpen,*/ Phone, Newspaper, AlertTriangle, CheckCircle, Clock, /*Globe,*/ Code } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
-
-// Add these missing component definitions
-/* function FeatureCard({ icon, title, description, features }: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  features: string[];
-}) {
-  return (
-    <div className="bg-gray-dark border border-gold/20 rounded-lg p-6">
-      <div className="text-gold mb-4">{icon}</div>
-      <h3 className="text-xl font-bold mb-3 text-gold">{title}</h3>
-      <p className="text-gray-300 mb-4">{description}</p>
-      <ul className="space-y-2">
-        {features.map((feature, index) => (
-          <li key={index} className="text-sm text-gray-400 flex items-center">
-            <span className="text-gold mr-2">•</span>
-            {feature}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-} */
 
 function ProtectionCard({ icon, title, description, examples }: {
   icon: React.ReactNode;
@@ -63,7 +39,7 @@ function ComingSoonCard({ title, description, price, features, featured = false 
   featured?: boolean;
 }) {
   return (
-    <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold scale-105' : 'border-gold/20'}`}>
+    <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold' : 'border-gold/20'}`}>
       {featured && (
         <div className="bg-gold text-black text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
           MOST POPULAR
@@ -103,6 +79,8 @@ const smoothScrollTo = (elementId: string) => {
 };
 
 export default function Home() {
+  const [hoveredStep, setHoveredStep] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen bg-black text-white scroll-smooth">
       {/* Sticky Navigation */}
@@ -116,7 +94,7 @@ export default function Home() {
               height={60}
               className="rounded-full"
             />
-            <span className="text-xl font-bold text-gold">Lion Project</span>
+            <span className="text-xl text-gold">Lion Project</span>
           </div>
           <nav className="hidden md:flex space-x-8">
             <button 
@@ -153,177 +131,123 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4">
+      {/* Hero Section - Full Screen */}
+      <section className="min-h-screen flex flex-col justify-center items-center relative px-4">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="md:w-1/3">
               <Image 
                 src="/images/2.png" 
                 alt="Lion Project - Protect Your Family from AI Deception" 
-                width={250} 
-                height={250}
+                width={300} 
+                height={300}
                 className="mx-auto rounded-full shadow-2xl"
                 priority
               />
             </div>
             
             <div className="md:w-2/3 text-center md:text-left">
+              {/* Lion Project Title */}
+              <div className="mb-6">
+                <div className="inline-flex items-center space-x-3 mb-2">
+                  <div className="w-1 h-8 bg-gradient-to-b from-gold to-yellow-500 rounded-full"></div>
+                  <span className="text-lg md:text-xl font-bold text-gold tracking-wide uppercase">
+                    The Lion Project
+                  </span>
+                  <div className="w-1 h-8 bg-gradient-to-b from-gold to-yellow-500 rounded-full"></div>
+                </div>
+                <div className="h-0.5 bg-gradient-to-r from-gold/60 to-transparent w-full max-w-md mx-auto md:mx-0"></div>
+              </div>
+              
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Protect Your Family from{' '}
-                <span className="gradient-text">AI Deception</span>
+                Protection from{' '}
+                <span className="gradient-text">AI</span>
               </h1>
+              
               <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-                Advanced AI detection that runs in the background, automatically alerting you to{' '}
-                <span className="gradient-text">deepfake scams</span>,{' '}
-                <span className="gradient-text">AI-generated news</span>, and{' '}
-                <span className="gradient-text">voice cloning</span> attempts. Specially designed to protect older adults and 
-                vulnerable family members from digital deception.
+                No more worrying about{' '}
+                <span className="gradient-text">scams</span>,{' '}
+                <span className="gradient-text">fake news</span>, or{' '}
+                <span className="gradient-text">voice cloning</span>
               </p>
-              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start">
+
+              {/* Main CTA buttons */}
+              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-8">
                 <button 
                   onClick={() => smoothScrollTo('demo')}
-                  className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center"
+                  className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center group"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Try Free Demo
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button 
                   onClick={() => smoothScrollTo('protection')}
                   className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center"
                 >
                   <Shield className="w-5 h-5 mr-2" />
-                  How It Protects
+                  How It Works
                 </button>
               </div>
-              <p className="text-sm text-gray-400 mt-4">
-                <CheckCircle className="w-4 h-4 inline mr-1 text-green-500" />
-                Products complete & launching soon - Try our detection model free while we prepare for release
-              </p>
+
+              {/* Status indicator */}
+              <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full">
+                <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                Products ready - launching soon
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Audio Tester Section */}
-      <section id="demo" className="py-20 px-4 bg-gray-dark/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">
-              Test Our AI Detection Model
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Try our detection technology for free. Upload any audio file and we&apos;ll analyze it for AI generation signs. 
-              This is the same technology that will power our background monitoring products.
-            </p>
-          </div>
-          <AudioTester />
-        </div>
-      </section>
-
-      {/* Protection Types Section */}
-      <section id="protection" className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Comprehensive <span className="gradient-text">Digital Protection</span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <ProtectionCard
-              icon={<Phone className="h-8 w-8" />}
-              title="Phone Call Protection"
-              description="Real-time monitoring of incoming calls to detect voice cloning and deepfake attempts targeting your family."
-              examples={[
-                "Fake calls from 'grandchildren' asking for money",
-                "Cloned voices of family members in distress",
-                "AI-generated voices impersonating trusted contacts",
-                "Emergency scam calls using familiar voices"
-              ]}
-            />
-            <ProtectionCard
-              icon={<Newspaper className="h-8 w-8" />}
-              title="News & Media Monitoring"
-              description="Background scanning of news feeds, social media, and videos to flag AI-generated content before it misleads."
-              examples={[
-                "Deepfake political speeches and statements",
-                "AI-generated news anchors spreading misinformation",
-                "Fake audio clips on social media platforms",
-                "Manipulated celebrity endorsements and testimonials"
-              ]}
-            />
-          </div>
+        {/* Scroll indicator - moved higher */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <button 
+            onClick={() => smoothScrollTo('demo')}
+            className="text-gold hover:text-gold-dark transition-colors"
+          >
+            <ChevronDown className="w-6 h-6" />
+          </button>
         </div>
       </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-16 px-4 bg-gray-dark">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Always-On <span className="gradient-text">Protection</span>
+          <h2 className="text-4xl font-bold text-center mb-4">
+            The <span className="gradient-text">Only</span> Background Protection
           </h2>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold mb-6 text-gold">Background Monitoring</h3>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h4 className="font-semibold">Continuous Scanning</h4>
-                    <p className="text-gray-300">Monitors phone calls, news feeds, and social media in real-time</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h4 className="font-semibold">AI Detection Analysis</h4>
-                    <p className="text-gray-300">Advanced neural networks identify deepfake patterns and anomalies</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h4 className="font-semibold">Instant Alerts</h4>
-                    <p className="text-gray-300">Immediate notifications when suspicious content is detected</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-gold text-black rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h4 className="font-semibold">Family Protection</h4>
-                    <p className="text-gray-300">Special modes for protecting elderly family members from sophisticated scams</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-black border border-gold rounded-lg p-6">
-              <h4 className="text-gold font-bold mb-4">Detection Capabilities</h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span>Detection Accuracy:</span>
-                  <span className="text-gold">90%+</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Processing Speed:</span>
-                  <span className="text-gold">&lt; 2 seconds</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>False Positive Rate:</span>
-                  <span className="text-gold">&lt; 5%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Supported Formats:</span>
-                  <span className="text-gold">MP3, WAV, M4A, Phone Calls</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Monitoring:</span>
-                  <span className="text-gold">24/7 Background Protection</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Platforms:</span>
-                  <span className="text-gold">Windows, Mac, Chrome, iOS, Android</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <p className="text-center text-gray-300 mb-16 max-w-3xl mx-auto">
+          Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
+          </p>
+   {/* Price Comparison */}
+   <div className="bg-gradient-to-r from-gold/10 to-yellow-500/10 border border-gold/30 rounded-xl p-8 mb-16 text-center">
+     <h3 className="text-3xl font-bold text-gold mb-8">Unmatched Pricing</h3>
+     <div className="grid md:grid-cols-4 gap-6">
+       <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+         <h4 className="text-lg font-bold text-red-400 mb-2">Competitors</h4>
+         <div className="text-3xl font-bold text-red-400 mb-2">$13-$700</div>
+         <p className="text-gray-300 text-sm">per month, per tool</p>
+       </div>
+       
+       <div className="bg-gold/20 border border-gold rounded-lg p-6">
+         <h4 className="text-lg font-bold text-gold mb-2">Individual Lion Products</h4>
+         <div className="text-3xl font-bold text-gold mb-2">$0-$2.99</div>
+         <p className="text-gray-300 text-sm">per month</p>
+       </div>
+       
+       <div className="bg-gold/30 border-2 border-gold rounded-lg p-6">
+         <h4 className="text-lg font-bold text-gold mb-2">Complete Lion Suite</h4>
+         <div className="text-3xl font-bold text-gold mb-2">$4.99</div>
+         <p className="text-gray-300 text-sm">per month (best value)</p>
+       </div>
+       
+       <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+         <h4 className="text-lg font-bold text-green-400 mb-2">You Save</h4>
+         <div className="text-3xl font-bold text-green-400 mb-2">95%+</div>
+         <p className="text-gray-300 text-sm">vs competitors</p>
+       </div>
+     </div>
+   </div>
         </div>
       </section>
 
@@ -334,51 +258,87 @@ export default function Home() {
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our products are complete and ready for launch. We&apos;re finalizing security audits and preparing distribution. 
-            Sign up to be notified when they become available.
+            Our products are complete and ready for launch in the coming days.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
-            <ComingSoonCard
-              title="Desktop Guardian"
-              description="Complete background monitoring for your computer and phone calls against deepfake scams"
-              price="$5/mo"
-              features={[
-                "24/7 call monitoring & alerts",
-                "News feed scanning",
-                "Browser protection",
-                "Family account management",
-                "Emergency contact alerts"
+          <ComingSoonCard
+            title="Desktop Guardian"
+            description="Protects calls and apps on your computer"
+            price="$2.99/mo"
+            features={[
+              "Phone calls through your computer",
+              "Desktop video call protection (Zoom, Teams)",
+              "Audio from any desktop application",
+              "Family account management",
+              "Emergency contact alerts"
+            ]}
+          />
+          <ComingSoonCard
+            title="Family Shield (Chrome)"
+            description="Scans everything you see in your browser"
+            price="Free"
+            features={[
+              "Social media feeds (Facebook, Twitter, etc)",
+              "YouTube and video content scanning", 
+              "News article verification",
+              "Web-based video calls",
+              "One-click reporting"
+            ]}
+            featured
+          />
+          <ComingSoonCard
+            title="Mobile Protector"
+            description="Monitors apps and calls on your phone"
+            price="$2.99/mo"
+            features={[
+              "TikTok, Instagram, Snapchat scanning",
+              "Phone call screening & analysis",
+              "WhatsApp & messaging apps",
+              "Mobile video calls (FaceTime, etc)",
+              "Real-time mobile alerts"
+            ]}
+          />
+          </div>
+        </div>
+      </section>
+              {/* Protection Types Section */}
+      <section id="protection" className="py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-12">
+            Comprehensive <span className="gradient-text">Digital Protection</span>
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <ProtectionCard
+              icon={<Phone className="h-8 w-8" />}
+              title="Phone Call Protection"
+              description="Real-time call monitoring to detect voice cloning and deepfake attempts."
+              examples={[
+                "Fake calls from 'grandchildren' asking for money",
+                "Cloned voices of family members in distress",
+                "AI-generated voices impersonating trusted contacts",
+                "Emergency scam calls using familiar voices"
               ]}
             />
-            <ComingSoonCard
-              title="Family Shield (Chrome)"
-              description="Browser extension for web and social media protection against AI-generated news"
-              price="Free"
-              features={[
-                "Social media scanning",
-                "Video call protection", 
-                "News article verification",
-                "One-click reporting",
-                "Elderly-friendly alerts"
-              ]}
-              featured
-            />
-            <ComingSoonCard
-              title="Mobile Protector"
-              description="On-the-go protection for calls and messages against voice cloning"
-              price="$2/mo"
-              features={[
-                "Call screening & analysis",
-                "Text message verification",
-                "WhatsApp/SMS scanning",
-                "GPS-based scam alerts",
-                "Emergency contact integration"
+            <ProtectionCard
+              icon={<Newspaper className="h-8 w-8" />}
+              title="News & Media Monitoring"
+              description="Notify you of AI-generated content in news feeds, social media, and videos."
+              examples={[
+                "Deepfake political speeches and statements",
+                "AI-generated news anchors spreading misinformation",
+                "Fake audio clips on social media platforms",
+                "Manipulated celebrity endorsements and testimonials"
               ]}
             />
           </div>
         </div>
       </section>
-
+            {/* Audio Tester Section */}
+            <section id="demo" className="py-20 px-4 bg-gray-dark/50">
+        <div className="container mx-auto">
+          <AudioTester />
+        </div>
+      </section>
       {/* For Developers Section */}
       <section id="developers" className="py-16 px-4 bg-gray-dark/50">
         <div className="container mx-auto text-center">
