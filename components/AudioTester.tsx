@@ -326,10 +326,6 @@ export default function AudioTester() {
       
       // Call the detection function
       const apiResult = await detectAudioDeepfake(file);
-      
-      if (apiResult.error) {
-        throw new Error(apiResult.error);
-      }
   
       setModelStatus('Analysis complete!');
   
