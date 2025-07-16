@@ -79,8 +79,6 @@ const smoothScrollTo = (elementId: string) => {
 };
 
 export default function Home() {
-  const [hoveredStep, setHoveredStep] = useState<string | null>(null);
-
   return (
     <div className="min-h-screen bg-black text-white scroll-smooth">
       {/* Sticky Navigation */}
