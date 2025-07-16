@@ -334,8 +334,8 @@ export default function Home() {
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            {Our products are complete and ready for launch. We're finalizing security audits and preparing distribution. 
-            Sign up to be notified when they become available.}
+            Our products are complete and ready for launch. We&apos;re finalizing security audits and preparing distribution. 
+            Sign up to be notified when they become available.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
