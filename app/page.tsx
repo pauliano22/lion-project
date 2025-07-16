@@ -397,8 +397,8 @@ export default function Home() {
             <div className="bg-black border border-gold/20 rounded-lg p-8">
               <h3 className="text-2xl font-bold text-gold mb-4">API Documentation Coming Soon</h3>
               <p className="text-gray-300 mb-6">
-                {We're preparing comprehensive documentation for developers who want to integrate our AI detection technology 
-                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.}
+                We&apos;re preparing comprehensive documentation for developers who want to integrate our AI detection technology 
+                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 text-left">
