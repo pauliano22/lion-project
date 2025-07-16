@@ -240,11 +240,13 @@ export default function AudioTester() {
       console.log('🔍 PARSING: Real probability:', realProb);
       console.log('🔍 PARSING: Fake probability:', fakeProb);
       
-      // Determine if it's fake based on markdown content
-      const isFake = markdown.includes('🚨 LIKELY AI GENERATED') || 
-                   markdown.toLowerCase().includes('ai generated') ||
-                   markdown.toLowerCase().includes('fake') ||
-                   fakeProb > realProb;
+      // Determine if it's fake based on probabilities FIRST, then markdown content
+      const isFake = fakeProb > realProb || 
+                   (fakeProb === realProb && (
+                     markdown.includes('🚨 LIKELY AI GENERATED') || 
+                     markdown.toLowerCase().includes('ai generated') ||
+                     markdown.toLowerCase().includes('fake')
+                   ));
       
       console.log('🔍 PARSING: Is fake?:', isFake);
       
