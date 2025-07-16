@@ -213,8 +213,8 @@ export default function Home() {
               Test Our AI Detection Model
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              {Try our detection technology for free. Upload any audio file and we'll analyze it for AI generation signs. 
-              This is the same technology that will power our background monitoring products.}
+              Try our detection technology for free. Upload any audio file and we&apos;ll analyze it for AI generation signs. 
+              This is the same technology that will power our background monitoring products.
             </p>
           </div>
           <AudioTester />
