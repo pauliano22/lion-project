@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
             <section>
               <h3 className="text-xl font-bold mb-3 text-gold">Contact</h3>
               <p className="text-gray-300">
-                If you have any questions about this privacy policy, please contact us at: [your-email@domain.com]
+                If you have any questions about this privacy policy, please contact us at: thelionprojectai@gmail.com
               </p>
             </section>
           </div>
