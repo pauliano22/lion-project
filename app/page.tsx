@@ -409,10 +409,6 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-gray-dark py-8 px-4">
-        <p>&copy; 2024 Lion Project |
-          <a href="/privacy-policy">Privacy Policy</a> |
-          <a href="/terms">Terms</a>
-        </p>
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Image
@@ -427,9 +423,20 @@ export default function Home() {
           <p className="text-gray-300 mb-4">
             Protecting families from AI deception. Specially designed for older adults and vulnerable populations.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-4">
             Built with privacy and security in mind. Your data never leaves your device.
           </p>
+          <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
+            <span>&copy; 2025 Lion Project</span>
+            <span>|</span>
+            <a href="/privacy-policy" className="hover:text-gold transition-colors">
+              Privacy Policy
+            </a>
+            <span>|</span>
+            <a href="/terms" className="hover:text-gold transition-colors">
+              Terms of Service
+            </a>
+          </div>
         </div>
       </footer>
     </div>
