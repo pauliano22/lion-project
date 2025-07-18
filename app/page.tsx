@@ -84,9 +84,9 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gold/20 px-1 py-1">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Image 
-              src="/images/2.png" 
-              alt="Lion Project" 
+            <Image
+              src="/images/2.png"
+              alt="Lion Project"
               width={60}
               height={60}
               className="rounded-full"
@@ -94,32 +94,32 @@ export default function Home() {
             <span className="text-xl text-gold">Lion Project</span>
           </div>
           <nav className="hidden md:flex space-x-8">
-            <button 
+            <button
               onClick={() => smoothScrollTo('protection')}
               className="text-gray-300 hover:text-gold transition-colors"
             >
               Protection
             </button>
-            <button 
+            <button
               onClick={() => smoothScrollTo('how-it-works')}
               className="text-gray-300 hover:text-gold transition-colors"
             >
               How it Works
             </button>
-            <button 
+            <button
               onClick={() => smoothScrollTo('coming-soon')}
               className="text-gray-300 hover:text-gold transition-colors"
             >
               Products
             </button>
-            <button 
+            <button
               onClick={() => smoothScrollTo('developers')}
               className="text-gray-300 hover:text-gold transition-colors"
             >
               Developers
             </button>
           </nav>
-          <button 
+          <button
             onClick={() => smoothScrollTo('demo')}
             className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors"
           >
@@ -133,16 +133,16 @@ export default function Home() {
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="md:w-1/3">
-              <Image 
-                src="/images/2.png" 
-                alt="Lion Project - Protect Your Family from AI Deception" 
-                width={300} 
+              <Image
+                src="/images/2.png"
+                alt="Lion Project - Protect Your Family from AI Deception"
+                width={300}
                 height={300}
                 className="mx-auto rounded-full shadow-2xl"
                 priority
               />
             </div>
-            
+
             <div className="md:w-2/3 text-center md:text-left">
               {/* Lion Project Title */}
               <div className="mb-6">
@@ -155,12 +155,12 @@ export default function Home() {
                 </div>
                 <div className="h-0.5 bg-gradient-to-r from-gold/60 to-transparent w-full max-w-md mx-auto md:mx-0"></div>
               </div>
-              
+
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Protection from{' '}
                 <span className="gradient-text">AI</span>
               </h1>
-              
+
               <p className="text-xl text-gray-300 mb-8 max-w-2xl">
                 No more worrying about{' '}
                 <span className="gradient-text">scams</span>,{' '}
@@ -170,7 +170,7 @@ export default function Home() {
 
               {/* Main CTA buttons */}
               <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-8">
-                <button 
+                <button
                   onClick={() => smoothScrollTo('demo')}
                   className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center group"
                 >
@@ -178,7 +178,7 @@ export default function Home() {
                   Try Free Demo
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button 
+                <button
                   onClick={() => smoothScrollTo('protection')}
                   className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center"
                 >
@@ -198,7 +198,7 @@ export default function Home() {
 
         {/* Scroll indicator - moved higher */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <button 
+          <button
             onClick={() => smoothScrollTo('demo')}
             className="text-gold hover:text-gold-dark transition-colors"
           >
@@ -214,37 +214,37 @@ export default function Home() {
             The <span className="gradient-text">Only</span> Background Protection
           </h2>
           <p className="text-center text-gray-300 mb-16 max-w-3xl mx-auto">
-          Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
+            Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
           </p>
-   {/* Price Comparison */}
-   <div className="bg-gradient-to-r from-gold/10 to-yellow-500/10 border border-gold/30 rounded-xl p-8 mb-16 text-center">
-     <h3 className="text-3xl font-bold text-gold mb-8">Unmatched Pricing</h3>
-     <div className="grid md:grid-cols-4 gap-6">
-       <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
-         <h4 className="text-lg font-bold text-red-400 mb-2">Competitors</h4>
-         <div className="text-3xl font-bold text-red-400 mb-2">$13-$700</div>
-         <p className="text-gray-300 text-sm">per month, per tool</p>
-       </div>
-       
-       <div className="bg-gold/20 border border-gold rounded-lg p-6">
-         <h4 className="text-lg font-bold text-gold mb-2">Individual Lion Products</h4>
-         <div className="text-3xl font-bold text-gold mb-2">$0-$2.99</div>
-         <p className="text-gray-300 text-sm">per month</p>
-       </div>
-       
-       <div className="bg-gold/30 border-2 border-gold rounded-lg p-6">
-         <h4 className="text-lg font-bold text-gold mb-2">Complete Lion Suite</h4>
-         <div className="text-3xl font-bold text-gold mb-2">$4.99</div>
-         <p className="text-gray-300 text-sm">per month (best value)</p>
-       </div>
-       
-       <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-         <h4 className="text-lg font-bold text-green-400 mb-2">You Save</h4>
-         <div className="text-3xl font-bold text-green-400 mb-2">95%+</div>
-         <p className="text-gray-300 text-sm">vs competitors</p>
-       </div>
-     </div>
-   </div>
+          {/* Price Comparison */}
+          <div className="bg-gradient-to-r from-gold/10 to-yellow-500/10 border border-gold/30 rounded-xl p-8 mb-16 text-center">
+            <h3 className="text-3xl font-bold text-gold mb-8">Unmatched Pricing</h3>
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+                <h4 className="text-lg font-bold text-red-400 mb-2">Competitors</h4>
+                <div className="text-3xl font-bold text-red-400 mb-2">$13-$700</div>
+                <p className="text-gray-300 text-sm">per month, per tool</p>
+              </div>
+
+              <div className="bg-gold/20 border border-gold rounded-lg p-6">
+                <h4 className="text-lg font-bold text-gold mb-2">Individual Lion Products</h4>
+                <div className="text-3xl font-bold text-gold mb-2">$0-$2.99</div>
+                <p className="text-gray-300 text-sm">per month</p>
+              </div>
+
+              <div className="bg-gold/30 border-2 border-gold rounded-lg p-6">
+                <h4 className="text-lg font-bold text-gold mb-2">Complete Lion Suite</h4>
+                <div className="text-3xl font-bold text-gold mb-2">$4.99</div>
+                <p className="text-gray-300 text-sm">per month (best value)</p>
+              </div>
+
+              <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                <h4 className="text-lg font-bold text-green-400 mb-2">You Save</h4>
+                <div className="text-3xl font-bold text-green-400 mb-2">95%+</div>
+                <p className="text-gray-300 text-sm">vs competitors</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -258,47 +258,47 @@ export default function Home() {
             Our products are complete and ready for launch in the coming days.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
-          <ComingSoonCard
-            title="Desktop Guardian"
-            description="Protects calls and apps on your computer"
-            price="$2.99/mo"
-            features={[
-              "Phone calls through your computer",
-              "Desktop video call protection (Zoom, Teams)",
-              "Audio from any desktop application",
-              "Family account management",
-              "Emergency contact alerts"
-            ]}
-          />
-          <ComingSoonCard
-            title="Family Shield (Chrome)"
-            description="Scans everything you see in your browser"
-            price="Free"
-            features={[
-              "Social media feeds (Facebook, Twitter, etc)",
-              "YouTube and video content scanning", 
-              "News article verification",
-              "Web-based video calls",
-              "One-click reporting"
-            ]}
-            featured
-          />
-          <ComingSoonCard
-            title="Mobile Protector"
-            description="Monitors apps and calls on your phone"
-            price="$2.99/mo"
-            features={[
-              "TikTok, Instagram, Snapchat scanning",
-              "Phone call screening & analysis",
-              "WhatsApp & messaging apps",
-              "Mobile video calls (FaceTime, etc)",
-              "Real-time mobile alerts"
-            ]}
-          />
+            <ComingSoonCard
+              title="Desktop Guardian"
+              description="Protects calls and apps on your computer"
+              price="$2.99/mo"
+              features={[
+                "Phone calls through your computer",
+                "Desktop video call protection (Zoom, Teams)",
+                "Audio from any desktop application",
+                "Family account management",
+                "Emergency contact alerts"
+              ]}
+            />
+            <ComingSoonCard
+              title="Family Shield (Chrome)"
+              description="Scans everything you see in your browser"
+              price="Free"
+              features={[
+                "Social media feeds (Facebook, Twitter, etc)",
+                "YouTube and video content scanning",
+                "News article verification",
+                "Web-based video calls",
+                "One-click reporting"
+              ]}
+              featured
+            />
+            <ComingSoonCard
+              title="Mobile Protector"
+              description="Monitors apps and calls on your phone"
+              price="$2.99/mo"
+              features={[
+                "TikTok, Instagram, Snapchat scanning",
+                "Phone call screening & analysis",
+                "WhatsApp & messaging apps",
+                "Mobile video calls (FaceTime, etc)",
+                "Real-time mobile alerts"
+              ]}
+            />
           </div>
         </div>
       </section>
-              {/* Protection Types Section */}
+      {/* Protection Types Section */}
       <section id="protection" className="py-16 px-4">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">
@@ -330,8 +330,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-            {/* Audio Tester Section */}
-            <section id="demo" className="py-20 px-4 bg-gray-dark/50">
+      {/* Audio Tester Section */}
+      <section id="demo" className="py-20 px-4 bg-gray-dark/50">
         <div className="container mx-auto">
           <AudioTester />
         </div>
@@ -346,7 +346,7 @@ export default function Home() {
                 For <span className="gradient-text">Developers</span>
               </h2>
             </div>
-            
+
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Integrate our powerful deepfake detection capabilities directly into your applications with our developer-friendly API.
             </p>
@@ -354,10 +354,10 @@ export default function Home() {
             <div className="bg-black border border-gold/20 rounded-lg p-8">
               <h3 className="text-2xl font-bold text-gold mb-4">API Documentation Coming Soon</h3>
               <p className="text-gray-300 mb-6">
-                We&apos;re preparing comprehensive documentation for developers who want to integrate our AI detection technology 
+                We&apos;re preparing comprehensive documentation for developers who want to integrate our AI detection technology
                 into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.
               </p>
-              
+
               <div className="grid md:grid-cols-2 gap-6 text-left">
                 <div>
                   <h4 className="font-semibold text-gold mb-3">What&apos;s Included:</h4>
@@ -409,12 +409,16 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-gray-dark py-8 px-4">
+        <p>&copy; 2024 Lion Project |
+          <a href="/privacy-policy">Privacy Policy</a> |
+          <a href="/terms">Terms</a>
+        </p>
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Image 
-              src="/images/2.png" 
-              alt="Lion Project" 
-              width={32} 
+            <Image
+              src="/images/2.png"
+              alt="Lion Project"
+              width={32}
               height={32}
               className="rounded-full"
             />
