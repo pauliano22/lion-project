@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
@@ -30,18 +30,20 @@ function ProtectionCard({ icon, title, description, examples }: {
   );
 }
 
-function ComingSoonCard({ title, description, price, features, featured = false }: {
+function ComingSoonCard({ title, description, price, features, featured = false, available = false, downloadLink = null }: {
   title: string;
   description: string;
   price: string;
   features: string[];
   featured?: boolean;
+  available?: boolean;
+  downloadLink?: string | null;
 }) {
   return (
     <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold' : 'border-gold/20'}`}>
       {featured && (
         <div className="bg-gold text-black text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
-          MOST POPULAR
+          NOW AVAILABLE!
         </div>
       )}
       <h3 className="text-xl font-bold mb-2 text-gold">{title}</h3>
@@ -55,13 +57,28 @@ function ComingSoonCard({ title, description, price, features, featured = false 
           </li>
         ))}
       </ul>
-      <button className="w-full bg-gray-600 text-gray-300 px-6 py-3 rounded-lg font-semibold cursor-not-allowed">
-        <Clock className="w-4 h-4 inline mr-2" />
-        Coming Soon
-      </button>
-      <p className="text-xs text-gray-500 mt-2 text-center">
-        Notify me when available
-      </p>
+      {available && downloadLink ? (
+        <a
+          href={downloadLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors flex items-center justify-center group"
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          Install Extension
+          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </a>
+      ) : (
+        <button className="w-full bg-gray-600 text-gray-300 px-6 py-3 rounded-lg font-semibold cursor-not-allowed">
+          <Clock className="w-4 h-4 inline mr-2" />
+          Coming Soon
+        </button>
+      )}
+      {!available && (
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Notify me when available
+        </p>
+      )}
     </div>
   );
 }
@@ -255,7 +272,7 @@ export default function Home() {
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our products are complete and ready for launch in the coming days.
+            Our Chrome extension is now live! Desktop and mobile apps launching soon.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
@@ -282,6 +299,8 @@ export default function Home() {
                 "One-click reporting"
               ]}
               featured
+              available={true}
+              downloadLink="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1"
             />
             <ComingSoonCard
               title="Mobile Protector"
