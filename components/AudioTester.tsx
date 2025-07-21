@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink, Zap, Shield, Target, Video } from 'lucide-react';
+import { Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink, Zap, Shield, Target, Video } from 'lucide-react';
 
 interface DetectionResult {
   prediction: 'FAKE' | 'REAL';
@@ -41,7 +41,7 @@ export default function AudioTester() {
       video.onloadedmetadata = () => {
         try {
           // Create audio context
-          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
           const source = audioContext.createMediaElementSource(video);
           const destination = audioContext.createMediaStreamDestination();
           
@@ -91,7 +91,8 @@ export default function AudioTester() {
             }
           }, Math.min(video.duration * 1000 || 30000, 60000)); // Max 1 minute
           
-        } catch (error) {
+        } catch (audioError) {
+          console.error('Audio extraction error:', audioError);
           reject(new Error('Browser audio extraction not supported'));
         }
       };
