@@ -37,7 +37,6 @@ export default function AudioTester() {
   const extractAudioFromVideo = async (videoFile: File): Promise<File> => {
     return new Promise((resolve, reject) => {
       const video = document.createElement('video');
-      const canvas = document.createElement('canvas');
       
       video.onloadedmetadata = () => {
         try {
@@ -70,7 +69,7 @@ export default function AudioTester() {
             resolve(audioFile);
           };
           
-          mediaRecorder.onerror = (event) => {
+          mediaRecorder.onerror = () => {
             reject(new Error('Audio extraction failed'));
           };
           
@@ -400,8 +399,9 @@ export default function AudioTester() {
           const extractedAudio = await extractAudioFromVideo(selectedFile);
           setAudioFile(extractedAudio);
           setModelStatus('Audio extracted - ready to analyze');
-        } catch (extractError) {
-          setError('Failed to extract audio from video. Please try converting to audio format first.');
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to extract audio from video';
+          setError(`${errorMessage}. Please try converting to audio format first.`);
           setModelStatus('Audio extraction failed');
         } finally {
           setIsExtracting(false);
