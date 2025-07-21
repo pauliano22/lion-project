@@ -30,7 +30,7 @@ function ProtectionCard({ icon, title, description, examples }: {
   );
 }
 
-function ComingSoonCard({ title, description, price, features, featured = false, available = false, downloadLink = null, buttonText = null }: {
+function ComingSoonCard({ title, description, price, features, featured = false, available = false, downloadLink = null, buttonText = null, smartDownload = false }: {
   title: string;
   description: string;
   price: string;
@@ -39,7 +39,42 @@ function ComingSoonCard({ title, description, price, features, featured = false,
   available?: boolean;
   downloadLink?: string | null;
   buttonText?: string | null;
+  smartDownload?: boolean;
 }) {
+  const getDownloadLink = () => {
+    if (!smartDownload || !available) return downloadLink;
+    
+    // Detect operating system
+    const userAgent = navigator.userAgent;
+    const isMac = userAgent.includes('Mac');
+    const isWindows = userAgent.includes('Win');
+    
+    if (isMac) {
+      return '/Lion-AI-Detection'; // macOS version
+    } else if (isWindows) {
+      return '/Lion-AI-Detection.exe'; // Windows version
+    } else {
+      // Default to Windows for other platforms
+      return '/Lion-AI-Detection.exe';
+    }
+  };
+
+  const getButtonText = () => {
+    if (!smartDownload) return buttonText || "Install Extension";
+    
+    const userAgent = navigator.userAgent;
+    const isMac = userAgent.includes('Mac');
+    const isWindows = userAgent.includes('Win');
+    
+    if (isMac) {
+      return "Download for macOS";
+    } else if (isWindows) {
+      return "Download for Windows";
+    } else {
+      return "Download App";
+    }
+  };
+
   return (
     <div className={`bg-gray-dark border rounded-lg p-6 flex flex-col ${featured ? 'border-gold' : 'border-gold/20'}`}>
       {featured && (
@@ -59,15 +94,15 @@ function ComingSoonCard({ title, description, price, features, featured = false,
         ))}
       </ul>
       <div className="mt-auto">
-        {available && downloadLink ? (
+        {available && (downloadLink || smartDownload) ? (
           <a
-            href={downloadLink}
+            href={getDownloadLink() || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors flex items-center justify-center group"
           >
             <ExternalLink className="w-4 h-4 mr-2" />
-            {buttonText || "Install Extension"}
+            {getButtonText()}
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </a>
         ) : (
@@ -210,7 +245,7 @@ export default function Home() {
               {/* Status indicator */}
               <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                Products ready - try them free for now!
+                Products ready - launching soon
               </div>
             </div>
           </div>
@@ -279,7 +314,7 @@ export default function Home() {
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
-              title="Desktop Guardian (Free for now!)"
+              title="Desktop Guardian"
               description="Protects calls and apps on your computer"
               price="$2.99/mo"
               features={[
