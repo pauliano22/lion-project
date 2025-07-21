@@ -30,7 +30,7 @@ function ProtectionCard({ icon, title, description, examples }: {
   );
 }
 
-function ComingSoonCard({ title, description, price, features, featured = false, available = false, downloadLink = null }: {
+function ComingSoonCard({ title, description, price, features, featured = false, available = false, downloadLink = null, buttonText = null }: {
   title: string;
   description: string;
   price: string;
@@ -38,9 +38,10 @@ function ComingSoonCard({ title, description, price, features, featured = false,
   featured?: boolean;
   available?: boolean;
   downloadLink?: string | null;
+  buttonText?: string | null;
 }) {
   return (
-    <div className={`bg-gray-dark border rounded-lg p-6 ${featured ? 'border-gold' : 'border-gold/20'}`}>
+    <div className={`bg-gray-dark border rounded-lg p-6 flex flex-col ${featured ? 'border-gold' : 'border-gold/20'}`}>
       {featured && (
         <div className="bg-gold text-black text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
           NOW AVAILABLE!
@@ -49,7 +50,7 @@ function ComingSoonCard({ title, description, price, features, featured = false,
       <h3 className="text-xl font-bold mb-2 text-gold">{title}</h3>
       <p className="text-gray-300 mb-4">{description}</p>
       <div className="text-3xl font-bold text-gold mb-4">{price}</div>
-      <ul className="space-y-2 mb-6">
+      <ul className="space-y-2 mb-6 flex-grow">
         {features.map((feature, index) => (
           <li key={index} className="text-sm text-gray-400 flex items-center">
             <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
@@ -57,28 +58,30 @@ function ComingSoonCard({ title, description, price, features, featured = false,
           </li>
         ))}
       </ul>
-      {available && downloadLink ? (
-        <a
-          href={downloadLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors flex items-center justify-center group"
-        >
-          <ExternalLink className="w-4 h-4 mr-2" />
-          Install Extension
-          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-        </a>
-      ) : (
-        <button className="w-full bg-gray-600 text-gray-300 px-6 py-3 rounded-lg font-semibold cursor-not-allowed">
-          <Clock className="w-4 h-4 inline mr-2" />
-          Coming Soon
-        </button>
-      )}
-      {!available && (
-        <p className="text-xs text-gray-500 mt-2 text-center">
-          Notify me when available
-        </p>
-      )}
+      <div className="mt-auto">
+        {available && downloadLink ? (
+          <a
+            href={downloadLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors flex items-center justify-center group"
+          >
+            <ExternalLink className="w-4 h-4 mr-2" />
+            {buttonText || "Install Extension"}
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </a>
+        ) : (
+          <button className="w-full bg-gray-600 text-gray-300 px-6 py-3 rounded-lg font-semibold cursor-not-allowed">
+            <Clock className="w-4 h-4 inline mr-2" />
+            Coming Soon
+          </button>
+        )}
+        {!available && (
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            Notify me when available
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -146,9 +149,9 @@ export default function Home() {
       </header>
 
       {/* Hero Section - Full Screen */}
-      <section className="min-h-screen flex flex-col justify-center items-center relative px-4">
+      <section className="min-h-screen flex flex-col justify-center items-center relative px-4 pb-16 md:pb-0">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
             <div className="md:w-1/3">
               <Image
                 src="/images/2.png"
@@ -186,7 +189,7 @@ export default function Home() {
               </p>
 
               {/* Main CTA buttons */}
-              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-8">
+              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 md:mb-8">
                 <button
                   onClick={() => smoothScrollTo('demo')}
                   className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center group"
@@ -205,21 +208,21 @@ export default function Home() {
               </div>
 
               {/* Status indicator */}
-              <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full">
+              <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                Products ready - launching soon
+                Products ready - try them free for now!
               </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll indicator - moved higher */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 animate-bounce">
+        {/* Scroll indicator - responsive positioning */}
+        <div className="absolute bottom-8 md:bottom-20 left-1/2 transform -translate-x-1/2 animate-bounce">
           <button
             onClick={() => smoothScrollTo('demo')}
-            className="text-gold hover:text-gold-dark transition-colors"
+            className="text-gold hover:text-gold-dark transition-colors p-2"
           >
-            <ChevronDown className="w-6 h-6" />
+            <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
       </section>
@@ -276,7 +279,7 @@ export default function Home() {
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
-              title="Desktop Guardian"
+              title="Desktop Guardian (Free for now!)"
               description="Protects calls and apps on your computer"
               price="$2.99/mo"
               features={[
@@ -286,6 +289,9 @@ export default function Home() {
                 "Family account management",
                 "Emergency contact alerts"
               ]}
+              available={true}
+              downloadLink="/Lion-AI-Detection.exe"
+              buttonText="Download App"
             />
             <ComingSoonCard
               title="Family Shield (Chrome)"
@@ -301,6 +307,7 @@ export default function Home() {
               featured
               available={true}
               downloadLink="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1"
+              buttonText="Install Extension"
             />
             <ComingSoonCard
               title="Mobile Protector"
