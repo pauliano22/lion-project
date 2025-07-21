@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink, Zap, Shield, Target } from 'lucide-react';
+import { Upload, Play, Pause, AlertTriangle, CheckCircle, Clock, FileAudio, ExternalLink, Zap, Shield, Target, Video } from 'lucide-react';
 
 interface DetectionResult {
   prediction: 'FAKE' | 'REAL';
@@ -22,7 +22,9 @@ interface DetectionResult {
 
 export default function AudioTester() {
   const [file, setFile] = useState<File | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -30,6 +32,79 @@ export default function AudioTester() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Extract audio from MP4 using Web APIs
+  const extractAudioFromVideo = async (videoFile: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video');
+      const canvas = document.createElement('canvas');
+      
+      video.onloadedmetadata = () => {
+        try {
+          // Create audio context
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const source = audioContext.createMediaElementSource(video);
+          const destination = audioContext.createMediaStreamDestination();
+          
+          source.connect(destination);
+          
+          // Create MediaRecorder to capture audio
+          const mediaRecorder = new MediaRecorder(destination.stream, {
+            mimeType: 'audio/webm; codecs=opus'
+          });
+          
+          const chunks: BlobPart[] = [];
+          
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              chunks.push(event.data);
+            }
+          };
+          
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+            const audioFile = new File([audioBlob], 
+              videoFile.name.replace(/\.[^/.]+$/, '') + '.webm', 
+              { type: 'audio/webm' }
+            );
+            resolve(audioFile);
+          };
+          
+          mediaRecorder.onerror = (event) => {
+            reject(new Error('Audio extraction failed'));
+          };
+          
+          // Start recording
+          mediaRecorder.start();
+          video.play();
+          
+          // Stop recording when video ends (or after reasonable duration)
+          video.onended = () => {
+            mediaRecorder.stop();
+            audioContext.close();
+          };
+          
+          // Safety timeout
+          setTimeout(() => {
+            if (mediaRecorder.state === 'recording') {
+              mediaRecorder.stop();
+              audioContext.close();
+            }
+          }, Math.min(video.duration * 1000 || 30000, 60000)); // Max 1 minute
+          
+        } catch (error) {
+          reject(new Error('Browser audio extraction not supported'));
+        }
+      };
+      
+      video.onerror = () => {
+        reject(new Error('Failed to load video file'));
+      };
+      
+      video.src = URL.createObjectURL(videoFile);
+      video.load();
+    });
+  };
 
   // Upload file and get the file URL for Gradio
   const uploadFileToGradio = async (file: File): Promise<string> => {
@@ -288,19 +363,26 @@ export default function AudioTester() {
     }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      // Validate file size (max 10MB)
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        setError('File size too large. Please select a file smaller than 10MB.');
+      // Validate file size (max 25MB for video files, 10MB for audio)
+      const maxSize = selectedFile.type.includes('video') ? 25 * 1024 * 1024 : 10 * 1024 * 1024;
+      if (selectedFile.size > maxSize) {
+        setError(`File size too large. Please select a file smaller than ${selectedFile.type.includes('video') ? '25MB' : '10MB'}.`);
         return;
       }
       
-      // Validate file type
-      const allowedTypes = ['audio/wav', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/m4a'];
-      if (!allowedTypes.some(type => selectedFile.type.includes(type.split('/')[1]))) {
-        setError('Invalid file type. Please select a WAV, MP3, OGG, or M4A file.');
+      // Validate file type - now includes MP4
+      const allowedTypes = ['audio/wav', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/m4a', 'video/mp4'];
+      const isValidType = allowedTypes.some(type => {
+        const [category, format] = type.split('/');
+        return selectedFile.type.includes(format) || 
+               (category === 'video' && selectedFile.name.toLowerCase().endsWith('.mp4'));
+      });
+      
+      if (!isValidType) {
+        setError('Invalid file type. Please select a WAV, MP3, OGG, M4A, or MP4 file.');
         return;
       }
       
@@ -308,11 +390,31 @@ export default function AudioTester() {
       setResult(null);
       setError(null);
       setModelStatus('Ready to analyze');
+      
+      // If it's an MP4 file, extract audio
+      if (selectedFile.type.includes('video') || selectedFile.name.toLowerCase().endsWith('.mp4')) {
+        setIsExtracting(true);
+        setModelStatus('Extracting audio from video...');
+        
+        try {
+          const extractedAudio = await extractAudioFromVideo(selectedFile);
+          setAudioFile(extractedAudio);
+          setModelStatus('Audio extracted - ready to analyze');
+        } catch (extractError) {
+          setError('Failed to extract audio from video. Please try converting to audio format first.');
+          setModelStatus('Audio extraction failed');
+        } finally {
+          setIsExtracting(false);
+        }
+      } else {
+        setAudioFile(selectedFile);
+      }
     }
   };
 
   const analyzeAudio = async () => {
-    if (!file) return;
+    const fileToAnalyze = audioFile || file;
+    if (!fileToAnalyze) return;
   
     setIsAnalyzing(true);
     setError(null);
@@ -325,7 +427,7 @@ export default function AudioTester() {
       setModelStatus('Processing with AI...');
       
       // Call the detection function
-      const apiResult = await detectAudioDeepfake(file);
+      const apiResult = await detectAudioDeepfake(fileToAnalyze);
   
       setModelStatus('Analysis complete!');
   
@@ -335,8 +437,8 @@ export default function AudioTester() {
         confidence: apiResult.confidence,
         probabilities: apiResult.probabilities,
         details: {
-          file_name: file.name,
-          file_size: file.size,
+          file_name: file?.name || 'Unknown',
+          file_size: file?.size || 0,
           processing_time: Date.now() - startTime,
           model_version: apiResult.details.model_version
         },
@@ -357,7 +459,7 @@ export default function AudioTester() {
   };
 
   const togglePlayback = () => {
-    if (!audioRef.current || !file) return;
+    if (!audioRef.current || (!audioFile && !file)) return;
 
     if (isPlaying) {
       audioRef.current.pause();
@@ -376,6 +478,8 @@ export default function AudioTester() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const isVideoFile = file && (file.type.includes('video') || file.name.toLowerCase().endsWith('.mp4'));
+
     return (
     <div className="max-w-4xl mx-auto">
     <div className="max-w-4xl mx-auto">
@@ -392,7 +496,9 @@ export default function AudioTester() {
         {/* Status Bar */}
         <div className="mb-6 p-3 bg-black/50 rounded-lg text-center">
           <div className="flex items-center justify-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${isAnalyzing ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'}`}></div>
+            <div className={`w-3 h-3 rounded-full ${
+              isAnalyzing || isExtracting ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'
+            }`}></div>
             <span className="text-gold font-medium">{modelStatus}</span>
           </div>
         </div>
@@ -402,7 +508,7 @@ export default function AudioTester() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="audio/*"
+            accept="audio/*,video/mp4,.mp4"
             onChange={handleFileSelect}
             className="hidden"
           />
@@ -411,15 +517,19 @@ export default function AudioTester() {
             onClick={() => fileInputRef.current?.click()}
             className="border-2 border-dashed border-gold/30 hover:border-gold/60 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 hover:bg-gold/5"
           >
-            <Upload className="w-16 h-16 text-gold mx-auto mb-4" />
+            <div className="flex items-center justify-center space-x-4 mb-4">
+              <FileAudio className="w-12 h-12 text-gold" />
+              <Video className="w-12 h-12 text-gold" />
+            </div>
             <h4 className="text-xl font-semibold text-gold mb-2">
-              Drop your audio file here
+              Drop your audio or video file here
             </h4>
             <p className="text-gray-300 mb-4">
               Or click to browse your files
             </p>
             <p className="text-sm text-gray-400">
-              Supports WAV, MP3, M4A, OGG files up to 10MB
+              Supports WAV, MP3, M4A, OGG files up to 10MB<br />
+              <strong>NEW:</strong> MP4 video files up to 25MB (audio will be extracted)
             </p>
           </div>
         </div>
@@ -429,30 +539,47 @@ export default function AudioTester() {
           <div className="mb-6 p-4 bg-black/30 border border-gold/20 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <FileAudio className="w-8 h-8 text-gold" />
+                {isVideoFile ? (
+                  <Video className="w-8 h-8 text-gold" />
+                ) : (
+                  <FileAudio className="w-8 h-8 text-gold" />
+                )}
                 <div>
                   <p className="font-semibold text-gold text-lg">{file.name}</p>
                   <p className="text-sm text-gray-400">
                     {formatFileSize(file.size)} • {file.type}
+                    {isVideoFile && (
+                      <span className="ml-2 px-2 py-1 bg-blue-900/30 border border-blue-500/50 rounded text-xs text-blue-400">
+                        Video → Audio
+                      </span>
+                    )}
                   </p>
+                  {isVideoFile && audioFile && (
+                    <p className="text-xs text-green-400 mt-1">
+                      ✓ Audio extracted ({formatFileSize(audioFile.size)})
+                    </p>
+                  )}
                 </div>
               </div>
               
               <button
                 onClick={togglePlayback}
-                className="flex items-center space-x-2 bg-gold/20 hover:bg-gold/30 text-gold px-6 py-3 rounded-lg transition-colors"
+                disabled={isExtracting || (!audioFile && !!isVideoFile)}
+                className="flex items-center space-x-2 bg-gold/20 hover:bg-gold/30 text-gold px-6 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isPlaying ? 
                   <Pause className="w-5 h-5" /> : 
                   <Play className="w-5 h-5" />
                 }
-                <span className="font-medium">{isPlaying ? 'Pause' : 'Play'}</span>
+                <span className="font-medium">
+                  {isExtracting ? 'Extracting...' : (isPlaying ? 'Pause' : 'Play')}
+                </span>
               </button>
             </div>
             
             <audio
               ref={audioRef}
-              src={file ? URL.createObjectURL(file) : ''}
+              src={audioFile ? URL.createObjectURL(audioFile) : (file && !isVideoFile ? URL.createObjectURL(file) : '')}
               onEnded={() => setIsPlaying(false)}
               onPause={() => setIsPlaying(false)}
               className="hidden"
@@ -461,7 +588,7 @@ export default function AudioTester() {
         )}
 
         {/* Analyze Button */}
-        {file && (
+        {file && !isExtracting && (audioFile || !isVideoFile) && (
           <div className="mb-6 text-center">
             <button
               onClick={analyzeAudio}
@@ -608,7 +735,7 @@ export default function AudioTester() {
         {/* Convert Audio Link */}
         <div className="mt-8 text-center">
           <p className="text-gray-400 text-sm">
-            Need to convert your audio file?{' '}
+            Need to convert your audio or video file?{' '}
             <a 
               href="https://convertio.co/" 
               target="_blank" 
