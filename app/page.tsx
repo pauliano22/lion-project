@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
@@ -133,6 +134,34 @@ const smoothScrollTo = (elementId: string) => {
 };
 
 export default function Home() {
+  const [feedback, setFeedback] = useState<string>('');
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+
+  const handleFeedbackSubmit = async () => {
+    if (!feedback.trim()) return;
+
+    setIsSubmittingFeedback(true);
+    
+    // Simulate API call - replace with your actual endpoint
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      
+      // Here you would make an actual API call to save the feedback
+      console.log('Feedback submitted:', feedback);
+      
+      setFeedbackSubmitted(true);
+      setFeedback('');
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => setFeedbackSubmitted(false), 3000);
+    } catch (error) {
+      console.error('Failed to submit feedback:', error);
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white scroll-smooth">
       {/* Sticky Navigation */}
@@ -462,6 +491,78 @@ export default function Home() {
                     </li>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Feedback Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto bg-gradient-to-r from-gold/5 to-yellow-500/5 border border-gold/20 rounded-xl p-4 sm:p-6 lg:p-8">
+            <div className="text-center mb-6">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <User className="w-6 h-6 text-gold" />
+                <Heart className="w-5 h-5 text-red-400" />
+              </div>
+              <h4 className="text-xl sm:text-2xl font-bold text-gold mb-2">
+                Built by a Cornell CS Student
+              </h4>
+              <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+                The Lion Project is a passion project created to help protect families from AI-generated scams and deepfakes. 
+                I'm constantly working to improve the accuracy and user experience. Your feedback 
+                helps make these tools better for everyone!
+              </p>
+            </div>
+
+            <div className="max-w-md mx-auto">
+              {feedbackSubmitted ? (
+                <div className="text-center p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
+                  <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <p className="text-green-400 font-semibold">Thank you for your feedback!</p>
+                  <p className="text-green-300 text-sm mt-1">Your input helps improve these tools.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="relative">
+                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gold/60" />
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Share your thoughts, suggestions, or report issues..."
+                      className="w-full bg-black/30 border border-gold/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none resize-none h-24 text-sm"
+                      maxLength={500}
+                    />
+                    <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                      {feedback.length}/500
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={handleFeedbackSubmit}
+                    disabled={!feedback.trim() || isSubmittingFeedback}
+                    className="w-full bg-gradient-to-r from-gold/80 to-yellow-500/80 hover:from-gold hover:to-yellow-500 text-black font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {isSubmittingFeedback ? (
+                      <>
+                        <Clock className="w-4 h-4 animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Send Feedback</span>
+                      </>
+                    )}
+                  </button>
+                </div> 
+              )}
+
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  You can also reach out via email or social media for detailed discussions!
+                </p>
               </div>
             </div>
           </div>
