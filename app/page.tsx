@@ -546,7 +546,7 @@ User Agent: ${navigator.userAgent}`,
               </h4>
               <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
                 The Lion Project is a passion project created to help protect families from AI-generated scams and deepfakes. 
-                I'm constantly working to improve the accuracy and user experience. Your feedback 
+                I&apos;m constantly working to improve the accuracy and user experience. Your feedback 
                 helps make these tools better for everyone!
               </p>
             </div>
