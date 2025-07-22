@@ -143,20 +143,55 @@ export default function Home() {
 
     setIsSubmittingFeedback(true);
     
-    // Simulate API call - replace with your actual endpoint
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      // Using your Formspree form endpoint
+      const formspreeResponse = await fetch('https://formspree.io/f/xgvzaojq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: 'feedback@lionproject.com', // From field for organization
+          message: `Lion Project Feedback - Home Page
+
+Feedback: ${feedback}
+
+Submitted: ${new Date().toLocaleString()}
+Page: Home Page
+User Agent: ${navigator.userAgent}`,
+          subject: 'Lion Project Website Feedback',
+          _replyto: 'noreply@lionproject.com'
+        })
+      });
+
+      if (formspreeResponse.ok) {
+        console.log('Feedback sent successfully to thelionproject@gmail.com via Formspree!');
+        setFeedbackSubmitted(true);
+        setFeedback('');
+        
+        // Reset success message after 3 seconds
+        setTimeout(() => setFeedbackSubmitted(false), 3000);
+      } else {
+        throw new Error('Formspree submission failed');
+      }
       
-      // Here you would make an actual API call to save the feedback
-      console.log('Feedback submitted:', feedback);
+    } catch (error) {
+      console.error('Failed to submit feedback via Formspree, trying mailto fallback:', error);
       
+      // Fallback: Open user's email client with pre-filled content
+      const subject = encodeURIComponent('Lion Project Feedback - Home Page');
+      const body = encodeURIComponent(
+        `Hi,\n\nI have feedback about the Lion Project:\n\n${feedback}\n\nSubmitted: ${new Date().toLocaleString()}\nPage: Home Page\n\nThanks!`
+      );
+      const mailtoLink = `mailto:thelionproject@gmail.com?subject=${subject}&body=${body}`;
+      
+      // Open mailto link
+      window.open(mailtoLink, '_self');
+      
+      // Show success message since we opened their email client
       setFeedbackSubmitted(true);
       setFeedback('');
-      
-      // Reset success message after 3 seconds
       setTimeout(() => setFeedbackSubmitted(false), 3000);
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
     } finally {
       setIsSubmittingFeedback(false);
     }
