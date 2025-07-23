@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lion Project - AI Voice Deepfake Detection",
+  title: "Lion Project - AI Detection",
   description:
-    "Protect yourself from AI voice deception with advanced deepfake detection technology. Real-time audio verification and authenticity protection.",
+    "Protect yourself from AI deception with advanced deepfake detection technology. Real-time audio verification and authenticity protection.",
   icons: {
     icon: [
       { url: "/images/2.png", sizes: "32x32", type: "image/png" },

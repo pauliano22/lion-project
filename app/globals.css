@@ -36,3 +36,88 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Mobile app-inspired font weights */
+.font-thin {
+  font-weight: 100;
+}
+
+.font-extralight {
+  font-weight: 200;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+/* Enhanced letter spacing for premium look */
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+.tracking-ultra {
+  letter-spacing: 0.2em;
+}
+
+.tracking-mega {
+  letter-spacing: 0.3em;
+}
+
+/* Apply thin fonts to headings by default */
+h1, h2, h3, h4 {
+  font-weight: 200;
+  letter-spacing: 0.05em;
+}
+
+/* Specific heading styles */
+h1 {
+  font-weight: 200;
+  letter-spacing: 0.1em;
+}
+
+h2 {
+  font-weight: 200;
+  letter-spacing: 0.05em;
+}
+
+/* Button text should be light with wide spacing */
+button {
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+/* Override Tailwind's default bold */
+.font-bold {
+  font-weight: 300;
+}
+
+.font-semibold {
+  font-weight: 300;
+}
+
+/* Special classes for specific elements */
+.logo-text {
+  font-weight: 200;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-weight: 200;
+  letter-spacing: 0.1em;
+}
+
+.card-title {
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* Smooth font rendering for thin weights */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

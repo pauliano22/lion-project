@@ -276,15 +276,11 @@ User Agent: ${navigator.userAgent}`,
               </div>
 
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Protect yourself from  {' '}
-                <span className="gradient-text">AI</span>
+                 {' '}
+                Is that real or is that <span className="gradient-text">AI</span>?
               </h1>
-
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-                No more worrying about{' '}
-                <span className="gradient-text">scams</span>,{' '}
-                <span className="gradient-text">fake news</span>, or{' '}
-                <span className="gradient-text">voice cloning</span>
+              <p className="text-lg text-gray-300 mb-8 max-w-2xl">
+                Can your family <span className="gradient-text">tell the difference</span>?
               </p>
 
               {/* Main CTA buttons */}
@@ -304,8 +300,8 @@ User Agent: ${navigator.userAgent}`,
                   Demo
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
+                
               </div>
-
               {/* Status indicator */}
               <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
@@ -336,22 +332,22 @@ User Agent: ${navigator.userAgent}`,
             Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
           </p>
           {/* Price Comparison */}
-          <div className="bg-gradient-to-r from-gold/10 to-yellow-500/10 border border-gold/30 rounded-xl p-8 mb-16 text-center">
+          <div className="bg-gray border border-gold/30 rounded-xl p-8 mb-16 text-center">
             <h3 className="text-3xl font-bold text-gold mb-8">Unmatched Pricing</h3>
             <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+              <div className="border border-red-500/30 rounded-lg p-6">
                 <h4 className="text-lg font-bold text-red-400 mb-2">Competitors</h4>
                 <div className="text-3xl font-bold text-red-400 mb-2">$13-$700</div>
                 <p className="text-gray-300 text-sm">per month, per tool</p>
               </div>
 
-              <div className="bg-gold/20 border border-gold rounded-lg p-6">
+              <div className="border border-gold rounded-lg p-6">
                 <h4 className="text-lg font-bold text-gold mb-2">Individual Lion Products</h4>
                 <div className="text-3xl font-bold text-gold mb-2">$0-$2.99</div>
                 <p className="text-gray-300 text-sm">per month</p>
               </div>
 
-              <div className="bg-gold/30 border-2 border-gold rounded-lg p-6">
+              <div className="border border-gold rounded-lg p-6">
                 <h4 className="text-lg font-bold text-gold mb-2">Complete Lion Suite</h4>
                 <div className="text-3xl font-bold text-gold mb-2">$4.99</div>
                 <p className="text-gray-300 text-sm">per month (best value)</p>
@@ -374,11 +370,11 @@ User Agent: ${navigator.userAgent}`,
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our Chrome extension is now live! Desktop and mobile apps launching soon.
+            Our Chrome extension and desktop app are now live! Mobile app launching soon.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <ComingSoonCard
-              title="Desktop Guardian"
+              title="Desktop Guardian (Free for now)"
               description="Protects calls and apps on your computer"
               price="$2.99/mo"
               features={[
