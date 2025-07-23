@@ -276,7 +276,7 @@ User Agent: ${navigator.userAgent}`,
               </div>
 
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Protection from{' '}
+                Protect yourself from  {' '}
                 <span className="gradient-text">AI</span>
               </h1>
 
@@ -289,27 +289,27 @@ User Agent: ${navigator.userAgent}`,
 
               {/* Main CTA buttons */}
               <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 md:mb-8">
-                <button
-                  onClick={() => smoothScrollTo('demo')}
-                  className="bg-gold text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold-dark transition-colors flex items-center justify-center group"
-                >
-                  <Search className="w-5 h-5 mr-2" />
-                  Try Free Demo
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button
-                  onClick={() => smoothScrollTo('protection')}
-                  className="border-2 border-gold text-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gold/10 transition-colors flex items-center justify-center"
+              <button
+                  onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1", "_blank")}
+                  className="border-2 border-gold text-gold px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gold/10 transition-colors flex items-center justify-center"
                 >
                   <Shield className="w-5 h-5 mr-2" />
-                  How It Works
+                  Chrome Extension
+                </button>
+                <button
+                  onClick={() => smoothScrollTo('demo')}
+                  className="border-2 border-gold text-gold px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gold/10 transition-colors flex items-center justify-center"
+                >
+                  <Search className="w-5 h-5 mr-2" />
+                  Demo
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
               {/* Status indicator */}
               <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                Products ready - launching soon
+                Try our products free! (for now)
               </div>
             </div>
           </div>
