@@ -240,7 +240,8 @@ User Agent: ${navigator.userAgent}`,
           </nav>
           <button
             onClick={() => smoothScrollTo('demo')}
-            className="bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold-dark transition-colors"
+            className="bg-gold text-black px-6 py-3 rounded-lg hover:bg-gold-dark transition-colors"
+            style={{ fontWeight: 500 }}
           >
             Try Demo
           </button>
@@ -467,9 +468,9 @@ User Agent: ${navigator.userAgent}`,
 
             {/* Chrome Extension - Featured with enhanced styling */}
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border-2 border-yellow-400 hover:border-yellow-300 transition-all">
-              <div className="flex items-center mb-2">
-                <h3 className="text-2xl font-bold text-yellow-400">Family Shield</h3>
-                <span className="ml-2 text-xs bg-red-600/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30">
+              <div className="relative mb-2">
+                <h3 className="text-2xl font-bold text-yellow-400 text-center">Family Shield</h3>
+                <span className="absolute top-0 right-0 text-xs bg-red-600/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30">
                   Popular
                 </span>
               </div>
@@ -839,6 +840,78 @@ console.log(result.data);`}
                   <Mail className="w-5 h-5 mr-2" />
                   Get Support
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Feedback Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto bg-gradient-to-r from-gold/5 to-yellow-500/5 border border-gold/20 rounded-xl p-4 sm:p-6 lg:p-8">
+            <div className="text-center mb-6">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <User className="w-6 h-6 text-gold" />
+                <Heart className="w-5 h-5 text-red-400" />
+              </div>
+              <h4 className="text-xl sm:text-2xl font-bold text-gold mb-2">
+                Built by a Cornell CS Student
+              </h4>
+              <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+                The Lion Project is a passion project created to help protect families from AI.<br /><br />
+                I&apos;m constantly working to improve the accuracy and user experience. <br /><br />Your feedback
+                helps make these tools better for everyone!
+              </p>
+            </div>
+
+            <div className="max-w-md mx-auto">
+              {feedbackSubmitted ? (
+                <div className="text-center p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
+                  <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <p className="text-green-400 font-semibold">Thank you for your feedback!</p>
+                  <p className="text-green-300 text-sm mt-1">Your input helps improve these tools.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="relative">
+                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gold/60" />
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Share your thoughts, suggestions, or report issues..."
+                      className="w-full bg-black/30 border border-gold/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none resize-none h-24 text-sm"
+                      maxLength={500}
+                    />
+                    <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                      {feedback.length}/500
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleFeedbackSubmit}
+                    disabled={!feedback.trim() || isSubmittingFeedback}
+                    className="w-full bg-gradient-to-r from-gold/80 to-yellow-500/80 hover:from-gold hover:to-yellow-500 text-black font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {isSubmittingFeedback ? (
+                      <>
+                        <Clock className="w-4 h-4 animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Send Feedback</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  You can also reach out via email or social media for detailed discussions!
+                </p>
               </div>
             </div>
           </div>
