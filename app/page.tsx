@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
@@ -44,12 +44,12 @@ function ComingSoonCard({ title, description, price, features, featured = false,
 }) {
   const getDownloadLink = () => {
     if (!smartDownload || !available) return downloadLink;
-    
+
     // Detect operating system
     const userAgent = navigator.userAgent;
     const isMac = userAgent.includes('Mac');
     const isWindows = userAgent.includes('Win');
-    
+
     if (isMac) {
       return '/Lion-AI-Detection'; // macOS version
     } else if (isWindows) {
@@ -62,11 +62,11 @@ function ComingSoonCard({ title, description, price, features, featured = false,
 
   const getButtonText = () => {
     if (!smartDownload) return buttonText || "Install Extension";
-    
+
     const userAgent = navigator.userAgent;
     const isMac = userAgent.includes('Mac');
     const isWindows = userAgent.includes('Win');
-    
+
     if (isMac) {
       return "Download for macOS";
     } else if (isWindows) {
@@ -142,7 +142,7 @@ export default function Home() {
     if (!feedback.trim()) return;
 
     setIsSubmittingFeedback(true);
-    
+
     try {
       // Using your Formspree form endpoint
       const formspreeResponse = await fetch('https://formspree.io/f/xgvzaojq', {
@@ -168,26 +168,26 @@ User Agent: ${navigator.userAgent}`,
         console.log('Feedback sent successfully to thelionproject@gmail.com via Formspree!');
         setFeedbackSubmitted(true);
         setFeedback('');
-        
+
         // Reset success message after 3 seconds
         setTimeout(() => setFeedbackSubmitted(false), 3000);
       } else {
         throw new Error('Formspree submission failed');
       }
-      
+
     } catch (error) {
       console.error('Failed to submit feedback via Formspree, trying mailto fallback:', error);
-      
+
       // Fallback: Open user's email client with pre-filled content
       const subject = encodeURIComponent('Lion Project Feedback - Home Page');
       const body = encodeURIComponent(
         `Hi,\n\nI have feedback about the Lion Project:\n\n${feedback}\n\nSubmitted: ${new Date().toLocaleString()}\nPage: Home Page\n\nThanks!`
       );
       const mailtoLink = `mailto:thelionproject@gmail.com?subject=${subject}&body=${body}`;
-      
+
       // Open mailto link
       window.open(mailtoLink, '_self');
-      
+
       // Show success message since we opened their email client
       setFeedbackSubmitted(true);
       setFeedback('');
@@ -276,7 +276,7 @@ User Agent: ${navigator.userAgent}`,
               </div>
 
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                 {' '}
+                {' '}
                 Is that real or is that <span className="gradient-text">AI</span>?
               </h1>
               <p className="text-lg text-gray-300 mb-8 max-w-2xl">
@@ -285,7 +285,7 @@ User Agent: ${navigator.userAgent}`,
 
               {/* Main CTA buttons */}
               <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 md:mb-8">
-              <button
+                <button
                   onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1", "_blank")}
                   className="border-2 border-gold text-gold px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gold/10 transition-colors flex items-center justify-center"
                 >
@@ -300,7 +300,7 @@ User Agent: ${navigator.userAgent}`,
                   Demo
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
-                
+
               </div>
               {/* Status indicator */}
               <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
@@ -373,49 +373,168 @@ User Agent: ${navigator.userAgent}`,
             Our Chrome extension and desktop app are now live! Mobile app launching soon.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
-            <ComingSoonCard
-              title="Desktop Guardian (Free for now)"
-              description="Protects calls and apps on your computer"
-              price="$2.99/mo"
-              features={[
-                "Phone calls through your computer",
-                "Desktop video call protection (Zoom, Teams)",
-                "Audio from any desktop application",
-                "Family account management",
-                "Emergency contact alerts"
-              ]}
-              available={true}
-              downloadLink="/Lion-AI-Detection.exe"
-              buttonText="Download App"
-            />
-            <ComingSoonCard
-              title="Family Shield (Chrome)"
-              description="Scans everything you see in your browser"
-              price="Free"
-              features={[
-                "Social media feeds (Facebook, Twitter, etc)",
-                "YouTube and video content scanning",
-                "News article verification",
-                "Web-based video calls",
-                "One-click reporting"
-              ]}
-              featured
-              available={true}
-              downloadLink="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1"
-              buttonText="Install Extension"
-            />
-            <ComingSoonCard
-              title="Mobile Protector"
-              description="Monitors apps and calls on your phone"
-              price="$2.99/mo"
-              features={[
-                "TikTok, Instagram, Snapchat scanning",
-                "Phone call screening & analysis",
-                "WhatsApp & messaging apps",
-                "Mobile video calls (FaceTime, etc)",
-                "Real-time mobile alerts"
-              ]}
-            />
+
+            {/* Desktop Guardian - Multi-Platform */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-yellow-500/50 hover:border-yellow-400 transition-all">
+              <h3 className="text-2xl font-bold mb-2 text-yellow-400">Desktop Guardian</h3>
+              <p className="text-gray-300 mb-4">Protects calls and apps on your computer</p>
+              <div className="text-3xl font-bold mb-6">
+                <span className="text-yellow-400">Free</span>
+                <span className="text-sm text-gray-400 block">during beta</span>
+                <span className="text-sm text-gray-500">$2.99/mo after launch</span>
+              </div>
+
+              <ul className="text-left mb-8 space-y-2">
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Phone calls through your computer
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Desktop video call protection (Zoom, Teams)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Audio from any desktop application
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Real-time deepfake detection (under 2s)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Smart alert system & logging
+                </li>
+              </ul>
+
+              <div className="space-y-3">
+                <h4 className="font-semibold text-yellow-400 mb-3">Download for Your Platform:</h4>
+
+                <a
+                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-Windows.exe"
+                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
+                >
+                  <Monitor className="w-4 h-4 mr-2" />
+                  Windows (30.5 MB)
+                </a>
+
+                <a
+                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-macOS"
+                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
+                >
+                  <Laptop className="w-4 h-4 mr-2" />
+                  macOS (17.6 MB)
+                </a>
+
+                <a
+                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-Linux"
+                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
+                >
+                  <Terminal className="w-4 h-4 mr-2" />
+                  Linux (44.1 MB)
+                </a>
+              </div>
+
+              <p className="text-xs text-gray-400 mt-4">
+                Hosted securely on GitHub Releases • Open source code available
+              </p>
+            </div>
+
+            {/* Chrome Extension - Featured with enhanced styling */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border-2 border-yellow-400 hover:border-yellow-300 transition-all">
+              <div className="flex items-center mb-2">
+                <h3 className="text-2xl font-bold text-yellow-400">Family Shield</h3>
+                <span className="ml-2 text-xs bg-red-600/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30">
+                  Popular
+                </span>
+              </div>
+              <p className="text-gray-300 mb-4">Scans everything you see in your browser</p>
+              <div className="text-3xl font-bold mb-6">
+                <span className="text-yellow-400">Free</span>
+              </div>
+
+              <ul className="text-left mb-8 space-y-2">
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Social media feeds (Facebook, Twitter, etc)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  YouTube and video content scanning
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  News article verification
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Web-based video calls
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  One-click reporting
+                </li>
+              </ul>
+
+              <a
+                href="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1"
+                className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-4 px-6 rounded-lg transition-colors border border-yellow-400 hover:border-yellow-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Shield className="w-5 h-5 mr-2" />
+                Install Extension
+              </a>
+
+              <p className="text-xs text-gray-400 mt-4">
+                Available on Chrome Web Store • 1-click install
+              </p>
+            </div>
+
+            {/* Mobile App - Coming Soon */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-yellow-500/50 hover:border-yellow-400 transition-all opacity-75">
+              <h3 className="text-2xl font-bold mb-2 text-yellow-400">Mobile Protector</h3>
+              <p className="text-gray-300 mb-4">Monitors apps and calls on your phone</p>
+              <div className="text-3xl font-bold mb-6">
+                <span className="text-yellow-400">$2.99</span>
+                <span className="text-sm text-gray-400 block">/month</span>
+              </div>
+
+              <ul className="text-left mb-8 space-y-2">
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  TikTok, Instagram, Snapchat scanning
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Phone call screening & analysis
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  WhatsApp & messaging apps
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Mobile video calls (FaceTime, etc)
+                </li>
+                <li className="flex items-center">
+                  <span className="text-yellow-400 mr-2">✓</span>
+                  Real-time mobile alerts
+                </li>
+              </ul>
+
+              <button
+                className="flex items-center justify-center w-full bg-gray-600 text-gray-300 py-4 px-6 rounded-lg cursor-not-allowed border border-gray-500"
+                disabled
+              >
+                <Smartphone className="w-5 h-5 mr-2" />
+                Coming Soon
+              </button>
+
+              <p className="text-xs text-gray-400 mt-4">
+                iOS & Android • Launching Q2 2025
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -541,8 +660,8 @@ User Agent: ${navigator.userAgent}`,
                 Built by a Cornell CS Student
               </h4>
               <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
-                The Lion Project is a passion project created to help protect families from AI-generated scams and deepfakes. 
-                I&apos;m constantly working to improve the accuracy and user experience. Your feedback 
+                The Lion Project is a passion project created to help protect families from AI-generated scams and deepfakes.
+                I&apos;m constantly working to improve the accuracy and user experience. Your feedback
                 helps make these tools better for everyone!
               </p>
             </div>
@@ -569,7 +688,7 @@ User Agent: ${navigator.userAgent}`,
                       {feedback.length}/500
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={handleFeedbackSubmit}
                     disabled={!feedback.trim() || isSubmittingFeedback}
@@ -587,7 +706,7 @@ User Agent: ${navigator.userAgent}`,
                       </>
                     )}
                   </button>
-                </div> 
+                </div>
               )}
 
               <div className="mt-4 text-center">
