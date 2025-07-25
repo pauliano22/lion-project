@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
