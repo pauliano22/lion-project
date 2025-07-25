@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
@@ -275,37 +275,62 @@ User Agent: ${navigator.userAgent}`,
                 <div className="h-0.5 bg-gradient-to-r from-gold/60 to-transparent w-full max-w-md mx-auto md:mx-0"></div>
               </div>
 
+              {/* Updated Hook - Option 2 (Empowerment-based) */}
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                {' '}
-                Is that real or is that <span className="gradient-text">AI</span>?
+                See through <span className="gradient-text">AI deception</span>
               </h1>
               <p className="text-lg text-gray-300 mb-8 max-w-2xl">
-                Can your family <span className="gradient-text">tell the difference</span>?
+                Real-time protection for your family against deepfakes and AI scams
               </p>
 
-              {/* Main CTA buttons */}
-              <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 md:mb-8">
-                <button
-                  onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1", "_blank")}
-                  className="border-2 border-gold text-gold px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gold/10 transition-colors flex items-center justify-center"
-                >
-                  <Shield className="w-5 h-5 mr-2" />
-                  Chrome Extension
-                </button>
-                <button
-                  onClick={() => smoothScrollTo('demo')}
-                  className="border-2 border-gold text-gold px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gold/10 transition-colors flex items-center justify-center"
-                >
-                  <Search className="w-5 h-5 mr-2" />
-                  Demo
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
-
+              {/* All options as small buttons */}
+              <div className="mb-6">
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <button
+                    onClick={() => smoothScrollTo('demo')}
+                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border-1 border-gold"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Demo
+                  </button>
+                  <button
+                    onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1", "_blank")}
+                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
+                    Chrome extension
+                  </button>
+                  <a
+                    href="#coming-soon"
+                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
+                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
+                  >
+                    <Monitor className="w-4 h-4 mr-2" />
+                    Windows
+                  </a>
+                  <a
+                    href="#coming-soon"
+                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
+                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
+                  >
+                    <Apple className="w-4 h-4 mr-2" />
+                    macOS
+                  </a>
+                  <a
+                    href="#coming-soon"
+                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
+                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
+                  >
+                    <Computer className="w-4 h-4 mr-2" />
+                    Linux
+                  </a>
+                </div>
               </div>
+
               {/* Status indicator */}
-              <div className="inline-flex items-center text-sm text-gray-400 bg--900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
+              <div className="inline-flex items-center text-sm text-gray-400 bg-gray-900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                Try our products free! (for now)
+                Chrome extension free forever • Desktop apps free during beta
               </div>
             </div>
           </div>
@@ -370,7 +395,7 @@ User Agent: ${navigator.userAgent}`,
             Choose Your <span className="gradient-text">Protection Level</span>
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our Chrome extension and desktop app are now live! Mobile app launching soon.
+            Our Chrome extension and desktop apps are now live! Mobile app launching soon.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
 
