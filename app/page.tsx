@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ArrowRight, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
 function ProtectionCard({ icon, title, description, examples }: {
@@ -604,7 +604,7 @@ User Agent: ${navigator.userAgent}`,
       {/* For Developers Section */}
       <section id="developers" className="py-16 px-4 bg-gray-dark/50">
         <div className="container mx-auto text-center">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-center mb-6">
               <Code className="w-12 h-12 text-gold mr-4" />
               <h2 className="text-4xl font-bold">
@@ -616,128 +616,229 @@ User Agent: ${navigator.userAgent}`,
               Integrate our powerful deepfake detection capabilities directly into your applications with our developer-friendly API.
             </p>
 
-            <div className="bg-black border border-gold/20 rounded-lg p-8">
-              <h3 className="text-2xl font-bold text-gold mb-4">API Documentation Coming Soon</h3>
-              <p className="text-gray-300 mb-6">
-                We&apos;re preparing comprehensive documentation for developers who want to integrate our AI detection technology
-                into their own applications. Our API will support real-time audio analysis, batch processing, and custom model configurations.
-              </p>
-
-              <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div>
-                  <h4 className="font-semibold text-gold mb-3">What&apos;s Included:</h4>
-                  <ul className="space-y-2">
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      RESTful API with JSON responses
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      Real-time and batch processing endpoints
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      Multiple audio format support
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      Confidence scoring and detailed analysis
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gold mb-3">Developer Resources:</h4>
-                  <ul className="space-y-2">
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      Code examples in Python, JavaScript, cURL
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      SDK libraries for popular frameworks
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      Interactive API playground
-                    </li>
-                    <li className="text-sm text-gray-300 flex items-center">
-                      <CheckCircle className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                      24/7 developer support
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Feedback Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto bg-gradient-to-r from-gold/5 to-yellow-500/5 border border-gold/20 rounded-xl p-4 sm:p-6 lg:p-8">
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <User className="w-6 h-6 text-gold" />
-                <Heart className="w-5 h-5 text-red-400" />
-              </div>
-              <h4 className="text-xl sm:text-2xl font-bold text-gold mb-2">
-                Built by a Cornell CS Student
-              </h4>
-              <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
-                The Lion Project is a passion project created to help protect families from AI-generated scams and deepfakes.
-                I&apos;m constantly working to improve the accuracy and user experience. Your feedback
-                helps make these tools better for everyone!
-              </p>
-            </div>
-
-            <div className="max-w-md mx-auto">
-              {feedbackSubmitted ? (
-                <div className="text-center p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
-                  <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                  <p className="text-green-400 font-semibold">Thank you for your feedback!</p>
-                  <p className="text-green-300 text-sm mt-1">Your input helps improve these tools.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gold/60" />
-                    <textarea
-                      value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
-                      placeholder="Share your thoughts, suggestions, or report issues..."
-                      className="w-full bg-black/30 border border-gold/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none resize-none h-24 text-sm"
-                      maxLength={500}
-                    />
-                    <div className="absolute bottom-2 right-2 text-xs text-gray-500">
-                      {feedback.length}/500
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleFeedbackSubmit}
-                    disabled={!feedback.trim() || isSubmittingFeedback}
-                    className="w-full bg-gradient-to-r from-gold/80 to-yellow-500/80 hover:from-gold hover:to-yellow-500 text-black font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                  >
-                    {isSubmittingFeedback ? (
-                      <>
-                        <Clock className="w-4 h-4 animate-spin" />
-                        <span>Sending...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        <span>Send Feedback</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-
-              <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500">
-                  You can also reach out via email or social media for detailed discussions!
+            {/* API Demo and Documentation */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Live API Demo */}
+              <div className="bg-black border border-gold/20 rounded-lg p-6">
+                <h3 className="text-2xl font-bold text-gold mb-4">Try the API Live</h3>
+                <p className="text-gray-300 mb-4">
+                  Test our deepfake detection API directly in your browser. Upload audio files and see real-time results.
                 </p>
+                <a
+                  href="https://huggingface.co/spaces/pauliano22/deepfake-audio-detector"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+                >
+                  <ExternalLink className="w-5 h-5 mr-2" />
+                  Live API Demo
+                </a>
+              </div>
+
+              {/* API Specifications */}
+              <div className="bg-black border border-gold/20 rounded-lg p-6">
+                <h3 className="text-2xl font-bold text-gold mb-4">API Specifications</h3>
+                <div className="text-left space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Endpoint:</span>
+                    <span className="text-gray-300">/predict</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Method:</span>
+                    <span className="text-gray-300">POST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Formats:</span>
+                    <span className="text-gray-300">WAV, MP3, M4A</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Response:</span>
+                    <span className="text-gray-300">JSON with confidence scores</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Code Examples */}
+            <div className="bg-black border border-gold/20 rounded-lg p-8 mb-8">
+              <h3 className="text-2xl font-bold text-gold mb-6">Code Examples</h3>
+
+              <div className="space-y-6">
+                {/* Python Example */}
+                <div className="text-left">
+                  <h4 className="font-semibold text-gold mb-3 flex items-center">
+                    <Code className="w-4 h-4 mr-2" />
+                    Python
+                  </h4>
+                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(`from gradio_client import Client, handle_file
+
+client = Client("pauliano22/deepfake-audio-detector")
+result = client.predict(
+    audio=handle_file('path/to/audio.wav'),
+    api_name="/predict"
+)
+print(result)`)}
+                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
+                      title="Copy code"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                    <pre className="text-gray-300 text-sm leading-relaxed">
+                      {`from gradio_client import Client, handle_file
+
+client = Client("pauliano22/deepfake-audio-detector")
+result = client.predict(
+    audio=handle_file('path/to/audio.wav'),
+    api_name="/predict"
+)
+print(result)`}
+                    </pre>
+                  </div>
+                </div>
+
+                {/* JavaScript Example */}
+                <div className="text-left">
+                  <h4 className="font-semibold text-gold mb-3 flex items-center">
+                    <Code className="w-4 h-4 mr-2" />
+                    JavaScript
+                  </h4>
+                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(`import { Client } from "@gradio/client";
+
+const client = await Client.connect(
+  "pauliano22/deepfake-audio-detector"
+);
+const result = await client.predict("/predict", { 
+  audio: audioFile 
+});
+console.log(result.data);`)}
+                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
+                      title="Copy code"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                    <pre className="text-gray-300 text-sm leading-relaxed">
+                      {`import { Client } from "@gradio/client";
+
+const client = await Client.connect(
+  "pauliano22/deepfake-audio-detector"
+);
+const result = await client.predict("/predict", { 
+  audio: audioFile 
+});
+console.log(result.data);`}
+                    </pre>
+                  </div>
+                </div>
+
+                {/* cURL Example */}
+                <div className="text-left">
+                  <h4 className="font-semibold text-gold mb-3 flex items-center">
+                    <Code className="w-4 h-4 mr-2" />
+                    cURL
+                  </h4>
+                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(`curl -X POST \\
+  https://pauliano22-deepfake-audio-detector.hf.space/gradio_api/call/predict \\
+  -H "Content-Type: application/json" \\
+  -d '{"data": [{"path": "audio.wav", "meta": {"_type": "gradio.FileData"}}]}'`)}
+                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
+                      title="Copy code"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                    <pre className="text-gray-300 text-sm leading-relaxed">
+                      {`curl -X POST \\
+  https://pauliano22-deepfake-audio-detector.hf.space/gradio_api/call/predict \\
+  -H "Content-Type: application/json" \\
+  -d '{"data": [{"path": "audio.wav", "meta": {"_type": "gradio.FileData"}}]}'`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Features and Resources */}
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-black border border-gold/20 rounded-lg p-6">
+                <h4 className="font-semibold text-gold mb-4">API Features</h4>
+                <ul className="space-y-3 text-left">
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Real-time audio deepfake detection
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Multiple audio format support (WAV, MP3, M4A)
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Confidence scoring and detailed analysis
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    RESTful API with JSON responses
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Hosted on Hugging Face for reliability
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-black border border-gold/20 rounded-lg p-6">
+                <h4 className="font-semibold text-gold mb-4">Getting Started</h4>
+                <ul className="space-y-3 text-left">
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    No API key required - free to use
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Python, JavaScript, and cURL examples
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Best results with 3-10 second audio clips
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Clear speech recordings recommended
+                  </li>
+                  <li className="text-sm text-gray-300 flex items-center">
+                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
+                    Gradio client libraries available
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="mt-8 text-center">
+              <p className="text-gray-300 mb-4">
+                Ready to integrate deepfake detection into your application?
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="https://huggingface.co/spaces/pauliano22/deepfake-audio-detector"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center border-2 border-gold text-gold px-6 py-3 rounded-lg font-semibold hover:bg-gold/10 transition-colors"
+                >
+                  <ExternalLink className="w-5 h-5 mr-2" />
+                  Try Live Demo
+                </a>
+                <button
+                  onClick={() => window.open('mailto:thelionprojectai@gmail.com?subject=API Integration Support', '_blank')}
+                  className="inline-flex items-center bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
+                >
+                  <Mail className="w-5 h-5 mr-2" />
+                  Get Support
+                </button>
               </div>
             </div>
           </div>
