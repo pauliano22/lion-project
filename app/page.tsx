@@ -1,27 +1,36 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy, Play, Users, Globe, Lock, Award, Star } from 'lucide-react';
 import AudioTester from '@/components/AudioTester';
 
-function ProtectionCard({ icon, title, description, examples }: {
+interface ProtectionCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   examples: string[];
-}) {
+  image: string;
+}
+
+function ProtectionCard({ icon, title, description, examples, image }: ProtectionCardProps) {
   return (
-    <div className="bg-gray-dark border border-gold/20 rounded-lg p-6">
-      <div className="text-gold mb-4">{icon}</div>
-      <h3 className="text-xl font-bold mb-3 text-gold">{title}</h3>
-      <p className="text-gray-300 mb-4">{description}</p>
-      <div className="space-y-2">
-        <p className="text-sm font-semibold text-gold">Common threats we detect:</p>
-        <ul className="space-y-1">
+    <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/40 transition-all duration-500 group shadow-lg shadow-orange-500/5">
+      {/* Image placeholder */}
+      <div className="mb-6 h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/40 transition-all duration-500">
+        <div className="text-center">
+          <div className="text-orange-400 mb-2 group-hover:scale-110 transition-transform">{icon}</div>
+          <span className="text-xs text-gray-400 font-light">Image: {image}</span>
+        </div>
+      </div>
+      
+      <h3 className="text-2xl font-light mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">{title}</h3>
+      <p className="text-gray-300 mb-6 font-light leading-relaxed">{description}</p>
+      <div className="space-y-3">
+        <p className="text-sm font-light text-orange-400">Common threats we detect:</p>
+        <ul className="space-y-2">
           {examples.map((example, index) => (
-            <li key={index} className="text-sm text-gray-400 flex items-start">
-              <AlertTriangle className="w-4 h-4 text-red mr-2 mt-0.5 flex-shrink-0" />
+            <li key={index} className="text-sm text-gray-400 flex items-start font-light">
+              <AlertTriangle className="w-4 h-4 text-red-400 mr-3 mt-0.5 flex-shrink-0" />
               {example}
             </li>
           ))}
@@ -31,7 +40,6 @@ function ProtectionCard({ icon, title, description, examples }: {
   );
 }
 
-// Smooth scroll function
 const smoothScrollTo = (elementId: string) => {
   const element = document.getElementById(elementId);
   if (element) {
@@ -43,445 +51,395 @@ const smoothScrollTo = (elementId: string) => {
 };
 
 export default function Home() {
-  const [feedback, setFeedback] = useState<string>('');
+  const [feedback, setFeedback] = useState('');
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   const handleFeedbackSubmit = async () => {
     if (!feedback.trim()) return;
-
     setIsSubmittingFeedback(true);
-
-    try {
-      // Using your Formspree form endpoint
-      const formspreeResponse = await fetch('https://formspree.io/f/xgvzaojq', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: 'feedback@lionproject.com', // From field for organization
-          message: `Lion Project Feedback - Home Page
-
-Feedback: ${feedback}
-
-Submitted: ${new Date().toLocaleString()}
-Page: Home Page
-User Agent: ${navigator.userAgent}`,
-          subject: 'Lion Project Website Feedback',
-          _replyto: 'noreply@lionproject.com'
-        })
-      });
-
-      if (formspreeResponse.ok) {
-        console.log('Feedback sent successfully to thelionproject@gmail.com via Formspree!');
-        setFeedbackSubmitted(true);
-        setFeedback('');
-
-        // Reset success message after 3 seconds
-        setTimeout(() => setFeedbackSubmitted(false), 3000);
-      } else {
-        throw new Error('Formspree submission failed');
-      }
-
-    } catch (error) {
-      console.error('Failed to submit feedback via Formspree, trying mailto fallback:', error);
-
-      // Fallback: Open user's email client with pre-filled content
-      const subject = encodeURIComponent('Lion Project Feedback - Home Page');
-      const body = encodeURIComponent(
-        `Hi,\n\nI have feedback about the Lion Project:\n\n${feedback}\n\nSubmitted: ${new Date().toLocaleString()}\nPage: Home Page\n\nThanks!`
-      );
-      const mailtoLink = `mailto:thelionproject@gmail.com?subject=${subject}&body=${body}`;
-
-      // Open mailto link
-      window.open(mailtoLink, '_self');
-
-      // Show success message since we opened their email client
+    
+    // Simulate submission
+    setTimeout(() => {
       setFeedbackSubmitted(true);
       setFeedback('');
-      setTimeout(() => setFeedbackSubmitted(false), 3000);
-    } finally {
       setIsSubmittingFeedback(false);
-    }
+      setTimeout(() => setFeedbackSubmitted(false), 3000);
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white scroll-smooth">
-      {/* Sticky Navigation */}
-      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gold/20 px-1 py-1">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Image
-              src="/images/2.png"
-              alt="Lion Project"
-              width={60}
-              height={60}
-              className="rounded-full"
-            />
-            <span className="text-xl text-gold">Lion Project</span>
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-orange-500/20">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            {/* Logo placeholder */}
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 tracking-wider">
+              Lion Project
+            </span>
           </div>
+          
           <nav className="hidden md:flex space-x-8">
-            <button
-              onClick={() => smoothScrollTo('protection')}
-              className="text-gray-300 hover:text-gold transition-colors"
-            >
+            <button onClick={() => smoothScrollTo('protection')} className="text-gray-300 hover:text-orange-400 transition-colors font-light">
               Protection
             </button>
-            <button
-              onClick={() => smoothScrollTo('how-it-works')}
-              className="text-gray-300 hover:text-gold transition-colors"
-            >
+            <button onClick={() => smoothScrollTo('how-it-works')} className="text-gray-300 hover:text-orange-400 transition-colors font-light">
               How it Works
             </button>
-            <button
-              onClick={() => smoothScrollTo('coming-soon')}
-              className="text-gray-300 hover:text-gold transition-colors"
-            >
+            <button onClick={() => smoothScrollTo('products')} className="text-gray-300 hover:text-orange-400 transition-colors font-light">
               Products
             </button>
-            <button
-              onClick={() => smoothScrollTo('developers')}
-              className="text-gray-300 hover:text-gold transition-colors"
-            >
+            <button onClick={() => smoothScrollTo('developers')} className="text-gray-300 hover:text-orange-400 transition-colors font-light">
               Developers
             </button>
           </nav>
+          
           <button
             onClick={() => smoothScrollTo('demo')}
-            className="bg-gold text-black px-6 py-3 rounded-lg hover:bg-gold-dark transition-colors"
-            style={{ fontWeight: 500 }}
+            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-light hover:from-orange-400 hover:to-red-400 transition-all duration-300 shadow-lg shadow-orange-500/25"
           >
             Try Demo
           </button>
         </div>
       </header>
 
-      {/* Hero Section - Full Screen */}
-      <section className="min-h-screen flex flex-col justify-center items-center relative px-4 pb-16 md:pb-0">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
-            <div className="md:w-1/3">
-              <Image
-                src="/images/2.png"
-                alt="Lion Project - Protect Your Family from AI Deception"
-                width={300}
-                height={300}
-                className="mx-auto rounded-full shadow-2xl"
-                priority
-              />
-            </div>
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center relative overflow-hidden pt-20">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <div 
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('/images/hero1.webp')",
+            }}
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/30"></div>
+          {/* Additional gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
 
-            <div className="md:w-2/3 text-center md:text-left">
-              {/* Lion Project Title */}
-              <div className="mb-6">
-                <div className="inline-flex items-center space-x-3 mb-2">
-                  <div className="w-1 h-8 bg-gradient-to-b from-gold to-yellow-500 rounded-full"></div>
-                  <span className="text-lg md:text-xl font-bold text-gold tracking-wide uppercase">
-                    The Lion Project
-                  </span>
-                  <div className="w-1 h-8 bg-gradient-to-b from-gold to-yellow-500 rounded-full"></div>
-                </div>
-                <div className="h-0.5 bg-gradient-to-r from-gold/60 to-transparent w-full max-w-md mx-auto md:mx-0"></div>
+              {/* Main Headline */}
+              <div className="space-y-6">
+                <h1 className="text-5xl lg:text-7xl font-extralight leading-tight">
+                  See through <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 font-light">AI deception</span>
+                </h1>
+                <p className="text-xl text-gray-300 font-light leading-relaxed max-w-2xl">
+                  Real-time protection for your family against deepfakes and AI scams. 
+                  Professional-grade detection technology made simple.
+                </p>
               </div>
 
-              {/* Updated Hook - Option 2 (Empowerment-based) */}
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                See through <span className="gradient-text">AI deception</span>
-              </h1>
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl">
-                Real-time protection for your family against deepfakes and AI scams
-              </p>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={() => smoothScrollTo('demo')}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl font-light text-lg hover:from-orange-400 hover:to-red-400 transition-all duration-300 flex items-center shadow-lg shadow-orange-500/25"
+                >
+                  <Search className="w-5 h-5 mr-3" />
+                  Try Demo
+                </button>
+                <button
+                  onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg", "_blank")}
+                  className="border border-orange-500/50 text-orange-400 px-8 py-4 rounded-xl font-light text-lg hover:bg-orange-500/10 transition-all duration-300 flex items-center"
+                >
+                  <Shield className="w-5 h-5 mr-3" />
+                  Chrome Extension
+                </button>
+              </div>
 
-              {/* All options as small buttons */}
-              <div className="mb-6">
-                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                  <button
-                    onClick={() => smoothScrollTo('demo')}
-                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border-1 border-gold"
-                  >
-                    <Search className="w-4 h-4 mr-2" />
-                    Demo
-                  </button>
-                  <button
-                    onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1", "_blank")}
-                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
-                  >
-                    <Shield className="w-4 h-4 mr-2" />
-                    Chrome extension
-                  </button>
-                  <a
-                    href="#coming-soon"
-                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
-                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
-                  >
-                    <Monitor className="w-4 h-4 mr-2" />
-                    Windows
-                  </a>
-                  <a
-                    href="#coming-soon"
-                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
-                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
-                  >
-                    <Apple className="w-4 h-4 mr-2" />
-                    macOS
-                  </a>
-                  <a
-                    href="#coming-soon"
-                    onClick={(e) => { e.preventDefault(); smoothScrollTo('coming-soon'); }}
-                    className="text-sm bg-gray-800/50 text-gray-300 px-4 py-2 rounded-md hover:bg-gray-700/50 transition-colors flex items-center border border-gray-600"
-                  >
-                    <Computer className="w-4 h-4 mr-2" />
-                    Linux
-                  </a>
+              {/* Platform Icons */}
+              <div className="flex items-center space-x-6 pt-4">
+                <span className="text-gray-400 font-light text-sm">Available on:</span>
+                <div className="flex space-x-4">
+                  <Monitor className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
+                  <Apple className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
+                  <Computer className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
+                  <Smartphone className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
                 </div>
               </div>
 
-              {/* Status indicator */}
-              <div className="inline-flex items-center text-sm text-gray-400 bg-gray-900/50 px-4 py-2 rounded-full mb-8 md:mb-0">
+              {/* Status */}
+              <div className="inline-flex items-center text-sm text-gray-400 bg-black/30 px-4 py-2 rounded-full border border-green-500/20">
                 <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
                 Chrome extension free forever • Desktop apps free during beta
               </div>
             </div>
+
+            {/* Hero Visual */}
+            <div className="relative">
+              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 shadow-2xl shadow-orange-500/10">
+                <div className="h-96 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+                  <div className="text-center">
+                    <Shield className="w-20 h-20 text-orange-400 mx-auto mb-4" />
+                    <p className="text-gray-400 font-light">Image: hero-dashboard.png</p>
+                    <p className="text-xs text-gray-500 mt-2">Dashboard or protection visualization</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Scroll indicator - responsive positioning */}
-        <div className="absolute bottom-8 md:bottom-20 left-1/2 transform -translate-x-1/2 animate-bounce">
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <button
-            onClick={() => smoothScrollTo('demo')}
-            className="text-gold hover:text-gold-dark transition-colors p-2"
+            onClick={() => smoothScrollTo('how-it-works')}
+            className="text-orange-400 hover:text-orange-300 transition-colors p-2"
           >
-            <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
+            <ChevronDown className="w-6 h-6" />
           </button>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="py-16 px-4 bg-gray-dark">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4">
-            The <span className="gradient-text">Only</span> Background Protection
-          </h2>
-          <p className="text-center text-gray-300 mb-16 max-w-3xl mx-auto">
-            Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
-          </p>
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 relative">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-extralight mb-6">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Only</span> Background Protection
+            </h2>
+            <p className="text-xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed">
+              Competitors charge $13-$700/month for single tools. They can't touch our prices.
+            </p>
+          </div>
+
           {/* Price Comparison */}
-          <div className="bg-gray border border-gold/30 rounded-xl p-8 mb-16 text-center">
-            <h3 className="text-3xl font-bold text-gold mb-8">Unmatched Pricing</h3>
+          <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 mb-16 shadow-lg shadow-orange-500/5">
+            <h3 className="text-3xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-12 text-center">
+              Unmatched Pricing
+            </h3>
             <div className="grid md:grid-cols-4 gap-6">
-              <div className="border border-red-500/30 rounded-lg p-6">
-                <h4 className="text-lg font-bold text-red-400 mb-2">Competitors</h4>
-                <div className="text-3xl font-bold text-red-400 mb-2">$13-$700</div>
-                <p className="text-gray-300 text-sm">per month, per tool</p>
+              <div className="border border-red-500/30 rounded-2xl p-6 text-center bg-red-500/5">
+                <h4 className="text-lg font-light text-red-400 mb-2">Competitors</h4>
+                <div className="text-3xl font-extralight text-red-400 mb-2">$13-$700</div>
+                <p className="text-gray-300 text-sm font-light">per month, per tool</p>
               </div>
 
-              <div className="border border-gold rounded-lg p-6">
-                <h4 className="text-lg font-bold text-gold mb-2">Individual Lion Products</h4>
-                <div className="text-3xl font-bold text-gold mb-2">$0-$2.99</div>
-                <p className="text-gray-300 text-sm">per month</p>
+              <div className="border border-orange-500 rounded-2xl p-6 text-center bg-orange-500/5">
+                <h4 className="text-lg font-light text-orange-400 mb-2">Individual Lion Products</h4>
+                <div className="text-3xl font-extralight text-orange-400 mb-2">$0-$2.99</div>
+                <p className="text-gray-300 text-sm font-light">per month</p>
               </div>
 
-              <div className="border border-gold rounded-lg p-6">
-                <h4 className="text-lg font-bold text-gold mb-2">Complete Lion Suite</h4>
-                <div className="text-3xl font-bold text-gold mb-2">$4.99</div>
-                <p className="text-gray-300 text-sm">per month (best value)</p>
+              <div className="border border-orange-500 rounded-2xl p-6 text-center bg-orange-500/5">
+                <h4 className="text-lg font-light text-orange-400 mb-2">Complete Lion Suite</h4>
+                <div className="text-3xl font-extralight text-orange-400 mb-2">$4.99</div>
+                <p className="text-gray-300 text-sm font-light">per month (best value)</p>
               </div>
 
-              <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                <h4 className="text-lg font-bold text-green-400 mb-2">You Save</h4>
-                <div className="text-3xl font-bold text-green-400 mb-2">95%+</div>
-                <p className="text-gray-300 text-sm">vs competitors</p>
+              <div className="bg-green-900/20 border border-green-500/30 rounded-2xl p-6 text-center">
+                <h4 className="text-lg font-light text-green-400 mb-2">You Save</h4>
+                <div className="text-3xl font-extralight text-green-400 mb-2">95%+</div>
+                <p className="text-gray-300 text-sm font-light">vs competitors</p>
               </div>
             </div>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: <Shield className="w-8 h-8" />, title: "Real-time Protection", desc: "Continuous monitoring across all your devices" },
+              { icon: <Globe className="w-8 h-8" />, title: "Universal Coverage", desc: "Works with any app, browser, or platform" },
+              { icon: <Lock className="w-8 h-8" />, title: "Privacy First", desc: "Your data never leaves your device" }
+            ].map((feature: { icon: React.ReactNode; title: string; desc: string }, index: number) => (
+              <div key={index} className="bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-sm border border-orange-500/10 rounded-2xl p-6 text-center hover:border-orange-500/30 transition-all duration-500">
+                <div className="text-orange-400 mb-4 flex justify-center">{feature.icon}</div>
+                <h4 className="text-xl font-light text-orange-400 mb-3">{feature.title}</h4>
+                <p className="text-gray-300 font-light">{feature.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Coming Soon Section */}
-      <section id="coming-soon" className="py-16 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">
-            Choose Your <span className="gradient-text">Protection Level</span>
-          </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto mb-12">
-            Our Chrome extension and desktop apps are now live! Mobile app launching soon.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8">
+      {/* Products Section */}
+      <section id="products" className="py-20 bg-gradient-to-b from-transparent to-orange-500/5">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-extralight mb-6">
+              Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Protection Level</span>
+            </h2>
+            <p className="text-xl text-gray-300 font-light max-w-2xl mx-auto">
+              Our Chrome extension and desktop apps are now live! Mobile app launching soon.
+            </p>
+          </div>
 
-            {/* Desktop Guardian - Multi-Platform */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-yellow-500/50 hover:border-yellow-400 transition-all">
-              <h3 className="text-2xl font-bold mb-2 text-yellow-400">Desktop Guardian</h3>
-              <p className="text-gray-300 mb-4">Protects calls and apps on your computer</p>
-              <div className="text-3xl font-bold mb-6">
-                <span className="text-yellow-400">Free</span>
-                <span className="text-sm text-gray-400 block">during beta</span>
-                <span className="text-sm text-gray-500">$2.99/mo after launch</span>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Desktop Guardian */}
+            <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 hover:border-orange-500/40 transition-all duration-500 shadow-lg shadow-orange-500/5">
+              {/* Product Image Placeholder */}
+              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 mb-6">
+                <div className="text-center">
+                  <Monitor className="w-16 h-16 text-orange-400 mx-auto mb-2" />
+                  <span className="text-xs text-gray-400 font-light">Image: desktop-guardian.png</span>
+                </div>
               </div>
 
-              <ul className="text-left mb-8 space-y-2">
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Phone calls through your computer
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Desktop video call protection (Zoom, Teams)
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Audio from any desktop application
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Real-time deepfake detection (under 2s)
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Smart alert system & logging
-                </li>
+              <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                Desktop Guardian
+              </h3>
+              <p className="text-gray-300 mb-4 font-light">Protects calls and apps on your computer</p>
+              
+              <div className="text-center mb-6">
+                <span className="text-3xl font-extralight text-orange-400">Free</span>
+                <span className="text-sm text-gray-400 block font-light">during beta</span>
+                <span className="text-sm text-gray-500 font-light">$2.99/mo after launch</span>
+              </div>
+
+              <ul className="space-y-3 mb-8 font-light">
+                {[
+                  "Phone calls through your computer",
+                  "Desktop video call protection (Zoom, Teams)",
+                  "Audio from any desktop application",
+                  "Real-time deepfake detection (under 2s)",
+                  "Smart alert system & logging"
+                ].map((feature: string, index: number) => (
+                  <li key={index} className="flex items-center text-gray-300">
+                    <CheckCircle className="w-4 h-4 text-orange-400 mr-3 flex-shrink-0" />
+                    {feature}
+                  </li>
+                ))}
               </ul>
 
               <div className="space-y-3">
-                <h4 className="font-semibold text-yellow-400 mb-3">Download for Your Platform:</h4>
-
-                <a
-                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-Windows.exe"
-                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
-                >
-                  <Monitor className="w-4 h-4 mr-2" />
-                  Windows (30.5 MB)
-                </a>
-
-                <a
-                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-macOS"
-                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
-                >
-                  <Laptop className="w-4 h-4 mr-2" />
-                  macOS (17.6 MB)
-                </a>
-
-                <a
-                  href="https://github.com/pauliano22/deepfake-audio-m2/releases/latest/download/Lion-AI-Detection-Linux"
-                  className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg transition-colors border border-yellow-500/30 hover:border-yellow-400/50"
-                >
-                  <Terminal className="w-4 h-4 mr-2" />
-                  Linux (44.1 MB)
-                </a>
+                {[
+                  { icon: <Monitor className="w-4 h-4" />, label: "Windows", link: "#" },
+                  { icon: <Laptop className="w-4 h-4" />, label: "macOS", link: "#" },
+                  { icon: <Terminal className="w-4 h-4" />, label: "Linux", link: "#" }
+                ].map((platform: { icon: React.ReactNode; label: string; link: string }, index: number) => (
+                  <a
+                    key={index}
+                    href={platform.link}
+                    className="flex items-center justify-center w-full bg-gray-700/50 hover:bg-gray-600/50 text-white py-3 px-4 rounded-xl transition-colors border border-orange-500/20 hover:border-orange-500/40 font-light"
+                  >
+                    {platform.icon}
+                    <span className="ml-2">{platform.label}</span>
+                  </a>
+                ))}
               </div>
-
-              <p className="text-xs text-gray-400 mt-4">
-                Hosted securely on GitHub Releases • Open source code available
-              </p>
             </div>
 
-            {/* Chrome Extension - Featured with enhanced styling */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border-2 border-yellow-400 hover:border-yellow-300 transition-all">
-              <div className="relative mb-2">
-                <h3 className="text-2xl font-bold text-yellow-400 text-center">Family Shield</h3>
-                <span className="absolute top-0 right-0 text-xs bg-red-600/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30">
-                  Popular
-                </span>
-              </div>
-              <p className="text-gray-300 mb-4">Scans everything you see in your browser</p>
-              <div className="text-3xl font-bold mb-6">
-                <span className="text-yellow-400">Free</span>
+            {/* Family Shield - Featured */}
+            <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm border-2 border-orange-500 rounded-3xl p-8 hover:border-orange-400 transition-all duration-500 shadow-lg shadow-orange-500/20 relative">
+              <div className="absolute top-4 right-4 bg-red-600/20 text-red-400 px-3 py-1 rounded-full border border-red-500/30 text-xs font-light">
+                Popular
               </div>
 
-              <ul className="text-left mb-8 space-y-2">
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Social media feeds (Facebook, Twitter, etc)
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  YouTube and video content scanning
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  News article verification
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Web-based video calls
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  One-click reporting
-                </li>
+              {/* Product Image Placeholder */}
+              <div className="h-48 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center border border-orange-500/30 mb-6">
+                <div className="text-center">
+                  <Shield className="w-16 h-16 text-orange-400 mx-auto mb-2" />
+                  <span className="text-xs text-gray-400 font-light">Image: family-shield.png</span>
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 text-center">
+                Family Shield
+              </h3>
+              <p className="text-gray-300 mb-4 font-light text-center">Scans everything you see in your browser</p>
+              
+              <div className="text-center mb-6">
+                <span className="text-3xl font-extralight text-orange-400">Free</span>
+              </div>
+
+              <ul className="space-y-3 mb-8 font-light">
+                {[
+                  "Social media feeds (Facebook, Twitter, etc)",
+                  "YouTube and video content scanning",
+                  "News article verification",
+                  "Web-based video calls",
+                  "One-click reporting"
+                ].map((feature: string, index: number) => (
+                  <li key={index} className="flex items-center text-gray-300">
+                    <CheckCircle className="w-4 h-4 text-orange-400 mr-3 flex-shrink-0" />
+                    {feature}
+                  </li>
+                ))}
               </ul>
 
               <a
-                href="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg?authuser=0&hl=en&pli=1"
-                className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white py-4 px-6 rounded-lg transition-colors border border-yellow-400 hover:border-yellow-300"
+                href="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg"
+                className="flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-xl font-light hover:from-orange-400 hover:to-red-400 transition-all duration-300 shadow-lg shadow-orange-500/25"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Shield className="w-5 h-5 mr-2" />
                 Install Extension
               </a>
-
-              <p className="text-xs text-gray-400 mt-4">
-                Available on Chrome Web Store • 1-click install
-              </p>
             </div>
 
-            {/* Mobile App - Coming Soon */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-yellow-500/50 hover:border-yellow-400 transition-all opacity-75">
-              <h3 className="text-2xl font-bold mb-2 text-yellow-400">Mobile Protector</h3>
-              <p className="text-gray-300 mb-4">Monitors apps and calls on your phone</p>
-              <div className="text-3xl font-bold mb-6">
-                <span className="text-yellow-400">$2.99</span>
-                <span className="text-sm text-gray-400 block">/month</span>
+            {/* Mobile Protector - Coming Soon */}
+            <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 opacity-75 hover:opacity-90 transition-all duration-500 shadow-lg shadow-orange-500/5">
+              {/* Product Image Placeholder */}
+              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 mb-6">
+                <div className="text-center">
+                  <Smartphone className="w-16 h-16 text-orange-400 mx-auto mb-2" />
+                  <span className="text-xs text-gray-400 font-light">Image: mobile-protector.png</span>
+                </div>
               </div>
 
-              <ul className="text-left mb-8 space-y-2">
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  TikTok, Instagram, Snapchat scanning
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Phone call screening & analysis
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  WhatsApp & messaging apps
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Mobile video calls (FaceTime, etc)
-                </li>
-                <li className="flex items-center">
-                  <span className="text-yellow-400 mr-2">✓</span>
-                  Real-time mobile alerts
-                </li>
+              <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                Mobile Protector
+              </h3>
+              <p className="text-gray-300 mb-4 font-light">Monitors apps and calls on your phone</p>
+              
+              <div className="text-center mb-6">
+                <span className="text-3xl font-extralight text-orange-400">$2.99</span>
+                <span className="text-sm text-gray-400 block font-light">/month</span>
+              </div>
+
+              <ul className="space-y-3 mb-8 font-light">
+                {[
+                  "TikTok, Instagram, Snapchat scanning",
+                  "Phone call screening & analysis",
+                  "WhatsApp & messaging apps",
+                  "Mobile video calls (FaceTime, etc)",
+                  "Real-time mobile alerts"
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center text-gray-300">
+                    <CheckCircle className="w-4 h-4 text-orange-400 mr-3 flex-shrink-0" />
+                    {feature}
+                  </li>
+                ))}
               </ul>
 
               <button
-                className="flex items-center justify-center w-full bg-gray-600 text-gray-300 py-4 px-6 rounded-lg cursor-not-allowed border border-gray-500"
+                className="flex items-center justify-center w-full bg-gray-600 text-gray-300 py-4 px-6 rounded-xl cursor-not-allowed border border-gray-500 font-light"
                 disabled
               >
                 <Smartphone className="w-5 h-5 mr-2" />
                 Coming Soon
               </button>
 
-              <p className="text-xs text-gray-400 mt-4">
+              <p className="text-xs text-gray-400 mt-4 text-center font-light">
                 iOS & Android • Launching Q2 2025
               </p>
             </div>
           </div>
         </div>
       </section>
-      {/* Protection Types Section */}
-      <section id="protection" className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Comprehensive <span className="gradient-text">Digital Protection</span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
+
+      {/* Protection Types */}
+      <section id="protection" className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-extralight mb-6">
+              Comprehensive <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Digital Protection</span>
+            </h2>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
             <ProtectionCard
-              icon={<Phone className="h-8 w-8" />}
+              icon={<Phone className="h-12 w-12" />}
               title="Phone Call Protection"
               description="Real-time call monitoring to detect voice cloning and deepfake attempts."
               examples={[
@@ -490,9 +448,10 @@ User Agent: ${navigator.userAgent}`,
                 "AI-generated voices impersonating trusted contacts",
                 "Emergency scam calls using familiar voices"
               ]}
+              image="phone-protection.png"
             />
             <ProtectionCard
-              icon={<Newspaper className="h-8 w-8" />}
+              icon={<Newspaper className="h-12 w-12" />}
               title="News & Media Monitoring"
               description="Notify you of AI-generated content in news feeds, social media, and videos."
               examples={[
@@ -501,54 +460,57 @@ User Agent: ${navigator.userAgent}`,
                 "Fake audio clips on social media platforms",
                 "Manipulated celebrity endorsements and testimonials"
               ]}
+              image="media-monitoring.png"
             />
           </div>
         </div>
       </section>
-      {/* Audio Tester Section */}
-      <section id="demo" className="py-20 px-4 bg-gray-dark/50">
-        <div className="container mx-auto">
+
+      {/* Demo Section */}
+      <section id="demo" className="py-20 bg-gradient-to-b from-orange-500/5 to-transparent">
+        <div className="container mx-auto px-6">
           <AudioTester />
         </div>
       </section>
-      {/* For Developers Section */}
-      <section id="developers" className="py-16 px-4 bg-gray-dark/50">
-        <div className="container mx-auto text-center">
+
+      {/* Developers Section */}
+      <section id="developers" className="py-20">
+        <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-center mb-6">
-              <Code className="w-12 h-12 text-gold mr-4" />
-              <h2 className="text-4xl font-bold">
-                For <span className="gradient-text">Developers</span>
-              </h2>
+            <div className="text-center mb-16">
+              <div className="flex items-center justify-center mb-6">
+                <Code className="w-12 h-12 text-orange-400 mr-4" />
+                <h2 className="text-4xl lg:text-5xl font-extralight">
+                  For <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Developers</span>
+                </h2>
+              </div>
+              <p className="text-xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
+                Integrate our powerful deepfake detection capabilities directly into your applications with our developer-friendly API.
+              </p>
             </div>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Integrate our powerful deepfake detection capabilities directly into your applications with our developer-friendly API.
-            </p>
-
-            {/* API Demo and Documentation */}
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="grid lg:grid-cols-2 gap-8 mb-12">
               {/* Live API Demo */}
-              <div className="bg-black border border-gold/20 rounded-lg p-6">
-                <h3 className="text-2xl font-bold text-gold mb-4">Try the API Live</h3>
-                <p className="text-gray-300 mb-4">
+              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 shadow-lg shadow-orange-500/5">
+                <h3 className="text-2xl font-light text-orange-400 mb-4">Try the API Live</h3>
+                <p className="text-gray-300 mb-6 font-light leading-relaxed">
                   Test our deepfake detection API directly in your browser. Upload audio files and see real-time results.
                 </p>
                 <a
                   href="https://huggingface.co/spaces/pauliano22/deepfake-audio-detector"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center bg-gold text-black px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+                  className="inline-flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-light hover:from-orange-400 hover:to-red-400 transition-all duration-300 shadow-lg shadow-orange-500/25"
                 >
                   <ExternalLink className="w-5 h-5 mr-2" />
                   Live API Demo
                 </a>
               </div>
 
-              {/* API Specifications */}
-              <div className="bg-black border border-gold/20 rounded-lg p-6">
-                <h3 className="text-2xl font-bold text-gold mb-4">API Specifications</h3>
-                <div className="text-left space-y-3">
+              {/* API Specs */}
+              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 shadow-lg shadow-orange-500/5">
+                <h3 className="text-2xl font-light text-orange-400 mb-4">API Specifications</h3>
+                <div className="space-y-3 font-light">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Endpoint:</span>
                     <span className="text-gray-300">/predict</span>
@@ -570,17 +532,17 @@ User Agent: ${navigator.userAgent}`,
             </div>
 
             {/* Code Examples */}
-            <div className="bg-black border border-gold/20 rounded-lg p-8 mb-8">
-              <h3 className="text-2xl font-bold text-gold mb-6">Code Examples</h3>
+            <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 mb-8 shadow-lg shadow-orange-500/5">
+              <h3 className="text-2xl font-light text-orange-400 mb-6">Code Examples</h3>
 
               <div className="space-y-6">
                 {/* Python Example */}
-                <div className="text-left">
-                  <h4 className="font-semibold text-gold mb-3 flex items-center">
+                <div>
+                  <h4 className="font-light text-orange-400 mb-3 flex items-center">
                     <Code className="w-4 h-4 mr-2" />
                     Python
                   </h4>
-                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
+                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative">
                     <button
                       onClick={() => navigator.clipboard.writeText(`from gradio_client import Client, handle_file
 
@@ -590,13 +552,13 @@ result = client.predict(
     api_name="/predict"
 )
 print(result)`)}
-                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
+                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-orange-400 transition-colors"
                       title="Copy code"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
-                    <pre className="text-gray-300 text-sm leading-relaxed">
-                      {`from gradio_client import Client, handle_file
+                    <pre className="text-gray-300 text-sm leading-relaxed font-light">
+{`from gradio_client import Client, handle_file
 
 client = Client("pauliano22/deepfake-audio-detector")
 result = client.predict(
@@ -609,12 +571,12 @@ print(result)`}
                 </div>
 
                 {/* JavaScript Example */}
-                <div className="text-left">
-                  <h4 className="font-semibold text-gold mb-3 flex items-center">
+                <div>
+                  <h4 className="font-light text-orange-400 mb-3 flex items-center">
                     <Code className="w-4 h-4 mr-2" />
                     JavaScript
                   </h4>
-                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
+                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative">
                     <button
                       onClick={() => navigator.clipboard.writeText(`import { Client } from "@gradio/client";
 
@@ -625,13 +587,13 @@ const result = await client.predict("/predict", {
   audio: audioFile 
 });
 console.log(result.data);`)}
-                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
+                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-orange-400 transition-colors"
                       title="Copy code"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
-                    <pre className="text-gray-300 text-sm leading-relaxed">
-                      {`import { Client } from "@gradio/client";
+                    <pre className="text-gray-300 text-sm leading-relaxed font-light">
+{`import { Client } from "@gradio/client";
 
 const client = await Client.connect(
   "pauliano22/deepfake-audio-detector"
@@ -643,93 +605,51 @@ console.log(result.data);`}
                     </pre>
                   </div>
                 </div>
-
-                {/* cURL Example */}
-                <div className="text-left">
-                  <h4 className="font-semibold text-gold mb-3 flex items-center">
-                    <Code className="w-4 h-4 mr-2" />
-                    cURL
-                  </h4>
-                  <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 relative">
-                    <button
-                      onClick={() => navigator.clipboard.writeText(`curl -X POST \\
-  https://pauliano22-deepfake-audio-detector.hf.space/gradio_api/call/predict \\
-  -H "Content-Type: application/json" \\
-  -d '{"data": [{"path": "audio.wav", "meta": {"_type": "gradio.FileData"}}]}'`)}
-                      className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gold transition-colors"
-                      title="Copy code"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                    <pre className="text-gray-300 text-sm leading-relaxed">
-                      {`curl -X POST \\
-  https://pauliano22-deepfake-audio-detector.hf.space/gradio_api/call/predict \\
-  -H "Content-Type: application/json" \\
-  -d '{"data": [{"path": "audio.wav", "meta": {"_type": "gradio.FileData"}}]}'`}
-                    </pre>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Features and Resources */}
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-black border border-gold/20 rounded-lg p-6">
-                <h4 className="font-semibold text-gold mb-4">API Features</h4>
-                <ul className="space-y-3 text-left">
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Real-time audio deepfake detection
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Multiple audio format support (WAV, MP3, M4A)
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Confidence scoring and detailed analysis
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    RESTful API with JSON responses
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Hosted on Hugging Face for reliability
-                  </li>
+            {/* Features Grid */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-6 shadow-lg shadow-orange-500/5">
+                <h4 className="font-light text-orange-400 mb-4">API Features</h4>
+                <ul className="space-y-3">
+                  {[
+                    "Real-time audio deepfake detection",
+                    "Multiple audio format support (WAV, MP3, M4A)",
+                    "Confidence scoring and detailed analysis",
+                    "RESTful API with JSON responses",
+                    "Hosted on Hugging Face for reliability"
+                  ].map((feature, index) => (
+                    <li key={index} className="text-sm text-gray-300 flex items-center font-light">
+                      <CheckCircle className="w-4 h-4 text-orange-400 mr-3 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              <div className="bg-black border border-gold/20 rounded-lg p-6">
-                <h4 className="font-semibold text-gold mb-4">Getting Started</h4>
-                <ul className="space-y-3 text-left">
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    No API key required - free to use
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Python, JavaScript, and cURL examples
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Best results with 3-10 second audio clips
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Clear speech recordings recommended
-                  </li>
-                  <li className="text-sm text-gray-300 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-gold mr-3 flex-shrink-0" />
-                    Gradio client libraries available
-                  </li>
+              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-6 shadow-lg shadow-orange-500/5">
+                <h4 className="font-light text-orange-400 mb-4">Getting Started</h4>
+                <ul className="space-y-3">
+                  {[
+                    "No API key required - free to use",
+                    "Python, JavaScript, and cURL examples",
+                    "Best results with 3-10 second audio clips",
+                    "Clear speech recordings recommended",
+                    "Gradio client libraries available"
+                  ].map((feature, index) => (
+                    <li key={index} className="text-sm text-gray-300 flex items-center font-light">
+                      <CheckCircle className="w-4 h-4 text-orange-400 mr-3 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            {/* Call to Action */}
-            <div className="mt-8 text-center">
-              <p className="text-gray-300 mb-4">
+            {/* CTA */}
+            <div className="mt-12 text-center">
+              <p className="text-gray-300 mb-6 font-light">
                 Ready to integrate deepfake detection into your application?
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -737,14 +657,14 @@ console.log(result.data);`}
                   href="https://huggingface.co/spaces/pauliano22/deepfake-audio-detector"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center border-2 border-gold text-gold px-6 py-3 rounded-lg font-semibold hover:bg-gold/10 transition-colors"
+                  className="inline-flex items-center border-2 border-orange-500 text-orange-400 px-6 py-3 rounded-xl font-light hover:bg-orange-500/10 transition-all duration-300"
                 >
                   <ExternalLink className="w-5 h-5 mr-2" />
                   Try Live Demo
                 </a>
                 <button
                   onClick={() => window.open('mailto:thelionprojectai@gmail.com?subject=API Integration Support', '_blank')}
-                  className="inline-flex items-center bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
+                  className="inline-flex items-center bg-gray-700/50 text-white px-6 py-3 rounded-xl font-light hover:bg-gray-600/50 transition-all duration-300"
                 >
                   <Mail className="w-5 h-5 mr-2" />
                   Get Support
@@ -756,43 +676,43 @@ console.log(result.data);`}
       </section>
 
       {/* Feedback Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto bg-gradient-to-r from-gold/5 to-yellow-500/5 border border-gold/20 rounded-xl p-4 sm:p-6 lg:p-8">
-            <div className="text-center mb-6">
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto bg-gradient-to-r from-orange-500/5 to-red-500/5 border border-orange-500/20 rounded-3xl p-8 shadow-lg shadow-orange-500/5">
+            <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <User className="w-6 h-6 text-gold" />
-                <Heart className="w-5 h-5 text-red-400" />
+                <User className="w-8 h-8 text-orange-400" />
+                <Heart className="w-6 h-6 text-red-400" />
               </div>
-              <h4 className="text-xl sm:text-2xl font-bold text-gold mb-2">
+              <h4 className="text-2xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-4">
                 Built by a Cornell CS Student
               </h4>
-              <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+              <p className="text-gray-300 font-light leading-relaxed max-w-2xl mx-auto">
                 The Lion Project is a passion project created to help protect families from AI.<br /><br />
-                I&apos;m constantly working to improve the accuracy and user experience. <br /><br />Your feedback
+                I'm constantly working to improve the accuracy and user experience. <br /><br />Your feedback
                 helps make these tools better for everyone!
               </p>
             </div>
 
             <div className="max-w-md mx-auto">
               {feedbackSubmitted ? (
-                <div className="text-center p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
+                <div className="text-center p-6 bg-green-900/20 border border-green-500/50 rounded-2xl">
                   <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                  <p className="text-green-400 font-semibold">Thank you for your feedback!</p>
-                  <p className="text-green-300 text-sm mt-1">Your input helps improve these tools.</p>
+                  <p className="text-green-400 font-light">Thank you for your feedback!</p>
+                  <p className="text-green-300 text-sm mt-1 font-light">Your input helps improve these tools.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gold/60" />
+                    <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-orange-400/60" />
                     <textarea
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
                       placeholder="Share your thoughts, suggestions, or report issues..."
-                      className="w-full bg-black/30 border border-gold/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none resize-none h-24 text-sm"
+                      className="w-full bg-black/30 border border-orange-500/30 rounded-2xl pl-10 pr-4 py-3 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none resize-none h-24 text-sm font-light"
                       maxLength={500}
                     />
-                    <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                    <div className="absolute bottom-2 right-2 text-xs text-gray-500 font-light">
                       {feedback.length}/500
                     </div>
                   </div>
@@ -800,7 +720,7 @@ console.log(result.data);`}
                   <button
                     onClick={handleFeedbackSubmit}
                     disabled={!feedback.trim() || isSubmittingFeedback}
-                    className="w-full bg-gradient-to-r from-gold/80 to-yellow-500/80 hover:from-gold hover:to-yellow-500 text-black font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    className="w-full bg-gradient-to-r from-orange-500/80 to-red-500/80 hover:from-orange-500 hover:to-red-500 text-white font-light py-3 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-lg shadow-orange-500/25"
                   >
                     {isSubmittingFeedback ? (
                       <>
@@ -818,7 +738,7 @@ console.log(result.data);`}
               )}
 
               <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 font-light">
                   You can also reach out via email or social media for detailed discussions!
                 </p>
               </div>
@@ -828,32 +748,30 @@ console.log(result.data);`}
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-dark py-8 px-4">
-        <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Image
-              src="/images/2.png"
-              alt="Lion Project"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
-            <span className="text-lg font-bold gradient-text">Lion Project</span>
+      <footer className="border-t border-orange-500/20 py-12 bg-gradient-to-t from-orange-500/5 to-transparent">
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+              Lion Project
+            </span>
           </div>
-          <p className="text-gray-300 mb-4">
+          <p className="text-gray-300 mb-6 font-light leading-relaxed">
             Protecting families from AI deception. Specially designed for older adults and vulnerable populations.
           </p>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-500 mb-6 font-light">
             Built with privacy and security in mind. Your data never leaves your device.
           </p>
-          <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
+          <div className="flex items-center justify-center space-x-6 text-sm text-gray-400 font-light">
             <span>&copy; 2025 Lion Project</span>
             <span>|</span>
-            <a href="/privacy-policy" className="hover:text-gold transition-colors">
+            <a href="/privacy-policy" className="hover:text-orange-400 transition-colors">
               Privacy Policy
             </a>
             <span>|</span>
-            <a href="/terms" className="hover:text-gold transition-colors">
+            <a href="/terms" className="hover:text-orange-400 transition-colors">
               Terms of Service
             </a>
           </div>

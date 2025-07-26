@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -11,12 +11,13 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
-  /* Lion Project custom colors */
-  --color-gold: #FFD700;
-  --color-gold-dark: #B8860B;
-  --color-red: #DC2626;
-  --color-red-dark: #991B1B;
+  /* Updated Lion Project colors - orange/red theme */
+  --color-orange-400: #FF6B35;
+  --color-orange-500: #FF4500;
+  --color-red-400: #FF5733;
+  --color-red-500: #DC2626;
   --color-gray-dark: #1a1a1a;
+  --color-gray-900: #111111;
 }
 
 body {
@@ -25,23 +26,19 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Custom gradient utilities */
-.gradient-gold-red {
-  background: linear-gradient(135deg, var(--color-gold), var(--color-red));
+/* Modern gradient utilities */
+.gradient-orange-red {
+  background: linear-gradient(135deg, var(--color-orange-500), var(--color-red-500));
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-gold), var(--color-red));
+  background: linear-gradient(135deg, var(--color-orange-400), var(--color-red-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Mobile app-inspired font weights */
-.font-thin {
-  font-weight: 100;
-}
-
+/* Professional typography system */
 .font-extralight {
   font-weight: 200;
 }
@@ -59,15 +56,7 @@ body {
   letter-spacing: 0.1em;
 }
 
-.tracking-ultra {
-  letter-spacing: 0.2em;
-}
-
-.tracking-mega {
-  letter-spacing: 0.3em;
-}
-
-/* Apply thin fonts to headings by default */
+/* Apply light fonts to headings by default */
 h1, h2, h3, h4 {
   font-weight: 200;
   letter-spacing: 0.05em;
@@ -87,10 +76,10 @@ h2 {
 /* Button text should be light with wide spacing */
 button {
   font-weight: 300;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
 }
 
-/* Override Tailwind's default bold */
+/* Override Tailwind's default weights for modern look */
 .font-bold {
   font-weight: 300;
 }
@@ -99,7 +88,7 @@ button {
   font-weight: 300;
 }
 
-/* Special classes for specific elements */
+/* Special classes for branding */
 .logo-text {
   font-weight: 200;
   letter-spacing: 0.3em;
@@ -120,4 +109,58 @@ button {
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Backdrop blur support */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+/* Custom shadow utilities for orange theme */
+.shadow-orange-500\/5 {
+  box-shadow: 0 10px 15px -3px rgba(255, 75, 0, 0.05), 0 4px 6px -2px rgba(255, 75, 0, 0.05);
+}
+
+.shadow-orange-500\/10 {
+  box-shadow: 0 10px 15px -3px rgba(255, 75, 0, 0.1), 0 4px 6px -2px rgba(255, 75, 0, 0.1);
+}
+
+.shadow-orange-500\/20 {
+  box-shadow: 0 10px 15px -3px rgba(255, 75, 0, 0.2), 0 4px 6px -2px rgba(255, 75, 0, 0.2);
+}
+
+.shadow-orange-500\/25 {
+  box-shadow: 0 10px 15px -3px rgba(255, 75, 0, 0.25), 0 4px 6px -2px rgba(255, 75, 0, 0.25);
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-orange-400);
+  outline-offset: 2px;
+}
+
+/* Custom selection colors */
+::selection {
+  background-color: var(--color-orange-400);
+  color: var(--background);
 }
