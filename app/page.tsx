@@ -22,7 +22,7 @@ function ProtectionCard({ icon, title, description, examples, image }: Protectio
           <span className="text-xs text-gray-400 font-light">Image: {image}</span>
         </div>
       </div>
-      
+
       <h3 className="text-2xl font-light mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">{title}</h3>
       <p className="text-gray-300 mb-6 font-light leading-relaxed">{description}</p>
       <div className="space-y-3">
@@ -58,7 +58,7 @@ export default function Home() {
   const handleFeedbackSubmit = async () => {
     if (!feedback.trim()) return;
     setIsSubmittingFeedback(true);
-    
+
     // Simulate submission
     setTimeout(() => {
       setFeedbackSubmitted(true);
@@ -82,7 +82,7 @@ export default function Home() {
               Lion Project
             </span>
           </div>
-          
+
           <nav className="hidden md:flex space-x-8">
             <button onClick={() => smoothScrollTo('protection')} className="text-gray-300 hover:text-orange-400 transition-colors font-light">
               Protection
@@ -97,7 +97,7 @@ export default function Home() {
               Developers
             </button>
           </nav>
-          
+
           <button
             onClick={() => smoothScrollTo('demo')}
             className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-light hover:from-orange-400 hover:to-red-400 transition-all duration-300 shadow-lg shadow-orange-500/25"
@@ -108,82 +108,60 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center relative overflow-hidden pt-20">
+      <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-20">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <div 
+          <div
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: "url('/images/hero1.webp')",
             }}
           />
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/60"></div>
           {/* Additional gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/70"></div>
         </div>
-        
+
         <div className="container mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="text-center space-y-8 max-w-5xl mx-auto">
 
-              {/* Main Headline */}
-              <div className="space-y-6">
-                <h1 className="text-5xl lg:text-7xl font-extralight leading-tight">
-                  See through <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 font-light">AI deception</span>
-                </h1>
-                <p className="text-xl text-gray-300 font-light leading-relaxed max-w-2xl">
-                  Real-time protection for your family against deepfakes and AI scams. 
-                  Professional-grade detection technology made simple.
-                </p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <button
-                  onClick={() => smoothScrollTo('demo')}
-                  className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl font-light text-lg hover:from-orange-400 hover:to-red-400 transition-all duration-300 flex items-center shadow-lg shadow-orange-500/25"
-                >
-                  <Search className="w-5 h-5 mr-3" />
-                  Try Demo
-                </button>
-                <button
-                  onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg", "_blank")}
-                  className="border border-orange-500/50 text-orange-400 px-8 py-4 rounded-xl font-light text-lg hover:bg-orange-500/10 transition-all duration-300 flex items-center"
-                >
-                  <Shield className="w-5 h-5 mr-3" />
-                  Chrome Extension
-                </button>
-              </div>
-
-              {/* Platform Icons */}
-              <div className="flex items-center space-x-6 pt-4">
-                <span className="text-gray-400 font-light text-sm">Available on:</span>
-                <div className="flex space-x-4">
-                  <Monitor className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
-                  <Apple className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
-                  <Computer className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
-                  <Smartphone className="w-6 h-6 text-gray-400 hover:text-orange-400 transition-colors" />
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="inline-flex items-center text-sm text-gray-400 bg-black/30 px-4 py-2 rounded-full border border-green-500/20">
-                <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                Chrome extension free forever • Desktop apps free during beta
-              </div>
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-extralight leading-tight whitespace-nowrap">
+                See through <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 font-light">AI deception</span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-white font-light leading-relaxed mx-auto max-w-3xl">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 font-light">Lion Project</span> catches deepfakes and fake news while you browse.
+              </p>
             </div>
 
-            {/* Hero Visual */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 shadow-2xl shadow-orange-500/10">
-                <div className="h-96 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
-                  <div className="text-center">
-                    <Shield className="w-20 h-20 text-orange-400 mx-auto mb-4" />
-                    <p className="text-gray-400 font-light">Image: hero-dashboard.png</p>
-                    <p className="text-xs text-gray-500 mt-2">Dashboard or protection visualization</p>
-                  </div>
-                </div>
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={() => smoothScrollTo('demo')}
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl font-light text-lg hover:from-orange-400 hover:to-red-400 transition-all duration-300 flex items-center shadow-lg shadow-orange-500/25"
+              >
+                <Search className="w-5 h-5 mr-3" />
+                Try Demo
+              </button>
+              <button
+                onClick={() => window.open("https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg", "_blank")}
+                className="bg-black/30 border border-orange-500/50 text-orange-400 px-8 py-4 rounded-xl font-light text-lg hover:bg-orange-500/10 transition-all duration-300 flex items-center backdrop-blur-sm"
+              >
+                <Shield className="w-5 h-5 mr-3" />
+                Chrome Extension
+              </button>
+            </div>
+
+            {/* Platform Icons */}
+            <div className="flex flex-col items-center space-y-4 pt-4">
+              <span className="text-gray-300 font-light text-sm">Available on:</span>
+              <div className="flex space-x-4">
+                <Monitor className="w-6 h-6 text-gray-300 hover:text-orange-400 transition-colors" />
+                <Apple className="w-6 h-6 text-gray-300 hover:text-orange-400 transition-colors" />
+                <Computer className="w-6 h-6 text-gray-300 hover:text-orange-400 transition-colors" />
+                <Smartphone className="w-6 h-6 text-gray-300 hover:text-orange-400 transition-colors" />
               </div>
             </div>
           </div>
@@ -276,19 +254,20 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Desktop Guardian */}
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 hover:border-orange-500/40 transition-all duration-500 shadow-lg shadow-orange-500/5">
-              {/* Product Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 mb-6">
-                <div className="text-center">
-                  <Monitor className="w-16 h-16 text-orange-400 mx-auto mb-2" />
-                  <span className="text-xs text-gray-400 font-light">Image: desktop-guardian.png</span>
-                </div>
+              {/* Product Image */}
+              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
+                <img
+                  src="/images/desktop-guardian.png"
+                  alt="Desktop Guardian - Lion Project desktop application protecting computer calls and apps"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
                 Desktop Guardian
               </h3>
               <p className="text-gray-300 mb-4 font-light">Protects calls and apps on your computer</p>
-              
+
               <div className="text-center mb-6">
                 <span className="text-3xl font-extralight text-orange-400">Free</span>
                 <span className="text-sm text-gray-400 block font-light">during beta</span>
@@ -330,23 +309,24 @@ export default function Home() {
 
             {/* Family Shield - Featured */}
             <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm border-2 border-orange-500 rounded-3xl p-8 hover:border-orange-400 transition-all duration-500 shadow-lg shadow-orange-500/20 relative">
-              <div className="absolute top-4 right-4 bg-red-600/20 text-red-400 px-3 py-1 rounded-full border border-red-500/30 text-xs font-light">
+              <div className="absolute top-4 right-4 bg-black text-red-400 px-3 py-1 rounded-full border-2 border-red text-xs font-light">
                 Popular
               </div>
 
-              {/* Product Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center border border-orange-500/30 mb-6">
-                <div className="text-center">
-                  <Shield className="w-16 h-16 text-orange-400 mx-auto mb-2" />
-                  <span className="text-xs text-gray-400 font-light">Image: family-shield.png</span>
-                </div>
+              {/* Product Image */}
+              <div className="h-48 bg-black rounded-2xl overflow-hidden border border-orange-500/30 mb-6">
+                <img
+                  src="/images/family-shield.svg"
+                  alt="Family Shield - Lion Project Chrome extension protecting browser content"
+                  className="w-full h-full object-contain filter brightness-0 invert"
+                />
               </div>
 
               <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 text-center">
                 Family Shield
               </h3>
               <p className="text-gray-300 mb-4 font-light text-center">Scans everything you see in your browser</p>
-              
+
               <div className="text-center mb-6">
                 <span className="text-3xl font-extralight text-orange-400">Free</span>
               </div>
@@ -379,19 +359,20 @@ export default function Home() {
 
             {/* Mobile Protector - Coming Soon */}
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 opacity-75 hover:opacity-90 transition-all duration-500 shadow-lg shadow-orange-500/5">
-              {/* Product Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 mb-6">
-                <div className="text-center">
-                  <Smartphone className="w-16 h-16 text-orange-400 mx-auto mb-2" />
-                  <span className="text-xs text-gray-400 font-light">Image: mobile-protector.png</span>
-                </div>
+              {/* Product Image */}
+              <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
+                <img
+                  src="/images/mobile-protector.png"
+                  alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <h3 className="text-2xl font-light mb-3 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
                 Mobile Protector
               </h3>
               <p className="text-gray-300 mb-4 font-light">Monitors apps and calls on your phone</p>
-              
+
               <div className="text-center mb-6">
                 <span className="text-3xl font-extralight text-orange-400">$2.99</span>
                 <span className="text-sm text-gray-400 block font-light">/month</span>
@@ -436,7 +417,7 @@ export default function Home() {
               Comprehensive <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Digital Protection</span>
             </h2>
           </div>
-          
+
           <div className="grid lg:grid-cols-2 gap-8">
             <ProtectionCard
               icon={<Phone className="h-12 w-12" />}
@@ -558,7 +539,7 @@ print(result)`)}
                       <Copy className="w-4 h-4" />
                     </button>
                     <pre className="text-gray-300 text-sm leading-relaxed font-light">
-{`from gradio_client import Client, handle_file
+                      {`from gradio_client import Client, handle_file
 
 client = Client("pauliano22/deepfake-audio-detector")
 result = client.predict(
@@ -593,7 +574,7 @@ console.log(result.data);`)}
                       <Copy className="w-4 h-4" />
                     </button>
                     <pre className="text-gray-300 text-sm leading-relaxed font-light">
-{`import { Client } from "@gradio/client";
+                      {`import { Client } from "@gradio/client";
 
 const client = await Client.connect(
   "pauliano22/deepfake-audio-detector"

@@ -486,27 +486,29 @@ export default function AudioTester() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center mb-6 sm:mb-8">
-        <h3 className="text-2xl sm:text-3xl font-bold text-gold mb-4">
-          Try Our AI Detection Technology
+        <h3 className="text-2xl sm:text-3xl font-light">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+            Try Our AI Detection Technology
+          </span>
         </h3>
       </div>
 
       {/* Main Card */}
-      <div className="bg-gray-dark border border-gold/20 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl">
+      <div className="bg-black border border-orange-500/20 rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-orange-500/10">
         
         {/* Status Bar */}
-        <div className="mb-4 sm:mb-6 p-3 bg-black/50 rounded-lg text-center">
+        <div className="mb-4 sm:mb-6 p-3 bg-black/70 border border-orange-500/30 rounded-lg text-center backdrop-blur-sm">
           <div className="flex items-center justify-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${
-              isAnalyzing || isExtracting ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'
+              isAnalyzing || isExtracting ? 'bg-orange-500 animate-pulse' : 'bg-green-500'
             }`}></div>
-            <span className="text-gold font-medium text-sm sm:text-base">{modelStatus}</span>
+            <span className="text-orange-400 font-light text-sm sm:text-base">{modelStatus}</span>
           </div>
         </div>
 
         {/* File Upload Area */}
         <div className="mb-4 sm:mb-6">
-                      <input
+          <input
             ref={fileInputRef}
             type="file"
             accept="audio/*,video/mp4,video/quicktime,.mp4,.mov"
@@ -516,44 +518,44 @@ export default function AudioTester() {
           
           <div 
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-gold/30 hover:border-gold/60 rounded-xl p-4 sm:p-6 lg:p-8 text-center cursor-pointer transition-all duration-300 hover:bg-gold/5"
+            className="border-2 border-dashed border-orange-500/30 hover:border-orange-500/60 rounded-xl p-4 sm:p-6 lg:p-8 text-center cursor-pointer transition-all duration-300 hover:bg-orange-500/5"
           >
             <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-4">
-              <FileAudio className="w-8 h-8 sm:w-12 sm:h-12 text-gold" />
-              <Video className="w-8 h-8 sm:w-12 sm:h-12 text-gold" />
+              <FileAudio className="w-8 h-8 sm:w-12 sm:h-12 text-orange-400" />
+              <Video className="w-8 h-8 sm:w-12 sm:h-12 text-orange-400" />
             </div>
-            <h4 className="text-lg sm:text-xl font-semibold text-gold mb-2">
+            <h4 className="text-lg sm:text-xl font-light text-orange-400 mb-2">
               Drop your audio or video file here
             </h4>
-            <p className="text-gray-300 mb-2 sm:mb-4 text-sm sm:text-base">
+            <p className="text-gray-300 mb-2 sm:mb-4 text-sm sm:text-base font-light">
               Or click to browse your files
             </p>
-            <p className="text-xs sm:text-sm text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-400 font-light">
               Supports WAV, MP3, M4A, OGG files up to 10MB<br />
-              <strong>NEW:</strong> MP4 & MOV video files up to 25MB (audio will be extracted)
+              <strong className="text-orange-400">NEW:</strong> MP4 & MOV video files up to 25MB (audio will be extracted)
             </p>
           </div>
         </div>
 
         {/* File Info - Mobile Optimized */}
         {file && (
-          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-black/30 border border-gold/20 rounded-lg">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-black/50 border border-orange-500/20 rounded-lg backdrop-blur-sm">
             <div className="flex items-start space-x-3">
               {isVideoFile ? (
-                <Video className="w-6 h-6 sm:w-8 sm:h-8 text-gold flex-shrink-0 mt-1" />
+                <Video className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400 flex-shrink-0 mt-1" />
               ) : (
-                <FileAudio className="w-6 h-6 sm:w-8 sm:h-8 text-gold flex-shrink-0 mt-1" />
+                <FileAudio className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400 flex-shrink-0 mt-1" />
               )}
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gold text-sm sm:text-lg truncate" title={file.name}>
+                <p className="font-light text-orange-400 text-sm sm:text-lg truncate" title={file.name}>
                   <span className="hidden sm:inline">{file.name}</span>
                   <span className="sm:hidden">{truncateFileName(file.name, 20)}</span>
                 </p>
-                <div className="text-xs sm:text-sm text-gray-400 space-y-1">
+                <div className="text-xs sm:text-sm text-gray-400 space-y-1 font-light">
                   <p>
                     {formatFileSize(file.size)} • {file.type}
                     {isVideoFile && (
-                      <span className="ml-2 px-2 py-1 bg-blue-900/30 border border-blue-500/50 rounded text-xs text-blue-400">
+                      <span className="ml-2 px-2 py-1 bg-orange-900/30 border border-orange-500/50 rounded text-xs text-orange-400">
                         Video → Audio
                       </span>
                     )}
@@ -575,7 +577,7 @@ export default function AudioTester() {
             <button
               onClick={analyzeAudio}
               disabled={isAnalyzing}
-              className="bg-gradient-to-r from-gold to-yellow-500 text-black px-8 sm:px-12 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-yellow-500 hover:to-gold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto shadow-lg"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-xl font-light text-base sm:text-lg hover:from-orange-400 hover:to-red-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto shadow-lg shadow-orange-500/25"
             >
               {isAnalyzing ? (
                 <>
@@ -594,12 +596,12 @@ export default function AudioTester() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-4 sm:mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+          <div className="mb-4 sm:mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
             <div className="flex items-start space-x-3">
               <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-red-400 flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-red-400 font-semibold text-sm sm:text-base">Analysis Failed</p>
-                <p className="text-red-300 text-xs sm:text-sm break-words">{error}</p>
+                <p className="text-red-400 font-light text-sm sm:text-base">Analysis Failed</p>
+                <p className="text-red-300 text-xs sm:text-sm break-words font-light">{error}</p>
               </div>
             </div>
           </div>
@@ -609,7 +611,7 @@ export default function AudioTester() {
         {result && (
           <div className="space-y-4 sm:space-y-6">
             {/* Main Result */}
-            <div className={`p-4 sm:p-6 rounded-xl border-2 ${
+            <div className={`p-4 sm:p-6 rounded-xl border-2 backdrop-blur-sm ${
               result.prediction === 'FAKE' 
                 ? 'bg-red-900/20 border-red-500/50 shadow-red-500/20' 
                 : 'bg-green-900/20 border-green-500/50 shadow-green-500/20'
@@ -622,20 +624,20 @@ export default function AudioTester() {
                     <CheckCircle className="w-8 h-8 sm:w-12 sm:h-12 text-green-400" />
                   )}
                   <div>
-                    <h4 className={`text-xl sm:text-3xl font-bold ${
+                    <h4 className={`text-xl sm:text-3xl font-light ${
                       result.prediction === 'FAKE' ? 'text-red-400' : 'text-green-400'
                     }`}>
                       {result.prediction === 'FAKE' ? 'AI Generated' : 'Authentic'}
                     </h4>
-                    <p className="text-gray-300 text-sm sm:text-lg">
+                    <p className="text-gray-300 text-sm sm:text-lg font-light">
                       {(result.confidence * 100).toFixed(1)}% confidence
                     </p>
                   </div>
                 </div>
                 
                 {result.is_suspicious && (
-                  <div className="bg-yellow-900/30 border border-yellow-500/50 rounded-lg px-3 sm:px-4 py-2 self-start sm:self-auto">
-                    <p className="text-yellow-400 font-semibold flex items-center text-sm">
+                  <div className="bg-orange-900/30 border border-orange-500/50 rounded-lg px-3 sm:px-4 py-2 self-start sm:self-auto backdrop-blur-sm">
+                    <p className="text-orange-400 font-light flex items-center text-sm">
                       <Shield className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                       Suspicious
                     </p>
@@ -646,7 +648,7 @@ export default function AudioTester() {
               {/* Probability Breakdown - Mobile Optimized */}
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
-                  <span className="text-gray-300 font-medium text-sm sm:text-base">Real Audio:</span>
+                  <span className="text-gray-300 font-light text-sm sm:text-base">Real Audio:</span>
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <div className="flex-1 sm:w-32 bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div 
@@ -654,14 +656,14 @@ export default function AudioTester() {
                         style={{ width: `${result.probabilities.real * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-green-400 font-mono text-sm sm:text-lg font-bold min-w-[50px] sm:min-w-[60px]">
+                    <span className="text-green-400 font-mono text-sm sm:text-lg font-light min-w-[50px] sm:min-w-[60px]">
                       {(result.probabilities.real * 100).toFixed(1)}%
                     </span>
                   </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
-                  <span className="text-gray-300 font-medium text-sm sm:text-base">AI Generated:</span>
+                  <span className="text-gray-300 font-light text-sm sm:text-base">AI Generated:</span>
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <div className="flex-1 sm:w-32 bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div 
@@ -669,7 +671,7 @@ export default function AudioTester() {
                         style={{ width: `${result.probabilities.fake * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-red-400 font-mono text-sm sm:text-lg font-bold min-w-[50px] sm:min-w-[60px]">
+                    <span className="text-red-400 font-mono text-sm sm:text-lg font-light min-w-[50px] sm:min-w-[60px]">
                       {(result.probabilities.fake * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -678,11 +680,11 @@ export default function AudioTester() {
             </div>
 
             {/* Technical Details - Collapsible */}
-            <details className="group bg-black/30 border border-gold/20 rounded-lg overflow-hidden">
-              <summary className="p-3 sm:p-4 cursor-pointer text-gold hover:bg-gold/5 transition-colors flex items-center justify-between">
+            <details className="group bg-black/50 border border-orange-500/20 rounded-lg overflow-hidden backdrop-blur-sm">
+              <summary className="p-3 sm:p-4 cursor-pointer text-orange-400 hover:bg-orange-500/5 transition-colors flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Target className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-medium text-sm sm:text-base">Technical Details</span>
+                  <span className="font-light text-sm sm:text-base">Technical Details</span>
                 </div>
                 <div className="transform group-open:rotate-180 transition-transform">
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -690,23 +692,23 @@ export default function AudioTester() {
                   </svg>
                 </div>
               </summary>
-              <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-3 text-xs sm:text-sm border-t border-gold/10">
+              <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-3 text-xs sm:text-sm border-t border-orange-500/10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 pt-3 sm:pt-4">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Processing Time:</span>
-                    <span className="text-white font-mono">{result.details.processing_time}ms</span>
+                    <span className="text-gray-400 font-light">Processing Time:</span>
+                    <span className="text-white font-mono font-light">{result.details.processing_time}ms</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">File Size:</span>
-                    <span className="text-white font-mono">{formatFileSize(result.details.file_size)}</span>
+                    <span className="text-gray-400 font-light">File Size:</span>
+                    <span className="text-white font-mono font-light">{formatFileSize(result.details.file_size)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Analyzed:</span>
-                    <span className="text-white font-mono">{new Date(result.timestamp).toLocaleTimeString()}</span>
+                    <span className="text-gray-400 font-light">Analyzed:</span>
+                    <span className="text-white font-mono font-light">{new Date(result.timestamp).toLocaleTimeString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Model Version:</span>
-                    <span className="text-white font-mono">{result.details.model_version}</span>
+                    <span className="text-gray-400 font-light">Model Version:</span>
+                    <span className="text-white font-mono font-light">{result.details.model_version}</span>
                   </div>
                 </div>
               </div>
@@ -716,13 +718,13 @@ export default function AudioTester() {
 
         {/* Convert Audio Link */}
         <div className="mt-6 sm:mt-8 text-center">
-          <p className="text-gray-400 text-xs sm:text-sm">
+          <p className="text-gray-400 text-xs sm:text-sm font-light">
             Need to convert your audio or video file?{' '}
             <a 
               href="https://convertio.co/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gold hover:text-yellow-400 transition-colors inline-flex items-center"
+              className="text-orange-400 hover:text-orange-300 transition-colors inline-flex items-center"
             >
               Try Convertio
               <ExternalLink className="w-3 h-3 ml-1" />
@@ -730,4 +732,6 @@ export default function AudioTester() {
           </p>
         </div>
       </div>
-    </div>)}
+    </div>
+  );
+}
