@@ -12,7 +12,7 @@ interface ProtectionCardProps {
   examples: string[];
 }
 
-function ProtectionCard({title, description, examples}: ProtectionCardProps) {
+function ProtectionCard({ title, description, examples }: ProtectionCardProps) {
   return (
     <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/40 transition-all duration-500 group shadow-lg shadow-orange-500/5">
 
@@ -171,6 +171,79 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Protection Types */}
+      <section id="protection" className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-extralight mb-6">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">AI Detection</span> Made Simple
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Our software runs quietly in the background and alerts you instantly when AI-generated content is detected.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 mb-20">
+            <ProtectionCard
+              icon={<Phone className="h-12 w-12" />}
+              title="Phone Call Alerts"
+              description="Get notified when AI voices are detected on your calls."
+              examples={[
+                "Fake family emergency calls",
+                "Cloned voices asking for money",
+                "AI impersonators"
+              ]}
+            />
+            <ProtectionCard
+              icon={<Newspaper className="h-12 w-12" />}
+              title="Media Monitoring"
+              description="Spot AI-generated content in news, social media, and videos."
+              examples={[
+                "Deepfake videos",
+                "AI-generated news",
+                "Fake audio clips"
+              ]}
+            />
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Shield className="w-8 h-8" />,
+                title: "Real-time Protection",
+                desc: "Continuous monitoring across all your devices"
+              },
+              {
+                icon: <Globe className="w-8 h-8" />,
+                title: "Universal Coverage",
+                desc: "Works with any app, browser, or platform"
+              },
+              {
+                icon: <Lock className="w-8 h-8" />,
+                title: "Privacy First",
+                desc: "Your data never leaves your device"
+              }
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-sm border border-orange-500/10 rounded-2xl p-6 text-center hover:border-orange-500/30 transition-all duration-500"
+              >
+                <div className="text-orange-400 mb-4 flex justify-center">
+                  {feature.icon}
+                </div>
+                <h4 className="text-xl font-light text-orange-400 mb-3">
+                  {feature.title}
+                </h4>
+                <p className="text-gray-300 font-light">
+                  {feature.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 relative">
         <div className="container mx-auto px-6">
@@ -214,21 +287,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: <Shield className="w-8 h-8" />, title: "Real-time Protection", desc: "Continuous monitoring across all your devices" },
-              { icon: <Globe className="w-8 h-8" />, title: "Universal Coverage", desc: "Works with any app, browser, or platform" },
-              { icon: <Lock className="w-8 h-8" />, title: "Privacy First", desc: "Your data never leaves your device" }
-            ].map((feature: { icon: React.ReactNode; title: string; desc: string }, index: number) => (
-              <div key={index} className="bg-gradient-to-br from-gray-900/30 to-black/30 backdrop-blur-sm border border-orange-500/10 rounded-2xl p-6 text-center hover:border-orange-500/30 transition-all duration-500">
-                <div className="text-orange-400 mb-4 flex justify-center">{feature.icon}</div>
-                <h4 className="text-xl font-light text-orange-400 mb-3">{feature.title}</h4>
-                <p className="text-gray-300 font-light">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -249,7 +307,7 @@ export default function Home() {
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 hover:border-orange-500/40 transition-all duration-500 shadow-lg shadow-orange-500/5">
               {/* Product Image */}
               <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
-                <Image 
+                <Image
                   src="/images/desktop-guardian.png"
                   alt="Desktop Guardian - Lion Project desktop application protecting computer calls and apps"
                   width={400}
@@ -286,20 +344,20 @@ export default function Home() {
 
               <div className="space-y-3">
                 {[
-                  { 
-                    icon: <Monitor className="w-4 h-4" />, 
-                    label: "Windows", 
-                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Windows.exe" 
+                  {
+                    icon: <Monitor className="w-4 h-4" />,
+                    label: "Windows",
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Windows.exe"
                   },
-                  { 
-                    icon: <Laptop className="w-4 h-4" />, 
-                    label: "macOS", 
-                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-macOS" 
+                  {
+                    icon: <Laptop className="w-4 h-4" />,
+                    label: "macOS",
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-macOS"
                   },
-                  { 
-                    icon: <Terminal className="w-4 h-4" />, 
-                    label: "Linux", 
-                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Linux" 
+                  {
+                    icon: <Terminal className="w-4 h-4" />,
+                    label: "Linux",
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Linux"
                   }
                 ].map((platform: { icon: React.ReactNode; label: string; link: string }, index: number) => (
                   <a
@@ -324,7 +382,7 @@ export default function Home() {
 
               {/* Product Image */}
               <div className="h-48 bg-black rounded-2xl overflow-hidden border border-orange-500/30 mb-6">
-                <Image 
+                <Image
                   src="/images/family-shield.svg"
                   alt="Family Shield - Lion Project Chrome extension protecting browser content"
                   width={400}
@@ -372,7 +430,7 @@ export default function Home() {
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 opacity-75 hover:opacity-90 transition-all duration-500 shadow-lg shadow-orange-500/5">
               {/* Product Image */}
               <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
-                <Image 
+                <Image
                   src="/images/mobile-protector.png"
                   alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
                   width={400}
@@ -418,42 +476,6 @@ export default function Home() {
                 iOS & Android • Launching Q2 2025
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Protection Types */}
-      <section id="protection" className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-extralight mb-6">
-              Comprehensive <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Digital Protection</span>
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            <ProtectionCard
-              icon={<Phone className="h-12 w-12" />}
-              title="Phone Call Protection"
-              description="Real-time call monitoring to detect voice cloning and deepfake attempts."
-              examples={[
-                "Fake calls from 'grandchildren' asking for money",
-                "Cloned voices of family members in distress",
-                "AI-generated voices impersonating trusted contacts",
-                "Emergency scam calls using familiar voices"
-              ]}
-            />
-            <ProtectionCard
-              icon={<Newspaper className="h-12 w-12" />}
-              title="News & Media Monitoring"
-              description="Notify you of AI-generated content in news feeds, social media, and videos."
-              examples={[
-                "Deepfake political speeches and statements",
-                "AI-generated news anchors spreading misinformation",
-                "Fake audio clips on social media platforms",
-                "Manipulated celebrity endorsements and testimonials"
-              ]}
-            />
           </div>
         </div>
       </section>
