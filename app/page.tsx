@@ -67,8 +67,8 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-orange-500/20">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            {/* Logo placeholder */}
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+            {/* Logo with red circle and white shield */}
+            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 tracking-wider">
@@ -121,7 +121,7 @@ export default function Home() {
 
             {/* Main Headline */}
             <div className="space-y-6">
-              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-extralight leading-tight whitespace-nowrap">
+              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-extralight leading-tight">
                 See through <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 font-light">AI deception</span>
               </h1>
               <p className="text-xl lg:text-2xl text-white font-light leading-relaxed mx-auto max-w-3xl">
@@ -252,6 +252,8 @@ export default function Home() {
                 <Image 
                   src="/images/desktop-guardian.png"
                   alt="Desktop Guardian - Lion Project desktop application protecting computer calls and apps"
+                  width={400}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -325,6 +327,8 @@ export default function Home() {
                 <Image 
                   src="/images/family-shield.svg"
                   alt="Family Shield - Lion Project Chrome extension protecting browser content"
+                  width={400}
+                  height={192}
                   className="w-full h-full object-contain filter brightness-0 invert"
                 />
               </div>
@@ -371,6 +375,8 @@ export default function Home() {
                 <Image 
                   src="/images/mobile-protector.png"
                   alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
+                  width={400}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -498,10 +504,6 @@ export default function Home() {
                 <h3 className="text-2xl font-light text-orange-400 mb-4">API Specifications</h3>
                 <div className="space-y-3 font-light">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Endpoint:</span>
-                    <span className="text-gray-300">/predict</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-gray-400">Method:</span>
                     <span className="text-gray-300">POST</span>
                   </div>
@@ -528,7 +530,7 @@ export default function Home() {
                     <Code className="w-4 h-4 mr-2" />
                     Python
                   </h4>
-                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative">
+                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative overflow-x-auto">
                     <button
                       onClick={() => navigator.clipboard.writeText(`from gradio_client import Client, handle_file
 
@@ -543,7 +545,7 @@ print(result)`)}
                     >
                       <Copy className="w-4 h-4" />
                     </button>
-                    <pre className="text-gray-300 text-sm leading-relaxed font-light">
+                    <pre className="text-gray-300 text-sm leading-relaxed font-light whitespace-pre-wrap break-words">
                       {`from gradio_client import Client, handle_file
 
 client = Client("pauliano22/deepfake-audio-detector")
@@ -562,7 +564,7 @@ print(result)`}
                     <Code className="w-4 h-4 mr-2" />
                     JavaScript
                   </h4>
-                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative">
+                  <div className="bg-black/50 border border-gray-700/50 rounded-xl p-4 relative overflow-x-auto">
                     <button
                       onClick={() => navigator.clipboard.writeText(`import { Client } from "@gradio/client";
 
@@ -578,7 +580,7 @@ console.log(result.data);`)}
                     >
                       <Copy className="w-4 h-4" />
                     </button>
-                    <pre className="text-gray-300 text-sm leading-relaxed font-light">
+                    <pre className="text-gray-300 text-sm leading-relaxed font-light whitespace-pre-wrap break-words">
                       {`import { Client } from "@gradio/client";
 
 const client = await Client.connect(
@@ -737,7 +739,7 @@ console.log(result.data);`}
       <footer className="border-t border-orange-500/20 py-12 bg-gradient-to-t from-orange-500/5 to-transparent">
         <div className="container mx-auto px-6 text-center">
           <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
               <Shield className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-light text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
