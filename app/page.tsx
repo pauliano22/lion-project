@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy, Play, Users, Globe, Lock, Award, Star } from 'lucide-react';
+import { Shield, Search, Phone, Newspaper, AlertTriangle, CheckCircle, Clock, Code, ChevronDown, ExternalLink, MessageSquare, Send, User, Heart, Monitor, Laptop, Terminal, Smartphone, Apple, Computer, Mail, Copy, Globe, Lock } from 'lucide-react';
+import Image from 'next/image';
 import AudioTester from '@/components/AudioTester';
 
 interface ProtectionCardProps {
@@ -178,7 +179,7 @@ export default function Home() {
               The <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Only</span> Background Protection
             </h2>
             <p className="text-xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed">
-              Competitors charge $13-$700/month for single tools. They can't touch our prices.
+              Competitors charge $13-$700/month for single tools. They can&apos;t touch our prices.
             </p>
           </div>
 
@@ -248,7 +249,7 @@ export default function Home() {
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 hover:border-orange-500/40 transition-all duration-500 shadow-lg shadow-orange-500/5">
               {/* Product Image */}
               <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
-                <img
+                <Image 
                   src="/images/desktop-guardian.png"
                   alt="Desktop Guardian - Lion Project desktop application protecting computer calls and apps"
                   className="w-full h-full object-cover"
@@ -321,7 +322,7 @@ export default function Home() {
 
               {/* Product Image */}
               <div className="h-48 bg-black rounded-2xl overflow-hidden border border-orange-500/30 mb-6">
-                <img
+                <Image 
                   src="/images/family-shield.svg"
                   alt="Family Shield - Lion Project Chrome extension protecting browser content"
                   className="w-full h-full object-contain filter brightness-0 invert"
@@ -368,6 +369,11 @@ export default function Home() {
               {/* Product Image */}
               <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
                 <img
+                  src="/images/mobile-protector.png"
+                  alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
+                  className="w-full h-full object-cover"
+                />
+                <Image 
                   src="/images/mobile-protector.png"
                   alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
                   className="w-full h-full object-cover"
@@ -674,7 +680,7 @@ console.log(result.data);`}
               </h4>
               <p className="text-gray-300 font-light leading-relaxed max-w-2xl mx-auto">
                 The Lion Project is a passion project created to help protect families from AI.<br /><br />
-                I'm constantly working to improve the accuracy and user experience. <br /><br />Your feedback
+                I&apos;m constantly working to improve the accuracy and user experience. <br /><br />Your feedback
                 helps make these tools better for everyone!
               </p>
             </div>
