@@ -12,7 +12,7 @@ interface ProtectionCardProps {
   examples: string[];
 }
 
-function ProtectionCard({ icon, title, description, examples}: ProtectionCardProps) {
+function ProtectionCard({title, description, examples}: ProtectionCardProps) {
   return (
     <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/40 transition-all duration-500 group shadow-lg shadow-orange-500/5">
 
@@ -368,11 +368,6 @@ export default function Home() {
             <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 opacity-75 hover:opacity-90 transition-all duration-500 shadow-lg shadow-orange-500/5">
               {/* Product Image */}
               <div className="h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
-                <img
-                  src="/images/mobile-protector.png"
-                  alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
-                  className="w-full h-full object-cover"
-                />
                 <Image 
                   src="/images/mobile-protector.png"
                   alt="Mobile Protector - Lion Project mobile app for phone protection (coming soon)"
