@@ -9,19 +9,11 @@ interface ProtectionCardProps {
   title: string;
   description: string;
   examples: string[];
-  image: string;
 }
 
-function ProtectionCard({ icon, title, description, examples, image }: ProtectionCardProps) {
+function ProtectionCard({ icon, title, description, examples}: ProtectionCardProps) {
   return (
     <div className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-8 hover:border-orange-500/40 transition-all duration-500 group shadow-lg shadow-orange-500/5">
-      {/* Image placeholder */}
-      <div className="mb-6 h-48 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/40 transition-all duration-500">
-        <div className="text-center">
-          <div className="text-orange-400 mb-2 group-hover:scale-110 transition-transform">{icon}</div>
-          <span className="text-xs text-gray-400 font-light">Image: {image}</span>
-        </div>
-      </div>
 
       <h3 className="text-2xl font-light mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">{title}</h3>
       <p className="text-gray-300 mb-6 font-light leading-relaxed">{description}</p>
@@ -291,13 +283,27 @@ export default function Home() {
 
               <div className="space-y-3">
                 {[
-                  { icon: <Monitor className="w-4 h-4" />, label: "Windows", link: "#" },
-                  { icon: <Laptop className="w-4 h-4" />, label: "macOS", link: "#" },
-                  { icon: <Terminal className="w-4 h-4" />, label: "Linux", link: "#" }
+                  { 
+                    icon: <Monitor className="w-4 h-4" />, 
+                    label: "Windows", 
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Windows.exe" 
+                  },
+                  { 
+                    icon: <Laptop className="w-4 h-4" />, 
+                    label: "macOS", 
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-macOS" 
+                  },
+                  { 
+                    icon: <Terminal className="w-4 h-4" />, 
+                    label: "Linux", 
+                    link: "https://github.com/pauliano22/deepfake-audio-m2/releases/download/v1.1.2/Lion-AI-Detection-Linux" 
+                  }
                 ].map((platform: { icon: React.ReactNode; label: string; link: string }, index: number) => (
                   <a
                     key={index}
                     href={platform.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center justify-center w-full bg-gray-700/50 hover:bg-gray-600/50 text-white py-3 px-4 rounded-xl transition-colors border border-orange-500/20 hover:border-orange-500/40 font-light"
                   >
                     {platform.icon}
@@ -429,7 +435,6 @@ export default function Home() {
                 "AI-generated voices impersonating trusted contacts",
                 "Emergency scam calls using familiar voices"
               ]}
-              image="phone-protection.png"
             />
             <ProtectionCard
               icon={<Newspaper className="h-12 w-12" />}
@@ -441,7 +446,6 @@ export default function Home() {
                 "Fake audio clips on social media platforms",
                 "Manipulated celebrity endorsements and testimonials"
               ]}
-              image="media-monitoring.png"
             />
           </div>
         </div>
