@@ -131,20 +131,20 @@ export default function Home() {
               </div>
             </div>
           </div>
-          
+
           <div className="lion-letters">
             <span className="letter l1">L</span>
             <span className="letter l2">I</span>
             <span className="letter l3">O</span>
             <span className="letter l4">N</span>
           </div>
-          
+
           <div className="project-text">PROJECT</div>
-          
+
           <div className="tagline">
             Protecting you from AI deception
           </div>
-          
+
           <div className="loading-dots">
             <div className="dot"></div>
             <div className="dot"></div>
@@ -459,12 +459,12 @@ export default function Home() {
             </div>
 
             {/* Family Shield - Featured */}
-            <div className="product-card featured bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm border-2 border-orange-500 rounded-3xl p-8 hover:border-orange-400 transition-all duration-500 shadow-lg shadow-orange-500/20 relative">
-              <div className="absolute top-4 right-4 bg-black text-red-400 px-3 py-1 rounded-full border-2 border-red text-xs font-light">
+            <div className="product-card bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm border border-orange-500/20 rounded-3xl p-8 hover:border-orange-500/40 transition-all duration-500 shadow-lg shadow-orange-500/8 relative">
+              <div className="absolute top-4 right-4 bg-orange-400 text-black px-3 py-1 rounded-full border border-orange-500/30 text-xs font-light">
                 Popular
               </div>
 
-              <div className="h-48 bg-black rounded-2xl overflow-hidden border border-orange-500/30 mb-6">
+              <div className="h-48 bg-gray-900/50 rounded-2xl overflow-hidden border border-orange-500/20 mb-6">
                 <Image
                   src="/images/family-shield.svg"
                   alt="Family Shield - Lion Project Chrome extension protecting browser content"
@@ -497,8 +497,9 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-
               <a
+
+
                 href="https://chromewebstore.google.com/detail/lion-project-ai-detector/bgcjkaplennpginekckeaomkkidhifdg"
                 className="flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-xl font-light hover:from-orange-400 hover:to-red-400 transition-all duration-300 shadow-lg shadow-orange-500/25"
                 target="_blank"
@@ -560,17 +561,17 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Demo Section */}
-      <section id="demo" className="demo-section section-animate py-20 bg-gradient-to-b from-orange-500/5 to-transparent">
+      < section id="demo" className="demo-section section-animate py-20 bg-gradient-to-b from-orange-500/5 to-transparent" >
         <div className="container mx-auto px-6">
           <AudioTester />
         </div>
-      </section>
+      </section >
 
       {/* Developers Section */}
-      <section id="developers" className="developers-section section-animate py-20">
+      < section id="developers" className="developers-section section-animate py-20" >
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <div className="section-header text-center mb-16">
@@ -758,10 +759,10 @@ console.log(result.data);`}
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Feedback Section */}
-      <section className="feedback-section section-animate py-20">
+      < section className="feedback-section section-animate py-20" >
         <div className="container mx-auto px-6">
           <div className="feedback-card max-w-4xl mx-auto bg-gradient-to-r from-orange-500/5 to-red-500/5 border border-orange-500/20 rounded-3xl p-8 shadow-lg shadow-orange-500/5">
             <div className="text-center mb-8">
@@ -830,10 +831,10 @@ console.log(result.data);`}
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Footer */}
-      <footer className="footer border-t border-orange-500/20 py-12 bg-gradient-to-t from-orange-500/5 to-transparent">
+      < footer className="footer border-t border-orange-500/20 py-12 bg-gradient-to-t from-orange-500/5 to-transparent" >
         <div className="container mx-auto px-6 text-center">
           <div className="footer-logo flex items-center justify-center space-x-3 mb-6">
             <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
@@ -861,7 +862,7 @@ console.log(result.data);`}
             </a>
           </div>
         </div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 }
