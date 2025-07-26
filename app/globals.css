@@ -28,9 +28,46 @@ html, body {
   height: 100vh !important;
 }
 
+/* Enable scrolling but hide scrollbars completely */
 html.content-ready, body.content-ready {
   overflow: auto !important;
   height: auto !important;
+  /* Hide scrollbars for all browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbars for Webkit browsers */
+html.content-ready::-webkit-scrollbar, 
+body.content-ready::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  display: none;
+}
+
+/* If you want to show a custom scrollbar on hover, uncomment below */
+/*
+html.content-ready:hover::-webkit-scrollbar {
+  width: 8px;
+}
+
+html.content-ready:hover::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+html.content-ready:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 107, 53, 0.3);
+  border-radius: 4px;
+}
+
+html.content-ready:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 107, 53, 0.5);
+}
+*/
+
+/* Remove the extra safeguard classes since we're hiding scrollbars */
+.content-loaded {
+  /* All scrollbar styling handled by html/body now */
 }
 
 body {

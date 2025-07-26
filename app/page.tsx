@@ -65,7 +65,7 @@ export default function Home() {
         setTimeout(() => {
           setIsLoading(false);
           setShowContent(true);
-          // Add content-ready class to enable scrolling
+          // Add content-ready class to enable scrolling (but scrollbars are hidden)
           document.documentElement.classList.add('content-ready');
           document.body.classList.add('content-ready');
         }, 2000);
